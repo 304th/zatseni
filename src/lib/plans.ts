@@ -19,8 +19,8 @@ export const PLANS: Record<PlanId, Plan> = {
   start: {
     id: "start",
     name: "Старт",
-    price: 0,
-    smsLimit: 50,
+    price: 990,
+    smsLimit: 100,
     businessLimit: 1,
     teamLimit: 1,
     features: {
@@ -33,23 +33,23 @@ export const PLANS: Record<PlanId, Plan> = {
   business: {
     id: "business",
     name: "Бизнес",
-    price: 1990,
+    price: 2490,
     smsLimit: 500,
-    businessLimit: 3,
+    businessLimit: 5,
     teamLimit: 5,
     features: {
       integrations: true,
       analytics: "full",
-      priority_support: false,
-      custom_branding: false,
+      priority_support: true,
+      custom_branding: true,
     },
   },
   network: {
     id: "network",
     name: "Сеть",
-    price: 4990,
+    price: 7990,
     smsLimit: 2000,
-    businessLimit: 10,
+    businessLimit: -1, // unlimited
     teamLimit: -1, // unlimited
     features: {
       integrations: true,
