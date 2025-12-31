@@ -73,8 +73,8 @@ export async function getUserBusinesses(userId: string) {
 
   // Combine and mark roles
   const businesses = [
-    ...owned.map((b) => ({ ...b, userRole: "owner" as Role })),
-    ...memberships.map((m) => ({
+    ...owned.map((b: typeof owned[number]) => ({ ...b, userRole: "owner" as Role })),
+    ...memberships.map((m: typeof memberships[number]) => ({
       ...m.business,
       userRole: m.role as Role,
     })),

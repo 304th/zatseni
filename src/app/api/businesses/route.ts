@@ -38,8 +38,8 @@ export async function GET() {
 
     // Combine and add role info
     const businesses = [
-      ...owned.map((b) => ({ ...b, userRole: "owner" })),
-      ...memberships.map((m) => ({ ...m.business, userRole: m.role })),
+      ...owned.map((b: typeof owned[number]) => ({ ...b, userRole: "owner" })),
+      ...memberships.map((m: typeof memberships[number]) => ({ ...m.business, userRole: m.role })),
     ];
 
     return NextResponse.json(businesses);
