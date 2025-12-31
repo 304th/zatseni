@@ -170,12 +170,20 @@ export default function BusinessPage() {
               История запросов
             </Link>
             {business.userRole === "owner" && (
-              <Link
-                href={`/dashboard/business/${params.id}/team`}
-                className="text-blue-600 hover:underline"
-              >
-                Команда {business._count?.members ? `(${business._count.members})` : ""}
-              </Link>
+              <>
+                <Link
+                  href={`/dashboard/business/${params.id}/team`}
+                  className="text-blue-600 hover:underline"
+                >
+                  Команда {business._count?.members ? `(${business._count.members})` : ""}
+                </Link>
+                <Link
+                  href={`/dashboard/business/${params.id}/integrations`}
+                  className="text-blue-600 hover:underline"
+                >
+                  Интеграции
+                </Link>
+              </>
             )}
           </div>
         </div>
