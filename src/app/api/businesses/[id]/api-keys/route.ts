@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkBusinessAccess } from "@/lib/permissions";
+import { canUseIntegrations } from "@/lib/plans";
 import crypto from "crypto";
 
 // GET - list API keys for business
@@ -59,6 +60,14 @@ export async function POST(
 
   if (!access.hasAccess || !access.isOwner) {
     return NextResponse.json({ error: "Только владелец может создавать API ключи" }, { status: 403 });
+  }
+
+  // Check plan allows integrations
+  if (!canUseIntegrations(session.user.plan)) {
+    return NextResponse.json(
+      { error: "Интеграции доступны на тарифах Бизнес и Сеть", upgrade: true },
+      { status: 403 }
+    );
   }
 
   const body = await request.json();

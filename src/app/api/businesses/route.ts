@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getUserBusinesses } from "@/lib/permissions";
+import { canAddBusiness, getPlan, getSmsLimit } from "@/lib/plans";
 
 // Get user's businesses (owned + member of, or all for support)
 export async function GET() {
@@ -43,6 +44,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check business limit
+    const currentBusinessCount = await prisma.business.count({
+      where: { userId: session.user.id },
+    });
+
+    const userPlan = session.user.plan || "start";
+    if (!canAddBusiness(userPlan, currentBusinessCount)) {
+      const plan = getPlan(userPlan);
+      return NextResponse.json(
+        {
+          error: `Лимит бизнесов (${plan.businessLimit}) достигнут. Перейдите на более высокий тариф.`,
+          upgrade: true,
+        },
+        { status: 403 }
+      );
+    }
+
     // Generate slug
     const slug = name
       .toLowerCase()
@@ -68,6 +86,7 @@ export async function POST(req: NextRequest) {
         yandexUrl,
         gisUrl,
         userId: session.user.id,
+        smsLimit: getSmsLimit(userPlan),
       },
     });
 

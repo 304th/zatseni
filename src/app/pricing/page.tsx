@@ -2,50 +2,61 @@ import Link from "next/link";
 
 const plans = [
   {
+    id: "start",
     name: "Старт",
-    price: "990",
+    price: "0",
     period: "мес",
-    description: "Для небольшого бизнеса",
+    description: "Для тестирования сервиса",
     features: [
-      "1 точка",
-      "100 SMS в месяц",
+      "1 бизнес",
+      "50 SMS в месяц",
+      "1 участник команды",
       "Базовая аналитика",
-      "Email поддержка",
+    ],
+    notIncluded: [
+      "Интеграции с CRM/POS",
+      "Приоритетная поддержка",
     ],
     cta: "Начать бесплатно",
     popular: false,
   },
   {
+    id: "business",
     name: "Бизнес",
-    price: "2 490",
+    price: "1 990",
     period: "мес",
     description: "Для растущих компаний",
     features: [
-      "До 5 точек",
+      "До 3 бизнесов",
       "500 SMS в месяц",
-      "Расширенная аналитика",
+      "До 5 участников команды",
+      "Полная аналитика",
+      "Интеграции с CRM/POS",
+    ],
+    notIncluded: [
       "Приоритетная поддержка",
-      "API доступ",
-      "Брендирование страницы",
+      "Своё оформление страницы",
     ],
     cta: "Выбрать план",
     popular: true,
   },
   {
+    id: "network",
     name: "Сеть",
-    price: "7 990",
+    price: "4 990",
     period: "мес",
     description: "Для сетей и франшиз",
     features: [
-      "Неограниченно точек",
+      "До 10 бизнесов",
       "2000 SMS в месяц",
+      "Неограниченно участников",
       "Полная аналитика",
-      "Персональный менеджер",
-      "API доступ",
-      "White label",
-      "Интеграции с CRM",
+      "Интеграции с CRM/POS",
+      "Приоритетная поддержка",
+      "Своё оформление страницы",
     ],
-    cta: "Связаться с нами",
+    notIncluded: [],
+    cta: "Выбрать план",
     popular: false,
   },
 ];
@@ -131,11 +142,11 @@ export default function PricingPage() {
                 <span className="text-gray-500">/{plan.period}</span>
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-4">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2">
                     <svg
-                      className="w-5 h-5 text-green-500"
+                      className="w-5 h-5 text-green-500 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -151,6 +162,29 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
+              {plan.notIncluded.length > 0 && (
+                <ul className="space-y-2 mb-8 opacity-50">
+                  {plan.notIncluded.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 text-sm">
+                      <svg
+                        className="w-4 h-4 text-gray-400 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {plan.notIncluded.length === 0 && <div className="mb-8" />}
 
               <Link
                 href="/signup"

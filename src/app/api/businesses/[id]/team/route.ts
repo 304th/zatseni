@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkBusinessAccess, permissions } from "@/lib/permissions";
+import { canAddTeamMember, getPlan } from "@/lib/plans";
 import crypto from "crypto";
 
 // GET - List team members and pending invites
@@ -74,6 +75,24 @@ export async function POST(
 
   if (!email) {
     return NextResponse.json({ error: "Email обязателен" }, { status: 400 });
+  }
+
+  // Check team member limit
+  const currentMemberCount = await prisma.businessMember.count({
+    where: { businessId: id },
+  });
+
+  const userPlan = session.user.plan || "start";
+  if (!canAddTeamMember(userPlan, currentMemberCount + 1)) { // +1 for owner
+    const plan = getPlan(userPlan);
+    const limitText = plan.teamLimit === -1 ? "без лимита" : plan.teamLimit;
+    return NextResponse.json(
+      {
+        error: `Лимит участников команды (${limitText}) достигнут. Перейдите на более высокий тариф.`,
+        upgrade: true,
+      },
+      { status: 403 }
+    );
   }
 
   // Check if user is already owner

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 interface ApiKey {
@@ -22,15 +23,24 @@ const INTEGRATIONS = [
 
 export default function IntegrationsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const { data: session } = useSession();
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [newKeyName, setNewKeyName] = useState("");
   const [createdKey, setCreatedKey] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
 
+  const userPlan = session?.user?.plan || "start";
+  const canUseIntegrations = userPlan === "business" || userPlan === "network";
+
   useEffect(() => {
-    fetchKeys();
-  }, [id]);
+    if (canUseIntegrations) {
+      fetchKeys();
+    } else {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, canUseIntegrations]);
 
   async function fetchKeys() {
     try {
@@ -97,8 +107,31 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
           Подключите CRM или POS для автоматической отправки запросов на отзыв
         </p>
 
+        {!canUseIntegrations && (
+          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-8 text-white">
+            <h2 className="text-xl font-bold mb-2">Интеграции доступны на платных тарифах</h2>
+            <p className="mb-4 opacity-90">
+              Подключите CRM, POS или любую другую систему для автоматической отправки запросов на отзыв после каждого визита клиента.
+            </p>
+            <div className="flex gap-3">
+              <Link
+                href="/pricing"
+                className="bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100"
+              >
+                Выбрать тариф
+              </Link>
+              <Link
+                href={`/dashboard/business/${id}/upgrade`}
+                className="bg-white/20 text-white px-6 py-2 rounded-lg font-medium hover:bg-white/30"
+              >
+                Сравнить планы
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* API Keys */}
-        <div className="bg-white rounded-xl border border-gray-100 p-6 mb-8">
+        <div className={`bg-white rounded-xl border border-gray-100 p-6 mb-8 ${!canUseIntegrations ? "opacity-50 pointer-events-none" : ""}`}>
           <h2 className="text-lg font-semibold mb-4">API ключи</h2>
 
           {createdKey && (
