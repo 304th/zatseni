@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,6 +12,7 @@ export default function SignupPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +20,6 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      // Register user
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -37,24 +34,34 @@ export default function SignupPage() {
         return;
       }
 
-      // Auto login after registration
-      const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        router.push("/dashboard");
-      }
+      // Show verification message
+      setVerificationSent(true);
     } catch {
       setError("Произошла ошибка");
     } finally {
       setLoading(false);
     }
   };
+
+  if (verificationSent) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <div className="text-4xl mb-4">📧</div>
+          <h1 className="text-2xl font-bold mb-2">Проверьте почту</h1>
+          <p className="text-gray-600 mb-4">
+            Мы отправили ссылку для подтверждения на <strong>{formData.email}</strong>
+          </p>
+          <p className="text-gray-500 text-sm mb-6">
+            Перейдите по ссылке в письме, чтобы активировать аккаунт. Ссылка действительна 24 часа.
+          </p>
+          <Link href="/login" className="text-blue-600 hover:underline">
+            Перейти к входу
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
