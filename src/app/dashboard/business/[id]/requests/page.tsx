@@ -30,6 +30,7 @@ export default function RequestsPage() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   async function fetchData() {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const StarButton = ({ filled, onClick }: { filled: boolean; onClick: () => void }) => (
   <button onClick={onClick} className="text-4xl transition-transform hover:scale-110">
@@ -118,7 +119,7 @@ export default function ReviewPage() {
         <div className="mt-8 pt-6 border-t border-gray-100">
           <p className="text-xs text-gray-400">
             Сервис сбора отзывов{" "}
-            <a href="/" className="text-indigo-600 hover:underline">Зацени</a>
+            <Link href="/" className="text-indigo-600 hover:underline">Зацени</Link>
           </p>
         </div>
       </div>

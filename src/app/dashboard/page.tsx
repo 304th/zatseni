@@ -49,7 +49,7 @@ export default function Dashboard() {
       if (data.length > 0) {
         setSelectedBusiness(data[0]);
         // Calculate stats from all businesses
-        let sent = 0, opened = 0, reviewed = 0;
+        let sent = 0;
         data.forEach((b: Business) => {
           sent += b.smsUsed;
         });
