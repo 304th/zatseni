@@ -128,6 +128,9 @@ export default function Dashboard() {
           <Link href="/dashboard/business/new" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
             <span>➕</span> Добавить бизнес
           </Link>
+          <Link href="/dashboard/billing" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <span>💳</span> Тариф и оплата
+          </Link>
           <Link href="/dashboard/settings" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
             <span>⚙️</span> Настройки
           </Link>

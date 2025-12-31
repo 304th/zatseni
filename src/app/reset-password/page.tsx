@@ -1,42 +1,55 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-
+  const router = useRouter();
   const token = searchParams.get("token");
   const email = searchParams.get("email");
 
-  useEffect(() => {
-    if (!token || !email) {
-      setError("Недействительная ссылка для сброса пароля");
-    }
-  }, [token, email]);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  if (!token || !email) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div className="text-5xl mb-4">❌</div>
+            <h1 className="text-2xl font-bold mb-4">Неверная ссылка</h1>
+            <p className="text-gray-600 mb-6">
+              Ссылка для сброса пароля недействительна или истекла.
+            </p>
+            <Link href="/forgot-password" className="text-indigo-600 hover:underline">
+              Запросить новую ссылку
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
 
     if (password !== confirmPassword) {
       setError("Пароли не совпадают");
-      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("Пароль должен быть минимум 6 символов");
-      setLoading(false);
+      setError("Пароль минимум 6 символов");
       return;
     }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/reset-password", {
@@ -45,54 +58,31 @@ function ResetPasswordForm() {
         body: JSON.stringify({ token, email, password }),
       });
 
-      if (!res.ok) {
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => router.push("/login"), 2000);
+      } else {
         const data = await res.json();
-        throw new Error(data.error || "Ошибка");
+        setError(data.error || "Ошибка");
       }
-
-      setSuccess(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка");
+    } catch {
+      setError("Ошибка сети");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   if (success) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="text-4xl mb-4">✅</div>
-          <h1 className="text-2xl font-bold mb-2">Пароль изменён</h1>
-          <p className="text-gray-600 mb-6">
-            Теперь вы можете войти с новым паролем.
-          </p>
-          <Link
-            href="/login"
-            className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Войти
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!token || !email) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="text-4xl mb-4">❌</div>
-          <h1 className="text-2xl font-bold mb-2">Недействительная ссылка</h1>
-          <p className="text-gray-600 mb-6">
-            Ссылка для сброса пароля недействительна или устарела.
-          </p>
-          <Link
-            href="/forgot-password"
-            className="text-blue-600 hover:underline"
-          >
-            Запросить новую ссылку
-          </Link>
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div className="text-5xl mb-4">✅</div>
+            <h1 className="text-2xl font-bold mb-4">Пароль изменён</h1>
+            <p className="text-gray-600">
+              Перенаправляем на страницу входа...
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -100,54 +90,58 @@ function ResetPasswordForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-        <div className="text-center mb-6">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="text-2xl">⭐</span>
-            <span className="text-xl font-bold">Зацени</span>
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <span className="text-3xl">⭐</span>
+            <span className="text-2xl font-bold text-gray-900">Зацени</span>
           </Link>
-          <h1 className="text-2xl font-bold">Новый пароль</h1>
-          <p className="text-gray-600 mt-2">Введите новый пароль для аккаунта</p>
+          <h1 className="text-2xl font-bold text-gray-900 mt-6">Новый пароль</h1>
+          <p className="text-gray-600 mt-2">
+            Введите новый пароль для аккаунта
+          </p>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          {error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Новый пароль
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               required
               minLength={6}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="••••••••"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Подтвердите пароль
             </label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
           >
             {loading ? "Сохранение..." : "Сохранить пароль"}
           </button>
@@ -159,13 +153,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-gray-500">Загрузка...</div>
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Загрузка...</div>}>
       <ResetPasswordForm />
     </Suspense>
   );

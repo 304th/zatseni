@@ -9,10 +9,10 @@ export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/forgot-password", {
@@ -21,32 +21,33 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email }),
       });
 
-      if (!res.ok) {
+      if (res.ok) {
+        setSent(true);
+      } else {
         const data = await res.json();
-        throw new Error(data.error || "Ошибка");
+        setError(data.error || "Ошибка");
       }
-
-      setSent(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка");
+    } catch {
+      setError("Ошибка сети");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   if (sent) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="text-4xl mb-4">📧</div>
-          <h1 className="text-2xl font-bold mb-2">Проверьте почту</h1>
-          <p className="text-gray-600 mb-6">
-            Если аккаунт с email <strong>{email}</strong> существует, мы
-            отправили инструкции по сбросу пароля.
-          </p>
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Вернуться к входу
-          </Link>
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div className="text-5xl mb-4">📧</div>
+            <h1 className="text-2xl font-bold mb-4">Проверьте почту</h1>
+            <p className="text-gray-600 mb-6">
+              Если аккаунт с email <strong>{email}</strong> существует, мы отправили инструкции по сбросу пароля.
+            </p>
+            <Link href="/login" className="text-indigo-600 hover:underline">
+              Вернуться к входу
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -54,52 +55,53 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-        <div className="text-center mb-6">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="text-2xl">⭐</span>
-            <span className="text-xl font-bold">Зацени</span>
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <span className="text-3xl">⭐</span>
+            <span className="text-2xl font-bold text-gray-900">Зацени</span>
           </Link>
-          <h1 className="text-2xl font-bold">Восстановление пароля</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mt-6">Сброс пароля</h1>
           <p className="text-gray-600 mt-2">
-            Введите email, указанный при регистрации
+            Введите email, на который зарегистрирован аккаунт
           </p>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          {error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="email@example.com"
               required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="you@example.com"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
           >
             {loading ? "Отправка..." : "Отправить ссылку"}
           </button>
-        </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Вспомнили пароль?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Войти
-          </Link>
-        </div>
+          <div className="mt-4 text-center">
+            <Link href="/login" className="text-sm text-gray-600 hover:underline">
+              Вернуться к входу
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );

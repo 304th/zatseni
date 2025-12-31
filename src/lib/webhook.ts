@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { sendSms } from "./sms";
 
 export interface WebhookResult {
   success: boolean;
@@ -73,7 +74,15 @@ export async function processWebhook(
     data: { lastUsedAt: new Date() },
   });
 
-  // TODO: Actually send SMS via SMS.ru
+  // Send SMS with review link
+  const reviewUrl = `${process.env.NEXTAUTH_URL}/r/${business.slug}`;
+  const message = `Спасибо за визит в ${business.name}! Оцените нас: ${reviewUrl}`;
+
+  const smsResult = await sendSms(normalizedPhone, message);
+
+  if (!smsResult.success) {
+    return { success: false, phone: normalizedPhone, error: smsResult.error };
+  }
 
   return { success: true, phone: normalizedPhone };
 }

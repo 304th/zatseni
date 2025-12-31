@@ -164,6 +164,12 @@ export default function BusinessPage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link
+              href={`/dashboard/business/${params.id}/analytics`}
+              className="text-blue-600 hover:underline"
+            >
+              Аналитика
+            </Link>
+            <Link
               href={`/dashboard/business/${params.id}/requests`}
               className="text-blue-600 hover:underline"
             >
