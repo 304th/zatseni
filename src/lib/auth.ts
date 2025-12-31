@@ -7,7 +7,6 @@ import bcrypt from "bcryptjs";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
   secret: process.env.NEXTAUTH_SECRET,
-  trustHost: true, // auto-detect URL from request headers
   providers: [
     CredentialsProvider({
       name: "credentials",
