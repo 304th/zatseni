@@ -75,6 +75,7 @@ model Business {
   requests    ReviewRequest[]
   members     BusinessMember[]
   invites     Invite[]
+  apiKeys     ApiKey[]
   plan        String    @default("start") // start, business, network
   smsLimit    Int       @default(100)
   smsUsed     Int       @default(0)
@@ -117,7 +118,21 @@ model ReviewRequest {
   status      String   @default("sent") // sent, opened, reviewed, feedback
   rating      Int?     // 1-5 if reviewed
   feedback    String?  // Private feedback text
+  source      String?  // webhook source: bitrix24, amocrm, yclients, iiko, poster, api
   sentAt      DateTime @default(now())
   openedAt    DateTime?
   reviewedAt  DateTime?
+}
+
+// API keys for webhook integrations
+model ApiKey {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name        String   // e.g. "iiko integration"
+  key         String   @unique
+  lastUsedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([key])
 }
