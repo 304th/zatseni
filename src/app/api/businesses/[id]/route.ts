@@ -14,7 +14,7 @@ export async function GET(
   }
 
   const { id } = await params;
-  const access = await checkBusinessAccess(session.user.id, id);
+  const access = await checkBusinessAccess(session.user.id, id, session.user.role);
 
   if (!access.hasAccess) {
     return NextResponse.json({ error: "Нет доступа" }, { status: 403 });
@@ -33,7 +33,8 @@ export async function GET(
 
   return NextResponse.json({
     ...business,
-    userRole: access.role,
+    userRole: access.isSupport ? "support" : access.role,
+    isSupport: access.isSupport,
   });
 }
 
@@ -47,9 +48,9 @@ export async function PUT(
   }
 
   const { id } = await params;
-  const access = await checkBusinessAccess(session.user.id, id);
+  const access = await checkBusinessAccess(session.user.id, id, session.user.role);
 
-  if (!access.hasAccess || !permissions.canEdit(access.role)) {
+  if (!access.hasAccess || !permissions.canEdit(access.role, access.isSupport)) {
     return NextResponse.json(
       { error: "Нет прав для редактирования" },
       { status: 403 }
@@ -82,9 +83,10 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const access = await checkBusinessAccess(session.user.id, id);
+  const access = await checkBusinessAccess(session.user.id, id, session.user.role);
 
-  if (!access.hasAccess || !permissions.canDelete(access.role)) {
+  // Support users cannot delete - only owners can
+  if (!access.hasAccess || !permissions.canDelete(access.role) || access.isSupport) {
     return NextResponse.json(
       { error: "Нет прав для удаления" },
       { status: 403 }

@@ -43,6 +43,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  role          String     @default("user") // user, support, admin
   accounts      Account[]
   sessions      Session[]
   businesses    Business[]         // businesses owned by user

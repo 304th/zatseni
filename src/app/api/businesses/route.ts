@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getUserBusinesses } from "@/lib/permissions";
 
-// Get user's businesses (owned + member of)
+// Get user's businesses (owned + member of, or all for support)
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -12,35 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
     }
 
-    // Get owned businesses
-    const owned = await prisma.business.findMany({
-      where: { userId: session.user.id },
-      include: {
-        _count: {
-          select: { requests: true, members: true },
-        },
-      },
-    });
-
-    // Get businesses user is a member of
-    const memberships = await prisma.businessMember.findMany({
-      where: { userId: session.user.id },
-      include: {
-        business: {
-          include: {
-            _count: {
-              select: { requests: true, members: true },
-            },
-          },
-        },
-      },
-    });
-
-    // Combine and add role info
-    const businesses = [
-      ...owned.map((b: typeof owned[number]) => ({ ...b, userRole: "owner" })),
-      ...memberships.map((m: typeof memberships[number]) => ({ ...m.business, userRole: m.role })),
-    ];
+    const businesses = await getUserBusinesses(session.user.id, session.user.role);
 
     return NextResponse.json(businesses);
   } catch (error) {
