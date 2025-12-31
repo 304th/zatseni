@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// NextAuth models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  accounts      Account[]
+  sessions      Session[]
+  businesses    Business[]         // businesses owned by user
+  memberships   BusinessMember[]   // businesses user has access to
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Business models
+model Business {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  phone       String?
+  address     String?
+  yandexUrl   String?   // Yandex Maps URL
+  gisUrl      String?   // 2GIS URL
+  logo        String?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requests    ReviewRequest[]
+  members     BusinessMember[]
+  invites     Invite[]
+  plan        String    @default("start") // start, business, network
+  smsLimit    Int       @default(100)
+  smsUsed     Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Team members with roles
+model BusinessMember {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String   @default("manager") // owner, manager
+  createdAt   DateTime @default(now())
+
+  @@unique([businessId, userId])
+}
+
+// Pending invitations
+model Invite {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  email       String
+  role        String   @default("manager")
+  token       String   @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@unique([businessId, email])
+}
+
+model ReviewRequest {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  phone       String
+  status      String   @default("sent") // sent, opened, reviewed, feedback
+  rating      Int?     // 1-5 if reviewed
+  feedback    String?  // Private feedback text
+  sentAt      DateTime @default(now())
+  openedAt    DateTime?
+  reviewedAt  DateTime?
+}
