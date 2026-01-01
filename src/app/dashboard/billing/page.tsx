@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 const PLANS = [
@@ -122,15 +121,8 @@ function BillingContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-6">
-          <Link href="/dashboard" className="text-indigo-600 hover:underline">
-            ← Назад к панели
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-2">Тариф и оплата</h1>
+    <div className="max-w-4xl">
+      <h1 className="text-2xl font-bold mb-2">Тариф и оплата</h1>
         <p className="text-gray-600 mb-6">
           Текущий тариф: <strong>{PLANS.find((p) => p.id === currentPlan)?.name}</strong>
         </p>
@@ -289,14 +281,13 @@ function BillingContent() {
             )}
           </div>
         )}
-      </div>
     </div>
   );
 }
 
 export default function BillingPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Загрузка...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center py-20">Загрузка...</div>}>
       <BillingContent />
     </Suspense>
   );

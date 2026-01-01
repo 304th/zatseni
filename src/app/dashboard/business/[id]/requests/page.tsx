@@ -96,7 +96,7 @@ export default function RequestsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
       </div>
     );
@@ -104,14 +104,12 @@ export default function RequestsPage() {
 
   if (error || !business) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white rounded-lg shadow p-6 text-center">
-            <p className="text-red-600 mb-4">{error || "Бизнес не найден"}</p>
-            <Link href="/dashboard" className="text-blue-600 hover:underline">
-              Вернуться к панели
-            </Link>
-          </div>
+      <div className="max-w-4xl">
+        <div className="bg-white rounded-lg shadow p-6 text-center">
+          <p className="text-red-600 mb-4">{error || "Бизнес не найден"}</p>
+          <Link href="/dashboard" className="text-blue-600 hover:underline">
+            Вернуться к панели
+          </Link>
         </div>
       </div>
     );
@@ -129,18 +127,8 @@ export default function RequestsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-6">
-          <Link
-            href={`/dashboard/business/${params.id}`}
-            className="text-blue-600 hover:underline"
-          >
-            ← Назад к {business.name}
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-6">История запросов</h1>
+    <div className="max-w-4xl">
+      <h1 className="text-2xl font-bold mb-6">История запросов — {business.name}</h1>
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
@@ -243,7 +231,6 @@ export default function RequestsPage() {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }

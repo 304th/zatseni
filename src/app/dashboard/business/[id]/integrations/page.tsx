@@ -94,15 +94,8 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <Link href={`/dashboard/business/${id}`} className="text-indigo-600 hover:underline">
-            ← Назад
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-2">Интеграции</h1>
+    <>
+      <h1 className="text-2xl font-bold mb-2">Интеграции</h1>
         <p className="text-gray-600 mb-8">
           Подключите CRM или POS для автоматической отправки запросов на отзыв
         </p>
@@ -229,7 +222,6 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
             </pre>
           </div>
         </div>
-      </div>
-    </div>
+    </>
   );
 }

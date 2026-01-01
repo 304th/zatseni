@@ -62,16 +62,9 @@ export default function NewBusinessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6">
-          <Link href="/dashboard" className="text-blue-600 hover:underline">
-            ← Назад к панели
-          </Link>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h1 className="text-2xl font-bold mb-6">Добавить бизнес</h1>
+    <div className="max-w-2xl">
+      <div className="bg-white rounded-lg shadow p-6">
+        <h1 className="text-2xl font-bold mb-6">Добавить бизнес</h1>
 
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
@@ -189,7 +182,6 @@ export default function NewBusinessPage() {
             </div>
           </form>
         </div>
-      </div>
     </div>
   );
 }

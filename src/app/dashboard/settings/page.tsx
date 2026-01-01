@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 export default function SettingsPage() {
   const { data: session, update } = useSession();
@@ -95,15 +94,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6">
-          <Link href="/dashboard" className="text-blue-600 hover:underline">
-            ← Назад к панели
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-6">Настройки</h1>
+    <div className="max-w-2xl">
+      <h1 className="text-2xl font-bold mb-6">Настройки</h1>
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
@@ -250,7 +242,6 @@ export default function SettingsPage() {
             Удалить аккаунт
           </button>
         </div>
-      </div>
     </div>
   );
 }

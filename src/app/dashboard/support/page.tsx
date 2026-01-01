@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
-import { Logo1 } from "@/components/Logo";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -61,48 +60,21 @@ export default function SupportDashboard() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 p-4">
-        <Link href="/" className="flex items-center gap-2 mb-8">
-          <Logo1 size={28} />
-          <span className="text-xl font-bold text-gray-900">Отзовик</span>
-        </Link>
-
-        <div className="bg-yellow-50 text-yellow-800 text-xs px-3 py-2 rounded-lg mb-4">
+    <>
+      <div className="mb-8">
+        <div className="bg-yellow-50 text-yellow-800 text-xs px-3 py-2 rounded-lg inline-block mb-4">
           Режим поддержки
         </div>
-
-        <nav className="space-y-1">
-          <Link href="/dashboard/support" className="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-600 rounded-lg font-medium">
-            <span>🛠️</span> Поддержка
-          </Link>
-          <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-            <span>📊</span> Мой дашборд
-          </Link>
-        </nav>
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="w-full text-sm text-gray-500 hover:text-gray-700 py-2"
-          >
-            Выйти
-          </button>
-        </div>
-      </aside>
-
-      <main className="ml-64 p-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Панель поддержки</h1>
-          <p className="text-gray-500">Все бизнесы и пользователи системы</p>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900">Панель поддержки</h1>
+        <p className="text-gray-500">Все бизнесы и пользователи системы</p>
+      </div>
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-6 mb-8">
@@ -202,7 +174,6 @@ export default function SupportDashboard() {
             </div>
           </div>
         )}
-      </main>
-    </div>
+    </>
   );
 }

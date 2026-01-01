@@ -143,7 +143,7 @@ export default function TeamPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
       </div>
     );
@@ -151,14 +151,12 @@ export default function TeamPage() {
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto px-4">
-          <div className="bg-white rounded-lg shadow p-6 text-center">
-            <p className="text-red-600 mb-4">{error || "Ошибка загрузки"}</p>
-            <Link href="/dashboard" className="text-blue-600 hover:underline">
-              Вернуться к панели
-            </Link>
-          </div>
+      <div className="max-w-2xl">
+        <div className="bg-white rounded-lg shadow p-6 text-center">
+          <p className="text-red-600 mb-4">{error || "Ошибка загрузки"}</p>
+          <Link href="/dashboard" className="text-blue-600 hover:underline">
+            Вернуться к панели
+          </Link>
         </div>
       </div>
     );
@@ -167,19 +165,9 @@ export default function TeamPage() {
   const isOwner = data.userRole === "owner";
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6">
-          <Link
-            href={`/dashboard/business/${params.id}`}
-            className="text-blue-600 hover:underline"
-          >
-            ← Назад к бизнесу
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Команда</h1>
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Команда</h1>
           {isOwner && (
             <button
               onClick={() => setShowInviteModal(true)}
@@ -325,7 +313,6 @@ export default function TeamPage() {
             </li>
           </ul>
         </div>
-      </div>
 
       {/* Invite Modal */}
       {showInviteModal && (
@@ -375,6 +362,6 @@ export default function TeamPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

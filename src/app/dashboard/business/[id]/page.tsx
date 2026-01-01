@@ -134,7 +134,7 @@ export default function BusinessPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
       </div>
     );
@@ -142,59 +142,51 @@ export default function BusinessPage() {
 
   if (!business) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto px-4">
-          <div className="bg-white rounded-lg shadow p-6 text-center">
-            <p className="text-red-600 mb-4">{error || "Бизнес не найден"}</p>
-            <Link href="/dashboard" className="text-blue-600 hover:underline">
-              Вернуться к панели
-            </Link>
-          </div>
+      <div className="max-w-2xl">
+        <div className="bg-white rounded-lg shadow p-6 text-center">
+          <p className="text-red-600 mb-4">{error || "Бизнес не найден"}</p>
+          <Link href="/dashboard" className="text-blue-600 hover:underline">
+            Вернуться к панели
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6 flex items-center justify-between">
-          <Link href="/dashboard" className="text-blue-600 hover:underline">
-            ← Назад к панели
-          </Link>
-          <div className="flex items-center gap-4">
+    <div className="max-w-2xl">
+      <div className="mb-6 flex items-center justify-end gap-4">
+        <Link
+          href={`/dashboard/business/${params.id}/analytics`}
+          className="text-blue-600 hover:underline"
+        >
+          Аналитика
+        </Link>
+        <Link
+          href={`/dashboard/business/${params.id}/requests`}
+          className="text-blue-600 hover:underline"
+        >
+          История запросов
+        </Link>
+        {business.userRole === "owner" && (
+          <>
             <Link
-              href={`/dashboard/business/${params.id}/analytics`}
+              href={`/dashboard/business/${params.id}/team`}
               className="text-blue-600 hover:underline"
             >
-              Аналитика
+              Команда {business._count?.members ? `(${business._count.members})` : ""}
             </Link>
             <Link
-              href={`/dashboard/business/${params.id}/requests`}
+              href={`/dashboard/business/${params.id}/integrations`}
               className="text-blue-600 hover:underline"
             >
-              История запросов
+              Интеграции
             </Link>
-            {business.userRole === "owner" && (
-              <>
-                <Link
-                  href={`/dashboard/business/${params.id}/team`}
-                  className="text-blue-600 hover:underline"
-                >
-                  Команда {business._count?.members ? `(${business._count.members})` : ""}
-                </Link>
-                <Link
-                  href={`/dashboard/business/${params.id}/integrations`}
-                  className="text-blue-600 hover:underline"
-                >
-                  Интеграции
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
+          </>
+        )}
+      </div>
 
-        {/* Stats Card */}
+      {/* Stats Card */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -350,7 +342,6 @@ export default function BusinessPage() {
             </form>
           </div>
         )}
-      </div>
 
       {/* SMS Modal */}
       {showSmsModal && (

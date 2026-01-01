@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import Link from "next/link";
 
 interface AnalyticsData {
   summary: {
@@ -47,7 +46,7 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
       </div>
     );
@@ -55,25 +54,17 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="text-red-500">Ошибка загрузки данных</div>
-      </div>
+      <div className="text-red-500">Ошибка загрузки данных</div>
     );
   }
 
   const maxDaily = Math.max(...data.dailyData.map((d) => d.sent), 1);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <Link href={`/dashboard/business/${id}`} className="text-indigo-600 hover:underline">
-              ← Назад
-            </Link>
-            <h1 className="text-2xl font-bold mt-2">Аналитика</h1>
-          </div>
-          <select
+    <>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Аналитика</h1>
+        <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg"
@@ -190,7 +181,6 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    </>
   );
 }

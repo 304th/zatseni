@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import DashboardSidebar from "@/components/DashboardSidebar";
 
 export default function DashboardLayout({
   children,
@@ -30,5 +31,10 @@ export default function DashboardLayout({
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <DashboardSidebar />
+      <main className="ml-64 p-8">{children}</main>
+    </div>
+  );
 }
