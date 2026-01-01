@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -18,6 +22,7 @@ const plans = [
       "Брендирование страницы",
     ],
     cta: "Начать бесплатно",
+    ctaLoggedIn: "Выбрать",
     popular: false,
   },
   {
@@ -36,6 +41,7 @@ const plans = [
     ],
     notIncluded: [],
     cta: "Выбрать план",
+    ctaLoggedIn: "Выбрать",
     popular: true,
   },
   {
@@ -53,7 +59,8 @@ const plans = [
       "White label",
     ],
     notIncluded: [],
-    cta: "Связаться с нами",
+    cta: "Выбрать план",
+    ctaLoggedIn: "Выбрать",
     popular: false,
   },
 ];
@@ -82,6 +89,23 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const isLoggedIn = status === "authenticated";
+  const currentPlan = session?.user?.plan || "start";
+
+  const handlePlanClick = (planId: string) => {
+    if (isLoggedIn) {
+      if (planId === currentPlan) {
+        router.push("/dashboard");
+      } else {
+        router.push(`/dashboard/billing?upgrade=${planId}`);
+      }
+    } else {
+      router.push(`/signup?plan=${planId}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -97,12 +121,21 @@ export default function PricingPage() {
             <Link href="/pricing" className="text-blue-600 font-medium">
               Тарифы
             </Link>
-            <Link
-              href="/login"
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Войти
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Панель
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+              >
+                Войти
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -118,53 +151,34 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
         <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`bg-white rounded-2xl shadow-lg p-8 relative ${
-                plan.popular ? "ring-2 ring-blue-600" : ""
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm">
-                  Популярный
+          {plans.map((plan) => {
+            const isCurrentPlan = isLoggedIn && plan.id === currentPlan;
+            return (
+              <div
+                key={plan.name}
+                className={`bg-white rounded-2xl shadow-lg p-8 relative ${
+                  plan.popular ? "ring-2 ring-blue-600" : ""
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm">
+                    Популярный
+                  </div>
+                )}
+
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <p className="text-gray-600 mb-4">{plan.description}</p>
+
+                <div className="mb-6">
+                  <span className="text-4xl font-bold">{plan.price}₽</span>
+                  <span className="text-gray-500">/{plan.period}</span>
                 </div>
-              )}
 
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <p className="text-gray-600 mb-4">{plan.description}</p>
-
-              <div className="mb-6">
-                <span className="text-4xl font-bold">{plan.price}₽</span>
-                <span className="text-gray-500">/{plan.period}</span>
-              </div>
-
-              <ul className="space-y-3 mb-4">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2">
-                    <svg
-                      className="w-5 h-5 text-green-500 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              {plan.notIncluded.length > 0 && (
-                <ul className="space-y-2 mb-8 opacity-50">
-                  {plan.notIncluded.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm">
+                <ul className="space-y-3 mb-4">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2">
                       <svg
-                        className="w-4 h-4 text-gray-400 flex-shrink-0"
+                        className="w-5 h-5 text-green-500 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -173,28 +187,57 @@ export default function PricingPage() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
+                          d="M5 13l4 4L19 7"
                         />
                       </svg>
                       {feature}
                     </li>
                   ))}
                 </ul>
-              )}
-              {plan.notIncluded.length === 0 && <div className="mb-8" />}
+                {plan.notIncluded.length > 0 && (
+                  <ul className="space-y-2 mb-8 opacity-50">
+                    {plan.notIncluded.map((feature) => (
+                      <li key={feature} className="flex items-center gap-2 text-sm">
+                        <svg
+                          className="w-4 h-4 text-gray-400 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {plan.notIncluded.length === 0 && <div className="mb-8" />}
 
-              <Link
-                href="/signup"
-                className={`block text-center py-3 rounded-lg font-medium ${
-                  plan.popular
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                }`}
-              >
-                {plan.cta}
-              </Link>
-            </div>
-          ))}
+                <button
+                  onClick={() => handlePlanClick(plan.id)}
+                  disabled={isCurrentPlan}
+                  className={`block w-full text-center py-3 rounded-lg font-medium ${
+                    isCurrentPlan
+                      ? "bg-gray-100 text-gray-500 cursor-default"
+                      : plan.popular
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  }`}
+                >
+                  {isCurrentPlan
+                    ? "Текущий тариф"
+                    : isLoggedIn
+                    ? plan.ctaLoggedIn
+                    : plan.cta}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -264,12 +307,21 @@ export default function PricingPage() {
         <p className="text-xl mb-8 opacity-90">
           14 дней бесплатно. Без привязки карты.
         </p>
-        <Link
-          href="/signup"
-          className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
-        >
-          Создать аккаунт
-        </Link>
+        {isLoggedIn ? (
+          <Link
+            href="/dashboard"
+            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
+          >
+            Перейти в панель
+          </Link>
+        ) : (
+          <Link
+            href="/signup"
+            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
+          >
+            Создать аккаунт
+          </Link>
+        )}
       </section>
 
       {/* Footer */}

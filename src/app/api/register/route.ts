@@ -4,16 +4,21 @@ import { sendVerificationEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
+const VALID_PLANS = ["start", "business", "network"];
+
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, name, businessName } = await req.json();
+    const { email, password, plan } = await req.json();
 
-    if (!email || !password || !businessName) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: "Email, пароль и название бизнеса обязательны" },
+        { error: "Email и пароль обязательны" },
         { status: 400 }
       );
     }
+
+    // Validate plan
+    const selectedPlan = VALID_PLANS.includes(plan) ? plan : "start";
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -30,38 +35,12 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate slug from business name
-    const slug = businessName
-      .toLowerCase()
-      .replace(/[^a-zа-яё0-9]/gi, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 30);
-
-    // Check if slug exists
-    const existingBusiness = await prisma.business.findUnique({
-      where: { slug },
-    });
-
-    const finalSlug = existingBusiness
-      ? `${slug}-${Date.now().toString(36)}`
-      : slug;
-
-    // Create user and business in transaction
+    // Create user (no business yet - user adds later)
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        name,
-        businesses: {
-          create: {
-            name: businessName,
-            slug: finalSlug,
-          },
-        },
-      },
-      include: {
-        businesses: true,
+        plan: selectedPlan,
       },
     });
 
@@ -83,9 +62,7 @@ export async function POST(req: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
       },
-      business: user.businesses[0],
       needsVerification: true,
     });
   } catch (error) {

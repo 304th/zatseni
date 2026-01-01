@@ -1,14 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import AuthProviders from "@/components/auth/AuthProviders";
 
-export default function SignupPage() {
+const PLAN_NAMES: Record<string, string> = {
+  start: "Старт",
+  business: "Бизнес",
+  network: "Сеть",
+};
+
+function SignupForm() {
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get("plan");
+  const selectedPlan = planParam && ["start", "business", "network"].includes(planParam) ? planParam : "start";
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    name: "",
-    businessName: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +33,7 @@ export default function SignupPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, plan: selectedPlan }),
       });
 
       const data = await res.json();
@@ -34,7 +44,6 @@ export default function SignupPage() {
         return;
       }
 
-      // Show verification message
       setVerificationSent(true);
     } catch {
       setError("Произошла ошибка");
@@ -75,91 +84,83 @@ export default function SignupPage() {
           <p className="text-gray-600 mt-2">
             14 дней бесплатно, без карты
           </p>
+          {selectedPlan !== "start" && (
+            <p className="text-indigo-600 text-sm mt-1">
+              Выбран тариф: {PLAN_NAMES[selectedPlan]}
+            </p>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-          {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm">
-              {error}
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          {/* Social auth providers */}
+          <AuthProviders plan={selectedPlan} />
+
+          {/* Email/password form */}
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm">
+                {error}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="you@example.com"
+              />
             </div>
-          )}
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Название бизнеса *
-            </label>
-            <input
-              type="text"
-              value={formData.businessName}
-              onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Кофейня «Бодрое утро»"
-            />
-          </div>
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Пароль
+              </label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+                minLength={6}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Минимум 6 символов"
+              />
+            </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ваше имя
-            </label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Иван"
-            />
-          </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
+            >
+              {loading ? "Создание..." : "Создать аккаунт"}
+            </button>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email *
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="you@example.com"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Пароль *
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-              minLength={6}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Минимум 6 символов"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
-          >
-            {loading ? "Создание..." : "Создать аккаунт"}
-          </button>
-
-          <p className="text-center text-gray-500 text-sm mt-4">
-            Уже есть аккаунт?{" "}
-            <Link href="/login" className="text-indigo-600 hover:underline">
-              Войти
-            </Link>
-          </p>
-        </form>
+            <p className="text-center text-gray-500 text-sm mt-4">
+              Уже есть аккаунт?{" "}
+              <Link href="/login" className="text-indigo-600 hover:underline">
+                Войти
+              </Link>
+            </p>
+          </form>
+        </div>
 
         <p className="text-center text-gray-400 text-xs mt-6">
           Регистрируясь, вы соглашаетесь с условиями использования
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Загрузка...</div>}>
+      <SignupForm />
+    </Suspense>
   );
 }

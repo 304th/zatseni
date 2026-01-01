@@ -53,10 +53,15 @@ function BillingContent() {
 
   const currentPlan = session?.user?.plan || "start";
   const successStatus = searchParams.get("status") === "success";
+  const upgradeParam = searchParams.get("upgrade");
 
   useEffect(() => {
     fetchPayments();
-  }, []);
+    // If upgrade param exists and it's a valid plan, highlight it
+    if (upgradeParam && ["start", "business", "network"].includes(upgradeParam)) {
+      setTab("plans");
+    }
+  }, [upgradeParam]);
 
   async function fetchPayments() {
     try {
@@ -161,18 +166,27 @@ function BillingContent() {
         {/* Plans */}
         {tab === "plans" && (
           <div className="grid md:grid-cols-3 gap-6">
-            {PLANS.map((plan) => (
+            {PLANS.map((plan) => {
+              const isUpgradeTarget = upgradeParam === plan.id && plan.id !== currentPlan;
+              return (
               <div
                 key={plan.id}
-                className={`bg-white rounded-xl p-6 border-2 ${
+                className={`bg-white rounded-xl p-6 border-2 relative ${
                   plan.id === currentPlan
                     ? "border-indigo-600"
+                    : isUpgradeTarget
+                    ? "border-green-500 ring-2 ring-green-200"
                     : plan.popular
                     ? "border-indigo-200"
                     : "border-gray-100"
                 }`}
               >
-                {plan.popular && (
+                {isUpgradeTarget && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Рекомендуем
+                  </div>
+                )}
+                {plan.popular && !isUpgradeTarget && (
                   <div className="text-xs font-medium text-indigo-600 mb-2">ПОПУЛЯРНЫЙ</div>
                 )}
                 <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
@@ -205,7 +219,8 @@ function BillingContent() {
                   </button>
                 )}
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
 

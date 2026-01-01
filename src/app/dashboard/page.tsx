@@ -140,16 +140,22 @@ export default function Dashboard() {
         <div className="mt-6">
           <div className="text-xs font-medium text-gray-400 uppercase px-4 mb-2">Мои бизнесы</div>
           <div className="space-y-1">
-            {businesses.map((biz) => (
-              <Link
-                key={biz.id}
-                href={`/dashboard/business/${biz.id}`}
-                className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm"
-              >
-                <span>🏢</span>
-                <span className="truncate">{biz.name}</span>
-              </Link>
-            ))}
+            {businesses.length === 0 ? (
+              <div className="px-4 py-2 text-gray-400 text-sm">
+                Пока нет бизнесов
+              </div>
+            ) : (
+              businesses.map((biz) => (
+                <Link
+                  key={biz.id}
+                  href={`/dashboard/business/${biz.id}`}
+                  className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm"
+                >
+                  <span>🏢</span>
+                  <span className="truncate">{biz.name}</span>
+                </Link>
+              ))
+            )}
           </div>
         </div>
 
@@ -207,18 +213,77 @@ export default function Dashboard() {
         </div>
 
         {businesses.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
-            <div className="text-4xl mb-4">🏢</div>
-            <h2 className="text-xl font-semibold mb-2">Добавьте свой первый бизнес</h2>
-            <p className="text-gray-500 mb-6">
-              Начните собирать отзывы, добавив информацию о вашем бизнесе
-            </p>
-            <Link
-              href="/dashboard/business/new"
-              className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700"
-            >
-              Добавить бизнес
-            </Link>
+          <div className="space-y-6">
+            {/* Trial banner */}
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold mb-1">14 дней бесплатного пробного периода</h2>
+                  <p className="opacity-90">50 бесплатных SMS для тестирования сервиса</p>
+                </div>
+                <div className="text-4xl">🎁</div>
+              </div>
+            </div>
+
+            {/* Welcome card */}
+            <div className="bg-white rounded-xl border border-gray-100 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Добро пожаловать в Зацени!</h2>
+              <p className="text-gray-500 mb-8">
+                Начните собирать положительные отзывы за 3 простых шага
+              </p>
+
+              {/* Steps */}
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="text-center p-6 border border-gray-100 rounded-xl">
+                  <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                    1
+                  </div>
+                  <div className="text-3xl mb-3">🏢</div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Добавьте бизнес</h3>
+                  <p className="text-sm text-gray-500">
+                    Укажите название и ссылки на Яндекс Карты и 2ГИС
+                  </p>
+                </div>
+
+                <div className="text-center p-6 border border-gray-100 rounded-xl">
+                  <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                    2
+                  </div>
+                  <div className="text-3xl mb-3">📱</div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Отправьте SMS</h3>
+                  <p className="text-sm text-gray-500">
+                    После визита клиента отправьте SMS с просьбой оставить отзыв
+                  </p>
+                </div>
+
+                <div className="text-center p-6 border border-gray-100 rounded-xl">
+                  <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                    3
+                  </div>
+                  <div className="text-3xl mb-3">⭐</div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Получите отзывы</h3>
+                  <p className="text-sm text-gray-500">
+                    Довольные клиенты идут на карты, недовольные — пишут вам лично
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Link
+                  href="/dashboard/business/new"
+                  className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700"
+                >
+                  Добавить бизнес
+                </Link>
+              </div>
+            </div>
+
+            {/* How it works link */}
+            <div className="text-center">
+              <Link href="/how-it-works" className="text-indigo-600 hover:underline text-sm">
+                Подробнее о том, как работает Зацени →
+              </Link>
+            </div>
           </div>
         ) : (
           <>

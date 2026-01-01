@@ -1,0 +1,76 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+const VALID_PLANS = ["start", "business", "network"];
+
+export async function POST(req: NextRequest) {
+  try {
+    const { phone, code, plan } = await req.json();
+
+    if (!phone || !code) {
+      return NextResponse.json(
+        { error: "Укажите номер и код" },
+        { status: 400 }
+      );
+    }
+
+    // Find valid OTP
+    const otp = await prisma.phoneOTP.findFirst({
+      where: {
+        phone,
+        code,
+        expires: { gt: new Date() },
+      },
+    });
+
+    if (!otp) {
+      return NextResponse.json(
+        { error: "Неверный или просроченный код" },
+        { status: 400 }
+      );
+    }
+
+    // Delete used OTP
+    await prisma.phoneOTP.delete({
+      where: { id: otp.id },
+    });
+
+    // Find or create user
+    let user = await prisma.user.findUnique({
+      where: { phone },
+    });
+
+    const isNewUser = !user;
+
+    if (!user) {
+      // Create new user
+      const selectedPlan = VALID_PLANS.includes(plan) ? plan : "start";
+      user = await prisma.user.create({
+        data: {
+          phone,
+          plan: selectedPlan,
+        },
+      });
+    }
+
+    // Return user data for client-side signIn
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        phone: user.phone,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        plan: user.plan,
+      },
+      isNewUser,
+    });
+  } catch (error) {
+    console.error("Verify OTP error:", error);
+    return NextResponse.json(
+      { error: "Ошибка сервера" },
+      { status: 500 }
+    );
+  }
+}

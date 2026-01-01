@@ -43,6 +43,8 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  phone         String?    @unique  // for phone auth
+  telegramId    String?    @unique  // for Telegram auth
   role          String     @default("user") // user, support, admin
   plan          String     @default("start") // start, business, network
   accounts      Account[]
@@ -165,4 +167,15 @@ model Payment {
 
   @@index([userId])
   @@index([yookassaId])
+}
+
+// Phone OTP for SMS authentication
+model PhoneOTP {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String   // 4-digit code
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([phone])
 }
