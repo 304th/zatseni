@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo1 } from "@/components/Logo";
 
 const StarIcon = () => (
   <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -118,10 +119,10 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">⭐</span>
-            <span className="text-xl font-bold text-gray-900">Зацени</span>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <Logo1 size={28} />
+            <span className="text-2xl font-bold text-gray-900">Отзовик</span>
+          </Link>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-gray-600 hover:text-gray-900">Возможности</a>
             <Link href="/how-it-works" className="text-gray-600 hover:text-gray-900">Как работает</Link>
@@ -193,7 +194,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-red-100">
-              <div className="text-red-500 font-semibold mb-4">❌ Без Зацени</div>
+              <div className="text-red-500 font-semibold mb-4">❌ Без Отзовик</div>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="flex">{[1,2,3].map(i => <StarIcon key={i} />)}<span className="w-5 h-5 text-gray-300">☆</span><span className="w-5 h-5 text-gray-300">☆</span></div>
@@ -205,7 +206,7 @@ export default function Home() {
               </div>
             </div>
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-green-100">
-              <div className="text-green-500 font-semibold mb-4">✅ С Зацени</div>
+              <div className="text-green-500 font-semibold mb-4">✅ С Отзовик</div>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="flex">{[1,2,3,4,5].map(i => <StarIcon key={i} />)}</div>
@@ -277,7 +278,7 @@ export default function Home() {
                   <p className="text-gray-800">
                     Спасибо за визит! ☕<br/><br/>
                     Нам важно ваше мнение. Оставьте отзыв — это займёт 30 секунд:<br/><br/>
-                    <span className="text-indigo-600">zatseni.ru/r/bodroe</span>
+                    <span className="text-indigo-600">otzovik.ai/r/bodroe</span>
                   </p>
                 </div>
               </div>
@@ -369,8 +370,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⭐</span>
-              <span className="text-xl font-bold text-white">Зацени</span>
+              <Logo1 size={28} />
+              <span className="text-xl font-bold text-white">Отзовик</span>
             </div>
             <div className="flex items-center gap-6 text-sm">
               <Link href="/how-it-works" className="hover:text-white">О сервисе</Link>
@@ -378,7 +379,7 @@ export default function Home() {
               <Link href="/terms" className="hover:text-white">Условия</Link>
             </div>
             <div className="text-sm">
-              © 2025 Зацени. Все права защищены.
+              © 2025 Отзовик. Все права защищены.
             </div>
           </div>
         </div>

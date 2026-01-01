@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { Logo1 } from "@/components/Logo";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -69,10 +70,10 @@ export default function SupportDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 p-4">
-        <div className="flex items-center gap-2 mb-8">
-          <span className="text-2xl">⭐</span>
-          <Link href="/" className="text-xl font-bold text-gray-900">Зацени</Link>
-        </div>
+        <Link href="/" className="flex items-center gap-2 mb-8">
+          <Logo1 size={28} />
+          <span className="text-xl font-bold text-gray-900">Отзовик</span>
+        </Link>
 
         <div className="bg-yellow-50 text-yellow-800 text-xs px-3 py-2 rounded-lg mb-4">
           Режим поддержки

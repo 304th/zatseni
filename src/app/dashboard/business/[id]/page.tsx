@@ -255,7 +255,7 @@ export default function BusinessPage() {
           <div className="mt-3 p-2 bg-gray-100 rounded text-sm text-gray-600">
             Ссылка для клиентов:{" "}
             <code className="bg-white px-2 py-1 rounded">
-              zatseni.ru/r/{business.slug}
+              otzovik.ai/r/{business.slug}
             </code>
           </div>
         </div>

@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const FROM_EMAIL = process.env.SMTP_FROM || "noreply@zatseni.ru";
+const FROM_EMAIL = process.env.SMTP_FROM || "noreply@otzovik.ai";
 const APP_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
 interface SendEmailOptions {
@@ -33,7 +33,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
 
   try {
     await transporter.sendMail({
-      from: `"Зацени" <${FROM_EMAIL}>`,
+      from: `"Отзовик" <${FROM_EMAIL}>`,
       to,
       subject,
       html,
@@ -51,7 +51,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   return sendEmail({
     to: email,
-    subject: "Подтвердите email - Зацени",
+    subject: "Подтвердите email - Отзовик",
     html: `
       <!DOCTYPE html>
       <html>
@@ -61,7 +61,8 @@ export async function sendVerificationEmail(email: string, token: string) {
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
           .header { text-align: center; margin-bottom: 30px; }
-          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; }
+          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; display: flex; align-items: center; justify-content: center; gap: 8px; }
+          .logo-icon { width: 32px; height: 32px; background: #4F46E5; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: #FBBF24; font-size: 18px; }
           .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; }
           .footer { margin-top: 30px; text-align: center; color: #666; font-size: 14px; }
         </style>
@@ -69,12 +70,12 @@ export async function sendVerificationEmail(email: string, token: string) {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">⭐ Зацени</div>
+            <div class="logo"><span class="logo-icon">★</span> Отзовик</div>
           </div>
 
           <h2>Подтвердите ваш email</h2>
 
-          <p>Спасибо за регистрацию в Зацени! Для завершения регистрации подтвердите ваш email, нажав на кнопку ниже:</p>
+          <p>Спасибо за регистрацию в Отзовик! Для завершения регистрации подтвердите ваш email, нажав на кнопку ниже:</p>
 
           <p style="text-align: center; margin: 30px 0;">
             <a href="${verifyUrl}" class="button">Подтвердить email</a>
@@ -85,10 +86,10 @@ export async function sendVerificationEmail(email: string, token: string) {
 
           <p>Ссылка действительна 24 часа.</p>
 
-          <p>Если вы не регистрировались в Зацени, просто проигнорируйте это письмо.</p>
+          <p>Если вы не регистрировались в Отзовик, просто проигнорируйте это письмо.</p>
 
           <div class="footer">
-            <p>&copy; 2025 Зацени. Все права защищены.</p>
+            <p>&copy; 2025 Отзовик. Все права защищены.</p>
           </div>
         </div>
       </body>
@@ -102,7 +103,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 
   return sendEmail({
     to: email,
-    subject: "Сброс пароля - Зацени",
+    subject: "Сброс пароля - Отзовик",
     html: `
       <!DOCTYPE html>
       <html>
@@ -112,7 +113,8 @@ export async function sendPasswordResetEmail(email: string, token: string) {
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
           .header { text-align: center; margin-bottom: 30px; }
-          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; }
+          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; display: flex; align-items: center; justify-content: center; gap: 8px; }
+          .logo-icon { width: 32px; height: 32px; background: #4F46E5; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: #FBBF24; font-size: 18px; }
           .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; }
           .footer { margin-top: 30px; text-align: center; color: #666; font-size: 14px; }
         </style>
@@ -120,12 +122,12 @@ export async function sendPasswordResetEmail(email: string, token: string) {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">⭐ Зацени</div>
+            <div class="logo"><span class="logo-icon">★</span> Отзовик</div>
           </div>
 
           <h2>Сброс пароля</h2>
 
-          <p>Вы запросили сброс пароля для вашего аккаунта в Зацени.</p>
+          <p>Вы запросили сброс пароля для вашего аккаунта в Отзовик.</p>
 
           <p style="text-align: center; margin: 30px 0;">
             <a href="${resetUrl}" class="button">Сбросить пароль</a>
@@ -139,7 +141,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
           <p>Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.</p>
 
           <div class="footer">
-            <p>&copy; 2025 Зацени. Все права защищены.</p>
+            <p>&copy; 2025 Отзовик. Все права защищены.</p>
           </div>
         </div>
       </body>
@@ -158,7 +160,7 @@ export async function sendInviteEmail(
 
   return sendEmail({
     to: email,
-    subject: `Приглашение в команду "${businessName}" - Зацени`,
+    subject: `Приглашение в команду "${businessName}" - Отзовик`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -168,7 +170,8 @@ export async function sendInviteEmail(
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
           .header { text-align: center; margin-bottom: 30px; }
-          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; }
+          .logo { font-size: 24px; font-weight: bold; color: #4F46E5; display: flex; align-items: center; justify-content: center; gap: 8px; }
+          .logo-icon { width: 32px; height: 32px; background: #4F46E5; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: #FBBF24; font-size: 18px; }
           .button { display: inline-block; background: #22C55E; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; }
           .footer { margin-top: 30px; text-align: center; color: #666; font-size: 14px; }
         </style>
@@ -176,12 +179,12 @@ export async function sendInviteEmail(
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">⭐ Зацени</div>
+            <div class="logo"><span class="logo-icon">★</span> Отзовик</div>
           </div>
 
           <h2>Приглашение в команду</h2>
 
-          <p><strong>${inviterName}</strong> приглашает вас в команду <strong>"${businessName}"</strong> на платформе Зацени.</p>
+          <p><strong>${inviterName}</strong> приглашает вас в команду <strong>"${businessName}"</strong> на платформе Отзовик.</p>
 
           <p style="text-align: center; margin: 30px 0;">
             <a href="${inviteUrl}" class="button">Принять приглашение</a>
@@ -193,7 +196,7 @@ export async function sendInviteEmail(
           <p>Приглашение действительно 7 дней.</p>
 
           <div class="footer">
-            <p>&copy; 2025 Зацени. Все права защищены.</p>
+            <p>&copy; 2025 Отзовик. Все права защищены.</p>
           </div>
         </div>
       </body>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { Logo1 } from "@/components/Logo";
 import { useRouter } from "next/navigation";
 
 const plans = [
@@ -111,8 +112,9 @@ export default function PricingPage() {
       {/* Header */}
       <header className="bg-white border-b">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Зацени
+          <Link href="/" className="flex items-center gap-2">
+            <Logo1 size={28} />
+            <span className="text-xl font-bold text-gray-900">Отзовик</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link href="/how-it-works" className="text-gray-600 hover:text-gray-900">
@@ -327,7 +329,7 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p>&copy; 2024 Зацени. Все права защищены.</p>
+          <p>&copy; 2025 Отзовик. Все права защищены.</p>
         </div>
       </footer>
     </div>

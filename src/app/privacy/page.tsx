@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo1 } from "@/components/Logo";
 
 export default function PrivacyPage() {
   return (
@@ -7,8 +8,8 @@ export default function PrivacyPage() {
       <header className="bg-white border-b">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">⭐</span>
-            <span className="text-xl font-bold text-gray-900">Зацени</span>
+            <Logo1 size={28} />
+            <span className="text-xl font-bold text-gray-900">Отзовик</span>
           </Link>
           <Link href="/login" className="text-gray-600 hover:text-gray-900">
             Войти
@@ -26,9 +27,9 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Общие положения</h2>
           <p>
-            Настоящая Политика конфиденциальности описывает, как ООО «Зацени»
+            Настоящая Политика конфиденциальности описывает, как ООО «Отзовик»
             (далее — «мы», «нас», «Сервис») собирает, использует и защищает
-            персональные данные пользователей сервиса zatseni.ru.
+            персональные данные пользователей сервиса otzovik.ai.
           </p>
           <p>
             Используя наш Сервис, вы соглашаетесь с условиями данной Политики
@@ -109,8 +110,8 @@ export default function PrivacyPage() {
           </ul>
           <p>
             Для реализации этих прав свяжитесь с нами по адресу:{" "}
-            <a href="mailto:privacy@zatseni.ru" className="text-blue-600">
-              privacy@zatseni.ru
+            <a href="mailto:privacy@otzovik.ai" className="text-blue-600">
+              privacy@otzovik.ai
             </a>
           </p>
 
@@ -145,8 +146,8 @@ export default function PrivacyPage() {
           <ul className="list-none space-y-1">
             <li>
               Email:{" "}
-              <a href="mailto:privacy@zatseni.ru" className="text-blue-600">
-                privacy@zatseni.ru
+              <a href="mailto:privacy@otzovik.ai" className="text-blue-600">
+                privacy@otzovik.ai
               </a>
             </li>
             <li>Адрес: г. Москва, ул. Примерная, д. 1</li>
@@ -163,7 +164,7 @@ export default function PrivacyPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8 mt-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <p>&copy; 2025 Зацени. Все права защищены.</p>
+          <p>&copy; 2025 Отзовик. Все права защищены.</p>
         </div>
       </footer>
     </div>

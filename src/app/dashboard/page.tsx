@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { Logo1 } from "@/components/Logo";
 
 interface Business {
   id: string;
@@ -116,10 +117,10 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 p-4">
-        <div className="flex items-center gap-2 mb-8">
-          <span className="text-2xl">⭐</span>
-          <Link href="/" className="text-xl font-bold text-gray-900">Зацени</Link>
-        </div>
+        <Link href="/" className="flex items-center gap-2 mb-8">
+          <Logo1 size={28} />
+          <span className="text-xl font-bold text-gray-900">Отзовик</span>
+        </Link>
 
         <nav className="space-y-1">
           <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-600 rounded-lg font-medium">
@@ -227,7 +228,7 @@ export default function Dashboard() {
 
             {/* Welcome card */}
             <div className="bg-white rounded-xl border border-gray-100 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Добро пожаловать в Зацени!</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Добро пожаловать в Отзовик!</h2>
               <p className="text-gray-500 mb-8">
                 Начните собирать положительные отзывы за 3 простых шага
               </p>
@@ -281,7 +282,7 @@ export default function Dashboard() {
             {/* How it works link */}
             <div className="text-center">
               <Link href="/how-it-works" className="text-indigo-600 hover:underline text-sm">
-                Подробнее о том, как работает Зацени →
+                Подробнее о том, как работает Отзовик →
               </Link>
             </div>
           </div>
@@ -328,7 +329,7 @@ export default function Dashboard() {
                       <div>
                         <div className="font-medium text-gray-900">{biz.name}</div>
                         <div className="text-sm text-gray-500">
-                          zatseni.ru/r/{biz.slug}
+                          otzovik.ai/r/{biz.slug}
                         </div>
                       </div>
                     </div>
@@ -406,7 +407,7 @@ export default function Dashboard() {
                 <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
                   Спасибо за визит в {selectedBusiness.name}!<br /><br />
                   Нам важно ваше мнение. Оставьте отзыв:<br />
-                  <span className="text-indigo-600">zatseni.ru/r/{selectedBusiness.slug}</span>
+                  <span className="text-indigo-600">otzovik.ai/r/{selectedBusiness.slug}</span>
                 </div>
               </div>
 

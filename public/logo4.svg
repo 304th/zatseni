@@ -1,0 +1,5 @@
+<svg width="512" height="512" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="6" width="28" height="20" rx="4" fill="#4F46E5"/>
+  <text x="8" y="21" fill="white" font-size="12" font-weight="bold" font-family="system-ui, sans-serif">О</text>
+  <path d="M22 10L23.5 14H27L24 16.5L25.2 20L22 17.5L18.8 20L20 16.5L17 14H20.5L22 10Z" fill="#FBBF24"/>
+</svg>

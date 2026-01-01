@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo1 } from "@/components/Logo";
 
 const steps = [
   {
@@ -91,8 +92,9 @@ export default function HowItWorksPage() {
       {/* Header */}
       <header className="bg-white border-b">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Зацени
+          <Link href="/" className="flex items-center gap-2">
+            <Logo1 size={28} />
+            <span className="text-xl font-bold text-gray-900">Отзовик</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link href="/how-it-works" className="text-blue-600 font-medium">
@@ -113,7 +115,7 @@ export default function HowItWorksPage() {
 
       {/* Hero */}
       <section className="py-16 text-center bg-gradient-to-b from-blue-50 to-white">
-        <h1 className="text-4xl font-bold mb-4">Как работает Зацени</h1>
+        <h1 className="text-4xl font-bold mb-4">Как работает Отзовик</h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Простая система для сбора отзывов и защиты от негатива. Настройка за 5
           минут.
@@ -202,7 +204,7 @@ export default function HowItWorksPage() {
       <section className="bg-white py-16">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-12">
-            Кому подходит Зацени
+            Кому подходит Отзовик
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {useCases.map((useCase) => (
@@ -266,7 +268,7 @@ export default function HowItWorksPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p>&copy; 2024 Зацени. Все права защищены.</p>
+          <p>&copy; 2025 Отзовик. Все права защищены.</p>
         </div>
       </footer>
     </div>

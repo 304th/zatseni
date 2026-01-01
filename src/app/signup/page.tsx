@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AuthProviders from "@/components/auth/AuthProviders";
+import { Logo1 } from "@/components/Logo";
 
 const PLAN_NAMES: Record<string, string> = {
   start: "Старт",
@@ -77,8 +78,8 @@ function SignupForm() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
-            <span className="text-3xl">⭐</span>
-            <span className="text-2xl font-bold text-gray-900">Зацени</span>
+            <Logo1 size={36} />
+            <span className="text-2xl font-bold text-gray-900">Отзовик</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-6">Создать аккаунт</h1>
           <p className="text-gray-600 mt-2">

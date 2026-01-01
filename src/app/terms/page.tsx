@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo1 } from "@/components/Logo";
 
 export default function TermsPage() {
   return (
@@ -7,8 +8,8 @@ export default function TermsPage() {
       <header className="bg-white border-b">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">⭐</span>
-            <span className="text-xl font-bold text-gray-900">Зацени</span>
+            <Logo1 size={28} />
+            <span className="text-xl font-bold text-gray-900">Отзовик</span>
           </Link>
           <Link href="/login" className="text-gray-600 hover:text-gray-900">
             Войти
@@ -27,8 +28,8 @@ export default function TermsPage() {
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Общие положения</h2>
           <p>
             Настоящие Условия использования (далее — «Условия») регулируют
-            отношения между ООО «Зацени» (далее — «Компания», «мы») и
-            пользователем сервиса zatseni.ru (далее — «Пользователь», «вы»).
+            отношения между ООО «Отзовик» (далее — «Компания», «мы») и
+            пользователем сервиса otzovik.ai (далее — «Пользователь», «вы»).
           </p>
           <p>
             Регистрируясь в Сервисе, вы подтверждаете согласие с настоящими
@@ -41,7 +42,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">2. Описание Сервиса</h2>
           <p>
-            Зацени — это платформа для автоматизации сбора отзывов от клиентов.
+            Отзовик — это платформа для автоматизации сбора отзывов от клиентов.
             Сервис позволяет:
           </p>
           <ul className="list-disc pl-6 space-y-2">
@@ -180,8 +181,8 @@ export default function TermsPage() {
           <ul className="list-none space-y-1">
             <li>
               Email:{" "}
-              <a href="mailto:support@zatseni.ru" className="text-blue-600">
-                support@zatseni.ru
+              <a href="mailto:support@otzovik.ai" className="text-blue-600">
+                support@otzovik.ai
               </a>
             </li>
             <li>Адрес: г. Москва, ул. Примерная, д. 1</li>
@@ -198,7 +199,7 @@ export default function TermsPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8 mt-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <p>&copy; 2025 Зацени. Все права защищены.</p>
+          <p>&copy; 2025 Отзовик. Все права защищены.</p>
         </div>
       </footer>
     </div>

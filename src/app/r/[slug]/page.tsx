@@ -36,7 +36,10 @@ export default async function ReviewPage({ params }: PageProps) {
             />
           ) : (
             <div className="w-20 h-20 rounded-full bg-indigo-100 mx-auto mb-4 flex items-center justify-center">
-              <span className="text-3xl">⭐</span>
+              <svg width="48" height="48" viewBox="4 4 24 24" fill="none">
+                <path d="M4 6C4 4.89543 4.89543 4 6 4H26C27.1046 4 28 4.89543 28 6V20C28 21.1046 27.1046 22 26 22H18L12 28V22H6C4.89543 22 4 21.1046 4 20V6Z" fill="#4F46E5"/>
+                <path d="M16 7L17.5 11.5H22L18.5 14L20 18.5L16 15.5L12 18.5L13.5 14L10 11.5H14.5L16 7Z" fill="#FBBF24"/>
+              </svg>
             </div>
           )}
 
@@ -51,7 +54,7 @@ export default async function ReviewPage({ params }: PageProps) {
         </div>
 
         <p className="text-center text-gray-400 text-sm mt-6">
-          Powered by Зацени
+          Powered by Отзовик
         </p>
       </div>
     </div>
