@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo1 } from "@/components/Logo";
+import PublicHeader from "@/components/PublicHeader";
 
 const StarIcon = () => (
   <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -48,12 +49,13 @@ const features = [
 
 const pricing = [
   {
+    id: "start",
     name: "Старт",
-    price: "1 500",
+    price: "990",
     period: "₽/мес",
     features: [
+      "1 точка",
       "100 SMS в месяц",
-      "1 локация",
       "Базовая аналитика",
       "Email поддержка"
     ],
@@ -61,31 +63,33 @@ const pricing = [
     popular: false
   },
   {
+    id: "business",
     name: "Бизнес",
-    price: "3 000",
+    price: "2 490",
     period: "₽/мес",
     features: [
-      "300 SMS в месяц",
-      "QR-коды для столов",
-      "Фильтр негатива",
-      "WhatsApp рассылка",
+      "До 5 точек",
+      "500 SMS в месяц",
+      "Интеграции с CRM/POS",
+      "Брендирование страницы",
       "Приоритетная поддержка"
     ],
-    cta: "Попробовать бесплатно",
+    cta: "Выбрать план",
     popular: true
   },
   {
+    id: "network",
     name: "Сеть",
-    price: "7 000",
+    price: "7 990",
     period: "₽/мес",
     features: [
-      "Безлимит SMS",
-      "До 10 локаций",
-      "API интеграция",
+      "Неограниченно точек",
+      "2000 SMS в месяц",
       "Персональный менеджер",
-      "Брендирование"
+      "Интеграции с CRM/POS",
+      "White label"
     ],
-    cta: "Связаться с нами",
+    cta: "Выбрать план",
     popular: false
   }
 ];
@@ -116,29 +120,7 @@ const steps = [
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Logo1 size={28} />
-            <span className="text-2xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-gray-600 hover:text-gray-900">Возможности</a>
-            <Link href="/how-it-works" className="text-gray-600 hover:text-gray-900">Как работает</Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-gray-900">Цены</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-gray-600 hover:text-gray-900">Войти</Link>
-            <Link
-              href="/signup"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-            >
-              Начать бесплатно
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
       <section className="pt-32 pb-20 px-4">
@@ -329,15 +311,16 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  className={`w-full py-3 rounded-xl font-semibold transition ${
+                <Link
+                  href={`/signup?plan=${plan.id}`}
+                  className={`block w-full py-3 rounded-xl font-semibold transition text-center ${
                     plan.popular
                       ? 'bg-white text-indigo-600 hover:bg-indigo-50'
                       : 'bg-indigo-600 text-white hover:bg-indigo-700'
                   }`}
                 >
                   {plan.cta}
-                </button>
+                </Link>
               </div>
             ))}
           </div>

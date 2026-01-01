@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Logo1 } from "@/components/Logo";
+import PublicHeader from "@/components/PublicHeader";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -19,17 +19,20 @@ function ResetPasswordForm() {
 
   if (!token || !email) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <div className="text-5xl mb-4">❌</div>
-            <h1 className="text-2xl font-bold mb-4">Неверная ссылка</h1>
-            <p className="text-gray-600 mb-6">
-              Ссылка для сброса пароля недействительна или истекла.
-            </p>
-            <Link href="/forgot-password" className="text-indigo-600 hover:underline">
-              Запросить новую ссылку
-            </Link>
+      <div className="min-h-screen bg-gray-50">
+        <PublicHeader />
+        <div className="pt-32 pb-12 px-4 flex items-center justify-center">
+          <div className="max-w-md w-full text-center">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+              <div className="text-5xl mb-4">❌</div>
+              <h1 className="text-2xl font-bold mb-4">Неверная ссылка</h1>
+              <p className="text-gray-600 mb-6">
+                Ссылка для сброса пароля недействительна или истекла.
+              </p>
+              <Link href="/forgot-password" className="text-indigo-600 hover:underline">
+                Запросить новую ссылку
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -75,14 +78,17 @@ function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <div className="text-5xl mb-4">✅</div>
-            <h1 className="text-2xl font-bold mb-4">Пароль изменён</h1>
-            <p className="text-gray-600">
-              Перенаправляем на страницу входа...
-            </p>
+      <div className="min-h-screen bg-gray-50">
+        <PublicHeader />
+        <div className="pt-32 pb-12 px-4 flex items-center justify-center">
+          <div className="max-w-md w-full text-center">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+              <div className="text-5xl mb-4">✅</div>
+              <h1 className="text-2xl font-bold mb-4">Пароль изменён</h1>
+              <p className="text-gray-600">
+                Перенаправляем на страницу входа...
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -90,14 +96,12 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <Logo1 size={36} />
-            <span className="text-2xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-6">Новый пароль</h1>
+    <div className="min-h-screen bg-gray-50">
+      <PublicHeader />
+      <div className="pt-32 pb-12 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900">Новый пароль</h1>
           <p className="text-gray-600 mt-2">
             Введите новый пароль для аккаунта
           </p>
@@ -147,6 +151,7 @@ function ResetPasswordForm() {
             {loading ? "Сохранение..." : "Сохранить пароль"}
           </button>
         </form>
+        </div>
       </div>
     </div>
   );

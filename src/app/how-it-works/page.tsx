@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo1 } from "@/components/Logo";
+import PublicHeader from "@/components/PublicHeader";
 
 const steps = [
   {
@@ -89,32 +89,10 @@ const useCases = [
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Logo1 size={28} />
-            <span className="text-xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/how-it-works" className="text-blue-600 font-medium">
-              Как работает
-            </Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
-              Тарифы
-            </Link>
-            <Link
-              href="/login"
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Войти
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
-      <section className="py-16 text-center bg-gradient-to-b from-blue-50 to-white">
+      <section className="pt-32 pb-16 text-center bg-gradient-to-b from-indigo-50 to-white">
         <h1 className="text-4xl font-bold mb-4">Как работает Отзовик</h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Простая система для сбора отзывов и защиты от негатива. Настройка за 5

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Logo1 } from "@/components/Logo";
 import { useRouter } from "next/navigation";
+import PublicHeader from "@/components/PublicHeader";
 
 const plans = [
   {
@@ -109,41 +109,10 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Logo1 size={28} />
-            <span className="text-xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/how-it-works" className="text-gray-600 hover:text-gray-900">
-              Как работает
-            </Link>
-            <Link href="/pricing" className="text-blue-600 font-medium">
-              Тарифы
-            </Link>
-            {isLoggedIn ? (
-              <Link
-                href="/dashboard"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Панель
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-              >
-                Войти
-              </Link>
-            )}
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
-      <section className="py-16 text-center">
+      <section className="pt-32 pb-16 text-center">
         <h1 className="text-4xl font-bold mb-4">Простые и понятные тарифы</h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Начните бесплатно, платите только когда растёте. Никаких скрытых платежей.

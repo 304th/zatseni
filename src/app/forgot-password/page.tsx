@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Logo1 } from "@/components/Logo";
+import PublicHeader from "@/components/PublicHeader";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -37,17 +37,20 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <div className="text-5xl mb-4">📧</div>
-            <h1 className="text-2xl font-bold mb-4">Проверьте почту</h1>
-            <p className="text-gray-600 mb-6">
-              Если аккаунт с email <strong>{email}</strong> существует, мы отправили инструкции по сбросу пароля.
-            </p>
-            <Link href="/login" className="text-indigo-600 hover:underline">
-              Вернуться к входу
-            </Link>
+      <div className="min-h-screen bg-gray-50">
+        <PublicHeader />
+        <div className="pt-32 pb-12 px-4 flex items-center justify-center">
+          <div className="max-w-md w-full text-center">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+              <div className="text-5xl mb-4">📧</div>
+              <h1 className="text-2xl font-bold mb-4">Проверьте почту</h1>
+              <p className="text-gray-600 mb-6">
+                Если аккаунт с email <strong>{email}</strong> существует, мы отправили инструкции по сбросу пароля.
+              </p>
+              <Link href="/login" className="text-indigo-600 hover:underline">
+                Вернуться к входу
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -55,14 +58,12 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <Logo1 size={36} />
-            <span className="text-2xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-6">Сброс пароля</h1>
+    <div className="min-h-screen bg-gray-50">
+      <PublicHeader />
+      <div className="pt-32 pb-12 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900">Сброс пароля</h1>
           <p className="text-gray-600 mt-2">
             Введите email, на который зарегистрирован аккаунт
           </p>
@@ -103,6 +104,7 @@ export default function ForgotPasswordPage() {
             </Link>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

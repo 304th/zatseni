@@ -1,23 +1,12 @@
 import Link from "next/link";
-import { Logo1 } from "@/components/Logo";
+import PublicHeader from "@/components/PublicHeader";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Logo1 size={28} />
-            <span className="text-xl font-bold text-gray-900">Отзовик</span>
-          </Link>
-          <Link href="/login" className="text-gray-600 hover:text-gray-900">
-            Войти
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
-      <main className="max-w-4xl mx-auto px-4 py-12">
+      <main className="max-w-4xl mx-auto px-4 pt-28 pb-12">
         <h1 className="text-3xl font-bold mb-8">Условия использования</h1>
 
         <div className="bg-white rounded-lg shadow p-8 prose prose-gray max-w-none">
