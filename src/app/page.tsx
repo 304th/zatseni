@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo1 } from "@/components/Logo";
 import PublicHeader from "@/components/PublicHeader";
+import CTALink from "@/components/CTALink";
 
 const StarIcon = () => (
   <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -141,12 +142,12 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <Link
+            <CTALink
               href="/signup"
               className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
             >
               Попробовать бесплатно
-            </Link>
+            </CTALink>
             <Link
               href="#how"
               className="w-full sm:w-auto border border-gray-300 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition"
@@ -311,7 +312,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <Link
+                <CTALink
                   href={`/signup?plan=${plan.id}`}
                   className={`block w-full py-3 rounded-xl font-semibold transition text-center ${
                     plan.popular
@@ -320,7 +321,7 @@ export default function Home() {
                   }`}
                 >
                   {plan.cta}
-                </Link>
+                </CTALink>
               </div>
             ))}
           </div>
@@ -336,12 +337,12 @@ export default function Home() {
           <p className="text-xl text-indigo-100 mb-8">
             Начните бесплатный 14-дневный период прямо сейчас
           </p>
-          <Link
+          <CTALink
             href="/signup"
             className="inline-block bg-white text-indigo-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-indigo-50 transition shadow-lg"
           >
             Попробовать бесплатно
-          </Link>
+          </CTALink>
           <p className="text-indigo-200 mt-4 text-sm">
             Не нужна карта • Настройка за 5 минут • Отмена в любой момент
           </p>

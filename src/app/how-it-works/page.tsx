@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
+import CTALink from "@/components/CTALink";
 
 const steps = [
   {
@@ -228,12 +229,12 @@ export default function HowItWorksPage() {
           Бесплатный пробный период 14 дней
         </p>
         <div className="flex gap-4 justify-center">
-          <Link
+          <CTALink
             href="/signup"
             className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
           >
             Попробовать бесплатно
-          </Link>
+          </CTALink>
           <Link
             href="/pricing"
             className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10"
