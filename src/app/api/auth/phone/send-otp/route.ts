@@ -25,7 +25,7 @@ function isValidRussianPhone(phone: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get("x-forwarded-for") ?? req.ip ?? "anonymous";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "anonymous";
     const { success } = await smsRatelimit.limit(ip);
     if (!success) {
       return NextResponse.json(
