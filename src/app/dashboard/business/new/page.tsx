@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { generateSlug } from "@/lib/slug";
 
 interface ParsedData {
   name?: string;
@@ -26,23 +27,6 @@ export default function NewBusinessPage() {
     yandexUrl: "",
     gisUrl: "",
   });
-
-  function generateSlug(name: string) {
-    return name
-      .toLowerCase()
-      .replace(/[а-яё]/g, (char) => {
-        const map: Record<string, string> = {
-          а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo",
-          ж: "zh", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m",
-          н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u",
-          ф: "f", х: "h", ц: "ts", ч: "ch", ш: "sh", щ: "sch",
-          ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
-        };
-        return map[char] || char;
-      })
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-  }
 
   async function parseYandexUrl(url: string) {
     if (!url.includes("yandex.ru/maps") && !url.includes("yandex.com/maps")) {

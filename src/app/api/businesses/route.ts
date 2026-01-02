@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getUserBusinesses } from "@/lib/permissions";
 import { canAddBusiness, getPlan, getSmsLimit } from "@/lib/plans";
+import { generateSlug } from "@/lib/slug";
 
 // Get user's businesses (owned + member of, or all for support)
 export async function GET() {
@@ -61,13 +62,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate slug
-    const slug = name
-      .toLowerCase()
-      .replace(/[^a-zа-яё0-9]/gi, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 30);
+    // Generate slug (latin only)
+    const slug = generateSlug(name);
 
     const existingBusiness = await prisma.business.findUnique({
       where: { slug },
