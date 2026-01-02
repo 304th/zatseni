@@ -125,17 +125,6 @@ export default function Dashboard() {
 
       {businesses.length === 0 ? (
         <div className="space-y-6">
-          {/* Trial banner */}
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold mb-1">14 дней бесплатного пробного периода</h2>
-                <p className="opacity-90">50 бесплатных SMS для тестирования сервиса</p>
-              </div>
-              <div className="text-4xl">🎁</div>
-            </div>
-          </div>
-
           {/* Welcome card */}
           <div className="bg-white rounded-xl border border-gray-100 p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Добро пожаловать в Отзовик!</h2>
