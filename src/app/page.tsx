@@ -54,13 +54,30 @@ const pricing = [
     name: "Старт",
     price: "990",
     period: "₽/мес",
+    description: "Для небольшого бизнеса",
     features: [
       "1 точка",
       "100 SMS в месяц",
       "Базовая аналитика",
-      "Email поддержка"
+      "Email поддержка",
     ],
     cta: "Начать бесплатно",
+    popular: false
+  },
+  {
+    id: "business",
+    name: "Бизнес",
+    price: "2 990",
+    period: "₽/мес",
+    description: "Для растущих компаний",
+    features: [
+      "До 5 точек",
+      "500 SMS в месяц",
+      "30 AI-ответов в месяц",
+      "Интеграции с CRM/POS",
+      "Брендирование страницы",
+    ],
+    cta: "Выбрать план",
     popular: false
   },
   {
@@ -68,12 +85,13 @@ const pricing = [
     name: "Бизнес+",
     price: "4 990",
     period: "₽/мес",
+    description: "Оптимальный выбор",
     features: [
       "До 10 точек",
       "1000 SMS в месяц",
-      "50 AI-ответов на отзывы",
+      "50 AI-ответов в месяц",
       "Интеграции с CRM/POS",
-      "Брендирование страницы"
+      "Приоритетная поддержка",
     ],
     cta: "Выбрать план",
     popular: true
@@ -83,12 +101,13 @@ const pricing = [
     name: "Сеть",
     price: "9 990",
     period: "₽/мес",
+    description: "Для сетей и франшиз",
     features: [
       "Неограниченно точек",
       "2000 SMS в месяц",
-      "100 AI-ответов на отзывы",
+      "100 AI-ответов в месяц",
       "Персональный менеджер",
-      "White label"
+      "White label",
     ],
     cta: "Выбрать план",
     popular: false
@@ -282,29 +301,34 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {pricing.map((plan, i) => (
               <div
                 key={i}
-                className={`p-8 rounded-2xl ${plan.popular ? 'bg-indigo-600 text-white ring-4 ring-indigo-200' : 'bg-white border border-gray-200'}`}
+                className={`p-6 rounded-2xl relative ${plan.popular ? 'bg-indigo-600 text-white ring-2 ring-indigo-600' : 'bg-white border border-gray-200'}`}
               >
                 {plan.popular && (
-                  <div className="text-indigo-200 text-sm font-semibold mb-2">ПОПУЛЯРНЫЙ</div>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Популярный
+                  </div>
                 )}
-                <h3 className={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-xl font-bold mb-1 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
                   {plan.name}
                 </h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className={`text-4xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
+                <p className={`text-sm mb-4 ${plan.popular ? 'text-indigo-200' : 'text-gray-500'}`}>
+                  {plan.description}
+                </p>
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className={`text-3xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
                     {plan.price}
                   </span>
                   <span className={plan.popular ? 'text-indigo-200' : 'text-gray-500'}>
                     {plan.period}
                   </span>
                 </div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-2 mb-6">
                   {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-center gap-2">
+                    <li key={j} className="flex items-center gap-2 text-sm">
                       <CheckIcon />
                       <span className={plan.popular ? 'text-indigo-100' : 'text-gray-600'}>
                         {feature}
@@ -314,7 +338,7 @@ export default function Home() {
                 </ul>
                 <CTALink
                   href={`/signup?plan=${plan.id}`}
-                  className={`block w-full py-3 rounded-xl font-semibold transition text-center ${
+                  className={`block w-full py-2.5 rounded-lg font-semibold transition text-center ${
                     plan.popular
                       ? 'bg-white text-indigo-600 hover:bg-indigo-50'
                       : 'bg-indigo-600 text-white hover:bg-indigo-700'
