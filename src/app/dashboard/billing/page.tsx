@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { getTrialDaysLeft, formatTrialStatus, TRIAL_SMS_LIMIT } from "@/lib/plans";
+import { api } from "@/lib/api";
 
 const PLANS = [
   {
@@ -34,21 +36,9 @@ const SMS_PACKS = [
   { amount: 500, price: 5000, perSms: "10" },
 ];
 
-interface Payment {
-  id: string;
-  amount: number;
-  status: string;
-  type: string;
-  description: string;
-  createdAt: string;
-  paidAt: string | null;
-}
-
 function BillingContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"plans" | "sms" | "history">("plans");
 
   const currentPlan = session?.user?.plan || "free";
@@ -59,71 +49,32 @@ function BillingContent() {
   const successStatus = searchParams.get("status") === "success";
   const upgradeParam = searchParams.get("upgrade");
 
-  useEffect(() => {
-    fetchPayments();
-    // If upgrade param exists and it's a valid plan, highlight it
-    if (upgradeParam && ["start", "business", "network"].includes(upgradeParam)) {
-      setTab("plans");
-    }
-  }, [upgradeParam]);
+  const { data: payments = [] } = useQuery({
+    queryKey: ["payments"],
+    queryFn: api.getPayments,
+  });
 
-  async function fetchPayments() {
-    try {
-      const res = await fetch("/api/payments");
-      if (res.ok) {
-        setPayments(await res.json());
-      }
-    } catch (e) {
-      console.error("Failed to fetch payments", e);
-    }
-  }
-
-  async function handleUpgrade(planId: string) {
-    if (planId === currentPlan) return;
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "subscription", planId }),
-      });
-
-      const data = await res.json();
+  const upgradeMutation = useMutation({
+    mutationFn: (planId: string) => api.createPayment("subscription", planId),
+    onSuccess: (data) => {
       if (data.paymentUrl) {
         window.location.href = data.paymentUrl;
-      } else {
-        alert(data.error || "Ошибка");
       }
-    } catch {
-      alert("Ошибка создания платежа");
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    onError: () => alert("Ошибка создания платежа"),
+  });
 
-  async function handleBuySms(amount: number) {
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "sms_pack", smsAmount: amount }),
-      });
-
-      const data = await res.json();
+  const buySmsMutation = useMutation({
+    mutationFn: (amount: number) => api.createPayment("sms_pack", undefined, amount),
+    onSuccess: (data) => {
       if (data.paymentUrl) {
         window.location.href = data.paymentUrl;
-      } else {
-        alert(data.error || "Ошибка");
       }
-    } catch {
-      alert("Ошибка создания платежа");
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    onError: () => alert("Ошибка создания платежа"),
+  });
+
+  const loading = upgradeMutation.isPending || buySmsMutation.isPending;
 
   return (
     <div className="max-w-4xl">
@@ -159,34 +110,34 @@ function BillingContent() {
         </div>
       )}
 
-        {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b">
-          <button
-            onClick={() => setTab("plans")}
-            className={`pb-3 px-1 font-medium ${tab === "plans" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
-          >
-            Тарифы
-          </button>
-          <button
-            onClick={() => setTab("sms")}
-            className={`pb-3 px-1 font-medium ${tab === "sms" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
-          >
-            SMS-пакеты
-          </button>
-          <button
-            onClick={() => setTab("history")}
-            className={`pb-3 px-1 font-medium ${tab === "history" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
-          >
-            История платежей
-          </button>
-        </div>
+      {/* Tabs */}
+      <div className="flex gap-4 mb-6 border-b">
+        <button
+          onClick={() => setTab("plans")}
+          className={`pb-3 px-1 font-medium ${tab === "plans" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
+        >
+          Тарифы
+        </button>
+        <button
+          onClick={() => setTab("sms")}
+          className={`pb-3 px-1 font-medium ${tab === "sms" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
+        >
+          SMS-пакеты
+        </button>
+        <button
+          onClick={() => setTab("history")}
+          className={`pb-3 px-1 font-medium ${tab === "history" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"}`}
+        >
+          История платежей
+        </button>
+      </div>
 
       {/* Plans */}
       {tab === "plans" && (
         <div className="grid md:grid-cols-3 gap-4">
-            {PLANS.map((plan) => {
-              const isUpgradeTarget = upgradeParam === plan.id && plan.id !== currentPlan;
-              return (
+          {PLANS.map((plan) => {
+            const isUpgradeTarget = upgradeParam === plan.id && plan.id !== currentPlan;
+            return (
               <div
                 key={plan.id}
                 className={`bg-white rounded-xl p-6 border-2 relative ${
@@ -229,7 +180,7 @@ function BillingContent() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => handleUpgrade(plan.id)}
+                    onClick={() => upgradeMutation.mutate(plan.id)}
                     disabled={loading}
                     className="w-full py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 disabled:opacity-50"
                   >
@@ -238,75 +189,75 @@ function BillingContent() {
                 )}
               </div>
             );
-            })}
-          </div>
-        )}
+          })}
+        </div>
+      )}
 
-        {/* SMS Packs */}
-        {tab === "sms" && (
-          <div className="grid md:grid-cols-4 gap-4">
-            {SMS_PACKS.map((pack) => (
-              <div
-                key={pack.amount}
-                className="bg-white rounded-xl p-6 border border-gray-100 text-center"
+      {/* SMS Packs */}
+      {tab === "sms" && (
+        <div className="grid md:grid-cols-4 gap-4">
+          {SMS_PACKS.map((pack) => (
+            <div
+              key={pack.amount}
+              className="bg-white rounded-xl p-6 border border-gray-100 text-center"
+            >
+              <div className="text-2xl font-bold mb-1">{pack.amount}</div>
+              <div className="text-gray-500 text-sm mb-4">SMS</div>
+              <div className="text-xl font-bold mb-1">{pack.price}₽</div>
+              <div className="text-gray-400 text-xs mb-4">{pack.perSms}₽/SMS</div>
+              <button
+                onClick={() => buySmsMutation.mutate(pack.amount)}
+                disabled={loading}
+                className="w-full py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 disabled:opacity-50"
               >
-                <div className="text-2xl font-bold mb-1">{pack.amount}</div>
-                <div className="text-gray-500 text-sm mb-4">SMS</div>
-                <div className="text-xl font-bold mb-1">{pack.price}₽</div>
-                <div className="text-gray-400 text-xs mb-4">{pack.perSms}₽/SMS</div>
-                <button
-                  onClick={() => handleBuySms(pack.amount)}
-                  disabled={loading}
-                  className="w-full py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 disabled:opacity-50"
-                >
-                  {loading ? "..." : "Купить"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                {loading ? "..." : "Купить"}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
-        {/* Payment History */}
-        {tab === "history" && (
-          <div className="bg-white rounded-xl border border-gray-100">
-            {payments.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                История платежей пуста
-              </div>
-            ) : (
-              <div className="divide-y">
-                {payments.map((p) => (
-                  <div key={p.id} className="p-4 flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">{p.description}</div>
-                      <div className="text-sm text-gray-500">
-                        {new Date(p.createdAt).toLocaleDateString("ru-RU")}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-medium">{(p.amount / 100).toLocaleString()}₽</div>
-                      <div
-                        className={`text-sm ${
-                          p.status === "succeeded"
-                            ? "text-green-600"
-                            : p.status === "canceled"
-                            ? "text-red-600"
-                            : "text-yellow-600"
-                        }`}
-                      >
-                        {p.status === "succeeded"
-                          ? "Оплачено"
-                          : p.status === "canceled"
-                          ? "Отменено"
-                          : "Ожидает"}
-                      </div>
+      {/* Payment History */}
+      {tab === "history" && (
+        <div className="bg-white rounded-xl border border-gray-100">
+          {payments.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              История платежей пуста
+            </div>
+          ) : (
+            <div className="divide-y">
+              {payments.map((p) => (
+                <div key={p.id} className="p-4 flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">{p.description}</div>
+                    <div className="text-sm text-gray-500">
+                      {new Date(p.createdAt).toLocaleDateString("ru-RU")}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                  <div className="text-right">
+                    <div className="font-medium">{(p.amount / 100).toLocaleString()}₽</div>
+                    <div
+                      className={`text-sm ${
+                        p.status === "succeeded"
+                          ? "text-green-600"
+                          : p.status === "canceled"
+                          ? "text-red-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {p.status === "succeeded"
+                        ? "Оплачено"
+                        : p.status === "canceled"
+                        ? "Отменено"
+                        : "Ожидает"}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

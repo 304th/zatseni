@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { generateSlug } from "@/lib/slug";
+import { api } from "@/lib/api";
 
 interface ParsedData {
   name?: string;
@@ -15,8 +17,7 @@ interface ParsedData {
 
 export default function NewBusinessPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [parsing, setParsing] = useState(false);
+  const queryClient = useQueryClient();
   const [error, setError] = useState("");
   const [parsedImages, setParsedImages] = useState<string[]>([]);
   const [formData, setFormData] = useState({
@@ -28,78 +29,55 @@ export default function NewBusinessPage() {
     gisUrl: "",
   });
 
-  async function parseYandexUrl(url: string) {
-    if (!url.includes("yandex.ru/maps") && !url.includes("yandex.com/maps")) {
-      return;
-    }
-
-    setParsing(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/parse-yandex", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
-
-      const data: ParsedData & { error?: string } = await res.json();
-
-      if (!res.ok) {
-        if (data.error) setError(data.error);
-        return;
-      }
-
-      // Auto-fill fields
+  const parseMutation = useMutation({
+    mutationFn: (url: string) => api.parseYandex(url),
+    onSuccess: (data) => {
       setFormData((prev) => ({
         ...prev,
-        yandexUrl: data.yandexUrl || url,
+        yandexUrl: data.yandexUrl || prev.yandexUrl,
         name: data.name || prev.name,
         address: data.address || prev.address,
         phone: data.phone || prev.phone,
         slug: data.name ? generateSlug(data.name) : prev.slug,
       }));
-
       if (data.images && data.images.length > 0) {
         setParsedImages(data.images);
       }
-    } catch (err) {
-      console.error("Parse error:", err);
-      setError("Ошибка при парсинге ссылки");
-    } finally {
-      setParsing(false);
-    }
-  }
+    },
+    onError: (err: Error) => setError(err.message),
+  });
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    const data = {
-      ...formData,
-      images: parsedImages.length > 0 ? JSON.stringify(parsedImages) : null,
-    };
-
-    try {
-      const res = await fetch("/api/businesses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Ошибка создания");
-      }
-
+  const createMutation = useMutation({
+    mutationFn: () => {
+      const data = {
+        ...formData,
+        images: parsedImages.length > 0 ? JSON.stringify(parsedImages) : null,
+      };
+      return api.createBusiness(data as Parameters<typeof api.createBusiness>[0]);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["businesses"] });
       router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка");
-    } finally {
-      setLoading(false);
+    },
+    onError: (err: Error) => setError(err.message),
+  });
+
+  function handleYandexPaste(url: string) {
+    if (!url.includes("yandex.ru/maps") && !url.includes("yandex.com/maps")) {
+      return;
     }
+    setError("");
+    parseMutation.mutate(url);
   }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    createMutation.mutate();
+  }
+
+  const loading = createMutation.isPending;
+  const parsing = parseMutation.isPending;
 
   return (
     <div className="max-w-2xl">
@@ -126,7 +104,7 @@ export default function NewBusinessPage() {
                 onPaste={(e) => {
                   const pasted = e.clipboardData.getData("text");
                   if (pasted) {
-                    setTimeout(() => parseYandexUrl(pasted), 100);
+                    setTimeout(() => handleYandexPaste(pasted), 100);
                   }
                 }}
                 className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"

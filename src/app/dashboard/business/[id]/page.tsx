@@ -1,138 +1,82 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-
-interface Business {
-  id: string;
-  name: string;
-  slug: string;
-  phone: string | null;
-  address: string | null;
-  yandexUrl: string | null;
-  gisUrl: string | null;
-  plan: string;
-  smsLimit: number;
-  smsUsed: number;
-  userRole: "owner" | "manager";
-  _count?: { members: number; requests: number };
-}
+import { api } from "@/lib/api";
 
 export default function BusinessPage() {
   const params = useParams();
   const router = useRouter();
-  const [business, setBusiness] = useState<Business | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
+  const businessId = params.id as string;
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  // SMS modal state
   const [showSmsModal, setShowSmsModal] = useState(false);
   const [smsPhone, setSmsPhone] = useState("");
-  const [sendingSms, setSendingSms] = useState(false);
 
-  useEffect(() => {
-    fetchBusiness();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
+  const { data: business, isLoading } = useQuery({
+    queryKey: ["business", businessId],
+    queryFn: () => api.getBusiness(businessId),
+  });
 
-  async function fetchBusiness() {
-    try {
-      const res = await fetch(`/api/businesses/${params.id}`);
-      if (!res.ok) throw new Error("Бизнес не найден");
-      const data = await res.json();
-      setBusiness(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSaving(true);
-    setError("");
-    setSuccess("");
-
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      address: formData.get("address"),
-      yandexUrl: formData.get("yandexUrl"),
-      gisUrl: formData.get("gisUrl"),
-    };
-
-    try {
-      const res = await fetch(`/api/businesses/${params.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Ошибка сохранения");
-      }
-
+  const updateMutation = useMutation({
+    mutationFn: (data: Parameters<typeof api.updateBusiness>[1]) =>
+      api.updateBusiness(businessId, data),
+    onSuccess: () => {
       setSuccess("Изменения сохранены");
-      fetchBusiness();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка");
-    } finally {
-      setSaving(false);
-    }
-  }
+      queryClient.invalidateQueries({ queryKey: ["business", businessId] });
+    },
+    onError: (err: Error) => setError(err.message),
+  });
 
-  async function handleSendSms(e: React.FormEvent) {
-    e.preventDefault();
-    setSendingSms(true);
+  const deleteMutation = useMutation({
+    mutationFn: () => api.deleteBusiness(businessId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["businesses"] });
+      router.push("/dashboard");
+    },
+    onError: (err: Error) => setError(err.message),
+  });
 
-    try {
-      const res = await fetch("/api/requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          businessId: business?.id,
-          phone: smsPhone,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Ошибка отправки");
-      }
-
+  const smsMutation = useMutation({
+    mutationFn: (phone: string) => api.sendSms(businessId, phone),
+    onSuccess: () => {
       setShowSmsModal(false);
       setSmsPhone("");
       setSuccess("SMS отправлено!");
-      fetchBusiness();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка отправки SMS");
-    } finally {
-      setSendingSms(false);
-    }
+      queryClient.invalidateQueries({ queryKey: ["business", businessId] });
+    },
+    onError: (err: Error) => setError(err.message),
+  });
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    const formData = new FormData(e.currentTarget);
+    updateMutation.mutate({
+      name: formData.get("name") as string,
+      phone: formData.get("phone") as string,
+      address: formData.get("address") as string,
+      yandexUrl: formData.get("yandexUrl") as string,
+      gisUrl: formData.get("gisUrl") as string,
+    });
   }
 
-  async function handleDelete() {
+  function handleDelete() {
     if (!confirm("Удалить бизнес? Это действие необратимо.")) return;
-
-    try {
-      const res = await fetch(`/api/businesses/${params.id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Ошибка удаления");
-      router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка удаления");
-    }
+    deleteMutation.mutate();
   }
 
-  if (loading) {
+  function handleSendSms(e: React.FormEvent) {
+    e.preventDefault();
+    smsMutation.mutate(smsPhone);
+  }
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
@@ -170,141 +114,141 @@ export default function BusinessPage() {
           </div>
         </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-center p-3 bg-gray-50 rounded">
-              <div className="text-2xl font-bold text-blue-600">
-                {business.smsUsed}
-              </div>
-              <div className="text-xs text-gray-500">SMS отправлено</div>
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="text-center p-3 bg-gray-50 rounded">
+            <div className="text-2xl font-bold text-blue-600">
+              {business.smsUsed}
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded">
-              <div className="text-2xl font-bold text-green-600">
-                {business.smsLimit - business.smsUsed}
-              </div>
-              <div className="text-xs text-gray-500">SMS осталось</div>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded">
-              <div className="text-2xl font-bold text-purple-600">
-                {business.smsLimit}
-              </div>
-              <div className="text-xs text-gray-500">Лимит SMS</div>
-            </div>
+            <div className="text-xs text-gray-500">SMS отправлено</div>
           </div>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowSmsModal(true)}
-              className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-            >
-              Отправить SMS
-            </button>
-            <Link
-              href={`/r/${business.slug}`}
-              target="_blank"
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Открыть страницу отзыва
-            </Link>
+          <div className="text-center p-3 bg-gray-50 rounded">
+            <div className="text-2xl font-bold text-green-600">
+              {business.smsLimit - business.smsUsed}
+            </div>
+            <div className="text-xs text-gray-500">SMS осталось</div>
           </div>
-
-          <div className="mt-3 p-2 bg-gray-100 rounded text-sm text-gray-600">
-            Ссылка для клиентов:{" "}
-            <code className="bg-white px-2 py-1 rounded">
-              otzovik.ai/r/{business.slug}
-            </code>
+          <div className="text-center p-3 bg-gray-50 rounded">
+            <div className="text-2xl font-bold text-purple-600">
+              {business.smsLimit}
+            </div>
+            <div className="text-xs text-gray-500">Лимит SMS</div>
           </div>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            {error}
-          </div>
-        )}
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowSmsModal(true)}
+            className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+          >
+            Отправить SMS
+          </button>
+          <Link
+            href={`/r/${business.slug}`}
+            target="_blank"
+            className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+          >
+            Открыть страницу отзыва
+          </Link>
+        </div>
 
-        {success && (
-          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
-            {success}
-          </div>
-        )}
+        <div className="mt-3 p-2 bg-gray-100 rounded text-sm text-gray-600">
+          Ссылка для клиентов:{" "}
+          <code className="bg-white px-2 py-1 rounded">
+            otzovik.ai/r/{business.slug}
+          </code>
+        </div>
+      </div>
 
-        {/* Edit Form - Only for owners */}
-        {business.userRole === "owner" && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Редактировать</h2>
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Название</label>
-                <input
-                  type="text"
-                  name="name"
-                  defaultValue={business.name}
-                  required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+      {success && (
+        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
+          {success}
+        </div>
+      )}
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Телефон</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  defaultValue={business.phone || ""}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+      {/* Edit Form - Only for owners */}
+      {business.userRole === "owner" && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-semibold mb-4">Редактировать</h2>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Адрес</label>
-                <input
-                  type="text"
-                  name="address"
-                  defaultValue={business.address || ""}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Название</label>
+              <input
+                type="text"
+                name="name"
+                defaultValue={business.name}
+                required
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Яндекс Карты URL
-                </label>
-                <input
-                  type="url"
-                  name="yandexUrl"
-                  defaultValue={business.yandexUrl || ""}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Телефон</label>
+              <input
+                type="tel"
+                name="phone"
+                defaultValue={business.phone || ""}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">2ГИС URL</label>
-                <input
-                  type="url"
-                  name="gisUrl"
-                  defaultValue={business.gisUrl || ""}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Адрес</label>
+              <input
+                type="text"
+                name="address"
+                defaultValue={business.address || ""}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {saving ? "Сохранение..." : "Сохранить"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
-                >
-                  Удалить
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Яндекс Карты URL
+              </label>
+              <input
+                type="url"
+                name="yandexUrl"
+                defaultValue={business.yandexUrl || ""}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">2ГИС URL</label>
+              <input
+                type="url"
+                name="gisUrl"
+                defaultValue={business.gisUrl || ""}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                disabled={updateMutation.isPending}
+                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                {updateMutation.isPending ? "Сохранение..." : "Сохранить"}
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+              >
+                Удалить
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* SMS Modal */}
       {showSmsModal && (
@@ -328,10 +272,10 @@ export default function BusinessPage() {
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  disabled={sendingSms}
+                  disabled={smsMutation.isPending}
                   className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50"
                 >
-                  {sendingSms ? "Отправка..." : "Отправить"}
+                  {smsMutation.isPending ? "Отправка..." : "Отправить"}
                 </button>
                 <button
                   type="button"

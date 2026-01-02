@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useParams, usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-
-interface Business {
-  id: string;
-  name: string;
-  userRole: "owner" | "manager";
-}
+import { api } from "@/lib/api";
 
 export default function BusinessLayout({
   children,
@@ -17,20 +12,14 @@ export default function BusinessLayout({
 }) {
   const params = useParams();
   const pathname = usePathname();
-  const [business, setBusiness] = useState<Business | null>(null);
-  const [loading, setLoading] = useState(true);
+  const businessId = params.id as string;
 
-  useEffect(() => {
-    fetch(`/api/businesses/${params.id}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        setBusiness(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [params.id]);
+  const { data: business, isLoading } = useQuery({
+    queryKey: ["business", businessId],
+    queryFn: () => api.getBusiness(businessId),
+  });
 
-  const basePath = `/dashboard/business/${params.id}`;
+  const basePath = `/dashboard/business/${businessId}`;
 
   const tabs = [
     { href: basePath, label: "Обзор", icon: "📋" },
@@ -45,7 +34,7 @@ export default function BusinessLayout({
     return pathname.startsWith(href);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-gray-500">Загрузка...</div>
