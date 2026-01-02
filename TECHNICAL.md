@@ -525,7 +525,6 @@ Templates:
 ```env
 # Database
 DATABASE_URL=postgresql://...
-DIRECT_URL=postgresql://...
 
 # Auth
 NEXTAUTH_URL=https://zatseni.ru
