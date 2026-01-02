@@ -2,11 +2,12 @@
 
 ## Current Pricing Tiers
 
-| Plan | Price | SMS/mo | Locations | Target |
-|------|-------|--------|-----------|--------|
-| Старт | 990₽ | 100 | 1 | Small business |
-| Бизнес | 2,490₽ | 500 | 5 | Growing companies |
-| Сеть | 7,990₽ | 2000 | Unlimited | Networks/franchises |
+| Plan | Price | SMS/mo | Locations | AI Replies | Target |
+|------|-------|--------|-----------|------------|--------|
+| Бесплатный | 0₽ | 10 | 1 | 0 | Try it free |
+| Старт | 990₽ | 100 | 1 | 0 | Small business |
+| Бизнес | 3,990₽ | 500 | 5 | 50 | Growing companies |
+| Сеть | 9,990₽ | 2000 | Unlimited | 100 | Networks/franchises |
 
 ---
 
@@ -35,14 +36,12 @@
 
 | Tier | SMS Included | Our Cost | Revenue | SMS Margin |
 |------|--------------|----------|---------|------------|
+| Бесплатный | 10 | 25₽ | 0₽ | -25₽ (marketing) |
 | Старт | 100 | 250₽ | 990₽ | 740₽ (75%) |
-| Бизнес | 500 | 1,250₽ | 2,490₽ | 1,240₽ (50%) |
-| Сеть | 2000 | 5,000₽ | 7,990₽ | 2,990₽ (37%) |
+| Бизнес | 500 | 1,250₽ | 3,990₽ | 2,740₽ (69%) |
+| Сеть | 2000 | 5,000₽ | 9,990₽ | 4,990₽ (50%) |
 
-**Problem:** Сеть tier has thin SMS margins. Consider:
-1. Raising price to 9,990₽
-2. Reducing included SMS to 1500
-3. Negotiating bulk rates (target: 1.5-2₽/SMS at 50k+/month volume)
+**Note:** Free tier is a marketing cost (~25₽/user/month). Бизнес tier has healthy margins after price adjustment.
 
 ### Cheaper Alternatives to Consider
 
@@ -98,20 +97,13 @@ Automatically generate professional responses to negative reviews on Yandex Maps
 
 **Recommendation:** Start with Gemini 2.5 Flash or Claude Haiku 3. Cost is negligible (<$1/mo for most users).
 
-### Pricing Strategy for AI Feature
+### AI Feature Pricing (Implemented)
 
-**Option A: Include in higher tiers**
-- Free for Бизнес and Сеть plans
-- Upsell driver from Старт
-
-**Option B: Add-on**
-- 500₽/month for unlimited AI replies
-- Or 10₽ per AI-generated reply
-
-**Option C: Usage-based (recommended)**
-- Include 20 AI replies in Бизнес
-- Include 100 AI replies in Сеть
-- Extra: 5₽ per reply
+AI replies are included in paid tiers:
+- **Бесплатный/Старт**: 0 AI replies (upsell driver)
+- **Бизнес**: 50 AI replies/month
+- **Сеть**: 100 AI replies/month
+- **Extra**: 5₽ per additional reply
 
 ---
 
@@ -150,6 +142,16 @@ Automatically generate professional responses to negative reviews on Yandex Maps
 
 ## 4. Full Cost Analysis per Tier
 
+### Бесплатный (0₽/month)
+
+| Cost Item | Amount | Notes |
+|-----------|--------|-------|
+| SMS (10) | 25₽ | @2.5₽ |
+| Infrastructure | 20₽ | Minimal usage |
+| Support | 0₽ | Self-service |
+| **Total Cost** | **45₽** | |
+| **Gross Margin** | **-45₽** | Marketing cost |
+
 ### Старт (990₽/month)
 
 | Cost Item | Amount | Notes |
@@ -160,45 +162,46 @@ Automatically generate professional responses to negative reviews on Yandex Maps
 | **Total Cost** | **340₽** | |
 | **Gross Margin** | **650₽ (66%)** | |
 
-### Бизнес (2,490₽/month)
+### Бизнес (3,990₽/month)
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
 | SMS (500) | 1,250₽ | @2.5₽ |
 | Infrastructure | 60₽ | Higher usage |
-| AI replies (20) | 5₽ | Negligible |
+| AI replies (50) | 10₽ | Negligible |
 | Support | 100₽ | Priority |
-| **Total Cost** | **1,415₽** | |
-| **Gross Margin** | **1,075₽ (43%)** | |
+| **Total Cost** | **1,420₽** | |
+| **Gross Margin** | **2,570₽ (64%)** | |
 
-### Сеть (7,990₽/month)
+### Сеть (9,990₽/month)
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
 | SMS (2000) | 5,000₽ | @2.5₽ |
 | Infrastructure | 100₽ | Heavy usage |
-| AI replies (100) | 10₽ | Negligible |
+| AI replies (100) | 20₽ | Negligible |
 | Support | 300₽ | Personal manager |
-| **Total Cost** | **5,410₽** | |
-| **Gross Margin** | **2,580₽ (32%)** | |
+| **Total Cost** | **5,420₽** | |
+| **Gross Margin** | **4,570₽ (46%)** | |
 
 ---
 
-## 5. Recommended Pricing Adjustments
+## 5. Pricing Strategy Notes
 
-### Problem Areas
-1. **Сеть tier margin too thin** — SMS costs eat 63% of revenue
-2. **No clear upgrade path** — Big jump from Бизнес to Сеть
-3. **SMS overage pricing unclear** — Should be profit center
+### Why 4 Tiers (not 5)
 
-### Proposed New Structure
+We consolidated from 5 to 4 tiers for simplicity:
+- Removed Бизнес+ (4,990₽) — too similar to Бизнес
+- Бизнес now includes priority support and more AI replies
+- Cleaner decision path: Free → Старт → Бизнес → Сеть
 
-| Plan | Price | SMS | Locations | AI Replies |
-|------|-------|-----|-----------|------------|
-| **Старт** | 990₽ | 100 | 1 | 0 |
-| **Бизнес** | 2,990₽ (+500₽) | 500 | 5 | 30 |
-| **Бизнес+** | 4,990₽ (NEW) | 1000 | 10 | 50 |
-| **Сеть** | 9,990₽ (+2,000₽) | 2000 | Unlimited | 100 |
+### Free Tier Economics
+
+Free tier costs us ~45₽/user/month. Break-even if:
+- 5% convert to Старт (990₽ × 0.05 = 49.5₽)
+- Or 2% convert to Бизнес (3,990₽ × 0.02 = 79.8₽)
+
+Target: 10%+ conversion to paid within 3 months.
 
 ### SMS Overage Pricing
 
