@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ReviewForm from "./ReviewForm";
+import { getPlan } from "@/lib/plans";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -15,6 +16,7 @@ export default async function ReviewPage({ params }: PageProps) {
       id: true,
       name: true,
       logo: true,
+      plan: true,
       yandexUrl: true,
       gisUrl: true,
     },
@@ -53,9 +55,11 @@ export default async function ReviewPage({ params }: PageProps) {
           />
         </div>
 
-        <p className="text-center text-gray-400 text-sm mt-6">
-          Powered by Отзовик
-        </p>
+        {!getPlan(business.plan).features.custom_branding && (
+          <p className="text-center text-gray-400 text-sm mt-6">
+            Powered by Отзовик
+          </p>
+        )}
       </div>
     </div>
   );
