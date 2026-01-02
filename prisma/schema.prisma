@@ -89,6 +89,7 @@ model Business {
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   requests    ReviewRequest[]
+  externalReviews ExternalReview[]
   members     BusinessMember[]
   invites     Invite[]
   apiKeys     ApiKey[]
@@ -139,6 +140,29 @@ model ReviewRequest {
   sentAt      DateTime @default(now())
   openedAt    DateTime?
   reviewedAt  DateTime?
+  // External review tracking
+  clickedYandexAt DateTime?  // when user clicked Yandex link
+  clickedGisAt    DateTime?  // when user clicked 2GIS link
+  externalReviewId String?   // matched external review
+  externalReview   ExternalReview? @relation(fields: [externalReviewId], references: [id])
+}
+
+// Scraped reviews from external platforms
+model ExternalReview {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  platform    String   // yandex, gis
+  externalId  String   // ID from platform to avoid duplicates
+  rating      Int      // 1-5
+  text        String?  // review text
+  authorName  String?
+  publishedAt DateTime // when review was posted on platform
+  scrapedAt   DateTime @default(now())
+  matchedRequest ReviewRequest[]
+
+  @@unique([platform, externalId])
+  @@index([businessId, platform])
 }
 
 // API keys for webhook integrations

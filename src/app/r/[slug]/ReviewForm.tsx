@@ -66,6 +66,16 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
     }
   };
 
+  const handleExternalClick = (platform: "yandex" | "gis") => {
+    if (requestId) {
+      fetch(`/api/requests/${requestId}/click`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ platform }),
+      }).catch(() => {});
+    }
+  };
+
   if (step === "rate") {
     return (
       <div>
@@ -102,6 +112,7 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
               href={`${yandexUrl.replace(/\/$/, "")}${yandexUrl.includes("?") ? "&" : "?"}add-review=true`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleExternalClick("yandex")}
               className="flex items-center justify-center gap-2 bg-yellow-400 text-black py-3 px-4 rounded-lg font-medium hover:bg-yellow-500 transition"
             >
               <span>📍</span> Оставить отзыв на Яндекс Картах
@@ -112,6 +123,7 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
               href={gisUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleExternalClick("gis")}
               className="flex items-center justify-center gap-2 bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 transition"
             >
               <span>📍</span> Оставить отзыв на 2ГИС

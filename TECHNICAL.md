@@ -8,16 +8,17 @@
 │  Frontend   │     │     ORM     │     │  (Supabase) │
 └─────────────┘     └─────────────┘     └─────────────┘
        │
-       ├───────────────────────────────┐
-       ▼                               ▼
-┌─────────────┐     ┌─────────────┐  ┌─────────────┐
-│  NextAuth   │     │  External   │  │   Upstash   │
-│    JWT      │     │   APIs      │  │    Redis    │
-└─────────────┘     └─────────────┘  │ (ratelimit) │
-                          │          └─────────────┘
-              ┌───────────┼───────────┐
-              ▼           ▼           ▼
-         SMS.ru      YooKassa      SMTP
+       ├───────────────────────────────┬───────────────┐
+       ▼                               ▼               ▼
+┌─────────────┐     ┌─────────────┐  ┌─────────────┐ ┌─────────────┐
+│  NextAuth   │     │  External   │  │   Upstash   │ │   Upstash   │
+│    JWT      │     │   APIs      │  │    Redis    │ │   QStash    │
+└─────────────┘     └─────────────┘  │ (ratelimit) │ │ (jobs)      │
+                          │          └─────────────┘ └──────┬──────┘
+              ┌───────────┼───────────┐                     │
+              ▼           ▼           ▼                     ▼
+         SMS.ru      YooKassa      SMTP              /api/scrape
+                                                    (Yandex/2GIS)
 ```
 
 ## Database Models
@@ -58,16 +59,36 @@ model Business {
 ### ReviewRequest
 ```prisma
 model ReviewRequest {
+  id               String
+  businessId       String
+  phone            String
+  status           String   // sent, opened, reviewed, feedback
+  rating           Int?     // 1-5
+  feedback         String?  // private feedback text
+  source           String?  // manual, bitrix24, amocrm, etc.
+  sentAt           DateTime
+  openedAt         DateTime?
+  reviewedAt       DateTime?
+  clickedYandexAt  DateTime?  // when user clicked Yandex link
+  clickedGisAt     DateTime?  // when user clicked 2GIS link
+  externalReviewId String?    // matched external review
+}
+```
+
+### ExternalReview
+```prisma
+model ExternalReview {
   id          String
   businessId  String
-  phone       String
-  status      String   // sent, opened, reviewed, feedback
-  rating      Int?     // 1-5
-  feedback    String?  // private feedback text
-  source      String?  // manual, bitrix24, amocrm, etc.
-  sentAt      DateTime
-  openedAt    DateTime?
-  reviewedAt  DateTime?
+  platform    String   // yandex, gis
+  externalId  String   // ID from platform (dedup)
+  rating      Int      // 1-5
+  text        String?
+  authorName  String?
+  publishedAt DateTime // when posted on platform
+  scrapedAt   DateTime
+
+  @@unique([platform, externalId])
 }
 ```
 
@@ -274,6 +295,39 @@ Flow:
 Client-side routing:
 - rating >= 4: Show Yandex/2GIS buttons
 - rating < 4: Show feedback form
+```
+
+#### Track External Click
+```
+POST /api/requests/[id]/click
+Body: { platform: "yandex" | "gis" }
+
+Flow:
+1. Check if already clicked (only track once)
+2. Update clickedYandexAt or clickedGisAt
+3. Schedule scrape job via QStash (2h delay)
+4. Return success
+
+Services: Upstash QStash
+```
+
+#### Scrape & Match Reviews (QStash Callback)
+```
+POST /api/scrape
+Headers: upstash-signature (QStash verification)
+Body: { requestId, businessId, platform }
+
+Flow:
+1. Verify QStash signature
+2. Get business URL (yandexUrl or gisUrl)
+3. Scrape reviews from platform
+4. Find review posted within 4h of click
+5. If matched: store ExternalReview, link to request
+6. Return { status: "matched" | "no_match" }
+
+Scrapers (unofficial, may break):
+- Yandex: internal API + HTML parsing fallback
+- 2GIS: public reviews API + HTML parsing fallback
 ```
 
 ---
@@ -522,6 +576,40 @@ Usage in src/lib/ratelimit.ts:
 - smsRatelimit: OTP sending
 ```
 
+### Upstash QStash (Delayed Jobs)
+```
+Console: https://console.upstash.com/qstash
+SDK: @upstash/qstash
+
+Usage:
+- Schedule one-time delayed HTTP calls
+- Used for scraping reviews 2h after user clicks external link
+
+Signature Verification:
+- All callbacks verified via Receiver class
+- Requires QSTASH_CURRENT_SIGNING_KEY, QSTASH_NEXT_SIGNING_KEY
+
+Usage in src/lib/qstash.ts:
+- scheduleScrapeJob(requestId, businessId, platform, delayHours)
+```
+
+### Review Scrapers (Unofficial)
+```
+Location: src/lib/scrapers/
+
+Yandex Maps (src/lib/scrapers/yandex.ts):
+- Extract org ID from URL: /org/{name}/{id}/
+- Try internal API: /maps/api/business/fetchReviews
+- Fallback: parse HTML for __PRELOADED_STATE__
+
+2GIS (src/lib/scrapers/gis.ts):
+- Extract firm ID from URL: /firm/{id}
+- Try public API: public-api.reviews.2gis.com/2.0/branches/{id}/reviews
+- Fallback: parse HTML for __PRELOADED_DATA__
+
+Warning: These use unofficial APIs and may break at any time.
+```
+
 ---
 
 ## Permission Matrix
@@ -562,6 +650,14 @@ RESEND_FROM=noreply@zatseni.ru
 # Rate Limiting (Upstash Redis)
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
 UPSTASH_REDIS_REST_TOKEN=xxx
+
+# Delayed Jobs (Upstash QStash)
+QSTASH_TOKEN=xxx
+QSTASH_CURRENT_SIGNING_KEY=xxx
+QSTASH_NEXT_SIGNING_KEY=xxx
+
+# App URL (for QStash callbacks)
+NEXT_PUBLIC_APP_URL=https://zatseni.ru
 ```
 
 ---
