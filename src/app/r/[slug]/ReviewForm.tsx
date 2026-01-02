@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface ReviewFormProps {
   businessId: string;
@@ -9,7 +10,18 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewFormProps) {
+  const searchParams = useSearchParams();
   const [rating, setRating] = useState(0);
+
+  const requestId = searchParams.get("rid");
+
+  // Track open on page load
+  useEffect(() => {
+    if (requestId) {
+      fetch(`/api/requests/${requestId}/open`, { method: "POST" }).catch(() => {});
+    }
+  }, [requestId]);
+
   const [hoveredRating, setHoveredRating] = useState(0);
   const [step, setStep] = useState<"rate" | "positive" | "negative" | "thanks">("rate");
   const [feedback, setFeedback] = useState("");
@@ -23,7 +35,7 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
       await fetch("/api/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessId, rating: selectedRating }),
+        body: JSON.stringify({ businessId, rating: selectedRating, requestId }),
       });
     } catch (e) {
       console.error("Failed to track rating", e);
@@ -44,7 +56,7 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
       await fetch("/api/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessId, rating, feedback }),
+        body: JSON.stringify({ businessId, rating, feedback, requestId }),
       });
       setStep("thanks");
     } catch (e) {

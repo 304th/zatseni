@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
@@ -8,6 +9,19 @@ import { api } from "@/lib/api";
 export default function RequestsPage() {
   const params = useParams();
   const businessId = params.id as string;
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  const toggleRow = (id: string) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   const { data: business } = useQuery({
     queryKey: ["business", businessId],
@@ -143,55 +157,54 @@ export default function RequestsPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Открыто
                   </th>
+                  <th className="w-10"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {requests.map((req) => (
-                  <tr key={req.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-mono">
-                      {maskPhone(req.phone)}
-                    </td>
-                    <td className="px-4 py-3">{getStatusBadge(req.status)}</td>
-                    <td className="px-4 py-3 text-yellow-500">
-                      {getRatingStars(req.rating)}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
-                      {formatDate(req.sentAt)}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
-                      {formatDate(req.openedAt)}
-                    </td>
-                  </tr>
-                ))}
+                {requests.map((req) => {
+                  const hasFeedback = !!req.feedback;
+                  const isExpanded = expandedRows.has(req.id);
+                  return [
+                    <tr
+                      key={req.id}
+                      className={`hover:bg-gray-50 ${hasFeedback ? "cursor-pointer" : ""}`}
+                      onClick={() => hasFeedback && toggleRow(req.id)}
+                    >
+                      <td className="px-4 py-3 text-sm font-mono">
+                        {maskPhone(req.phone)}
+                      </td>
+                      <td className="px-4 py-3">{getStatusBadge(req.status)}</td>
+                      <td className="px-4 py-3 text-yellow-500">
+                        {getRatingStars(req.rating)}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">
+                        {formatDate(req.sentAt)}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">
+                        {formatDate(req.openedAt)}
+                      </td>
+                      <td className="px-4 py-3 text-gray-400">
+                        {hasFeedback && (
+                          <span className={`inline-block transition-transform ${isExpanded ? "rotate-180" : ""}`}>
+                            ▼
+                          </span>
+                        )}
+                      </td>
+                    </tr>,
+                    isExpanded && req.feedback && (
+                      <tr key={`${req.id}-feedback`} className="bg-yellow-50">
+                        <td colSpan={6} className="px-4 py-3 text-sm text-gray-700 border-l-2 border-yellow-400">
+                          {req.feedback}
+                        </td>
+                      </tr>
+                    ),
+                  ];
+                })}
               </tbody>
             </table>
           </div>
         )}
       </div>
-
-      {/* Feedback Section */}
-      {requests.filter((r) => r.feedback).length > 0 && (
-        <div className="mt-6 bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Обратная связь</h2>
-          <div className="space-y-4">
-            {requests
-              .filter((r) => r.feedback)
-              .map((req) => (
-                <div key={req.id} className="border-l-4 border-yellow-400 pl-4 py-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-yellow-500">
-                      {getRatingStars(req.rating)}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {formatDate(req.reviewedAt)}
-                    </span>
-                  </div>
-                  <p className="text-gray-700">{req.feedback}</p>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
     </>
   );
 }

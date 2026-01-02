@@ -2,26 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendSms } from "@/lib/sms";
 import { smsRatelimit } from "@/lib/ratelimit";
-
-// Normalize Russian phone number
-function normalizePhone(phone: string): string {
-  const digits = phone.replace(/\D/g, "");
-  if (digits.startsWith("8") && digits.length === 11) {
-    return "7" + digits.slice(1);
-  }
-  if (digits.startsWith("7") && digits.length === 11) {
-    return digits;
-  }
-  if (digits.length === 10) {
-    return "7" + digits;
-  }
-  return digits;
-}
-
-// Validate phone format
-function isValidRussianPhone(phone: string): boolean {
-  return /^7\d{10}$/.test(phone);
-}
+import { normalizePhone, isValidRussianPhone } from "@/lib/phone";
 
 export async function POST(req: NextRequest) {
   try {

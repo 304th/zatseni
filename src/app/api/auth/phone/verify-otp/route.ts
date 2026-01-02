@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getPlanPriceKopecks } from "@/lib/plans";
+import { normalizePhone } from "@/lib/phone";
 
 const VALID_PLANS = ["free", "start", "business", "network"];
 
 export async function POST(req: NextRequest) {
   try {
-    const { phone, code, plan } = await req.json();
+    const { phone: rawPhone, code, plan } = await req.json();
 
-    if (!phone || !code) {
+    if (!rawPhone || !code) {
       return NextResponse.json(
         { error: "Укажите номер и код" },
         { status: 400 }
       );
     }
+
+    const phone = normalizePhone(rawPhone);
 
     // Find valid OTP
     const otp = await prisma.phoneOTP.findFirst({

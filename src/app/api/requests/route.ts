@@ -111,21 +111,7 @@ export async function POST(req: NextRequest) {
       ? cleanPhone
       : `7${cleanPhone.slice(1)}`;
 
-    // Create message
-    const reviewUrl = `${process.env.NEXTAUTH_URL}/r/${business.slug}`;
-    const message = `Спасибо за визит в ${business.name}! Оцените нас: ${reviewUrl}`;
-
-    // Send SMS
-    const smsResult = await sendSms(formattedPhone, message);
-
-    if (!smsResult.success) {
-      return NextResponse.json(
-        { error: smsResult.error || "Ошибка отправки SMS" },
-        { status: 500 }
-      );
-    }
-
-    // Create request record
+    // Create request record first to get ID for tracking
     const request = await prisma.reviewRequest.create({
       data: {
         businessId,
@@ -133,6 +119,22 @@ export async function POST(req: NextRequest) {
         status: "sent",
       },
     });
+
+    // Create message with tracking ID
+    const reviewUrl = `${process.env.NEXTAUTH_URL}/r/${business.slug}?rid=${request.id}`;
+    const message = `Спасибо за визит в ${business.name}! Оцените нас: ${reviewUrl}`;
+
+    // Send SMS
+    const smsResult = await sendSms(formattedPhone, message);
+
+    if (!smsResult.success) {
+      // Delete the request record if SMS failed
+      await prisma.reviewRequest.delete({ where: { id: request.id } });
+      return NextResponse.json(
+        { error: smsResult.error || "Ошибка отправки SMS" },
+        { status: 500 }
+      );
+    }
 
     // Update SMS counter: use tier quota first, then purchased
     if (tierRemaining > 0) {

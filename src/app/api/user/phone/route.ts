@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { normalizePhone } from "@/lib/phone";
 
 // Link phone to existing user account
 export async function POST(req: NextRequest) {
@@ -11,14 +12,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
     }
 
-    const { phone, code } = await req.json();
+    const { phone: rawPhone, code } = await req.json();
 
-    if (!phone || !code) {
+    if (!rawPhone || !code) {
       return NextResponse.json(
         { error: "Укажите номер и код" },
         { status: 400 }
       );
     }
+
+    const phone = normalizePhone(rawPhone);
 
     // Find valid OTP
     const otp = await prisma.phoneOTP.findFirst({

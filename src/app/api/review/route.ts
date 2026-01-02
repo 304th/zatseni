@@ -3,25 +3,31 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { businessId, rating, feedback } = await req.json();
+    const { businessId, rating, feedback, requestId } = await req.json();
 
     if (!businessId || !rating) {
       return NextResponse.json({ error: "Missing data" }, { status: 400 });
     }
 
-    // Find the most recent request for this business (within last 24h)
-    const recentRequest = await prisma.reviewRequest.findFirst({
-      where: {
-        businessId,
-        rating: null,
-        sentAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      },
-      orderBy: { sentAt: "desc" },
-    });
+    // If we have a specific request ID, update that one
+    // Otherwise fall back to finding most recent request
+    let targetRequestId = requestId;
 
-    if (recentRequest) {
+    if (!targetRequestId) {
+      const recentRequest = await prisma.reviewRequest.findFirst({
+        where: {
+          businessId,
+          rating: null,
+          sentAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+        orderBy: { sentAt: "desc" },
+      });
+      targetRequestId = recentRequest?.id;
+    }
+
+    if (targetRequestId) {
       await prisma.reviewRequest.update({
-        where: { id: recentRequest.id },
+        where: { id: targetRequestId },
         data: {
           rating,
           feedback: feedback || null,
