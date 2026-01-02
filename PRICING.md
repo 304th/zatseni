@@ -223,29 +223,128 @@ Target: 10%+ conversion to paid within 3 months.
 
 ---
 
-## 6. Profit Projections
+## 6. Growth Projections (3-Year)
 
-### Conservative Scenario (Year 1)
+### Assumptions
+- **ARPU:** 2,000₽/month average (mix of tiers)
+- **Churn:** 5%/month Year 1, 3%/month Year 2-3
+- **Growth:** 15% month-over-month Year 1, 10% Year 2, 7% Year 3
+- **Costs:** 35% of revenue (SMS + infra + support)
 
-| Month | Users | MRR | Costs | Profit |
-|-------|-------|-----|-------|--------|
-| 1-3 | 20 | 30k₽ | 25k₽ | 5k₽ |
-| 4-6 | 50 | 80k₽ | 50k₽ | 30k₽ |
-| 7-9 | 100 | 170k₽ | 100k₽ | 70k₽ |
-| 10-12 | 150 | 270k₽ | 150k₽ | 120k₽ |
+---
 
-**Year 1 Total:** ~600k₽ profit
+### Conservative Scenario
 
-### Optimistic Scenario (Year 1)
+| Quarter | Paying Users | MRR | ARR | Costs | Net Profit |
+|---------|--------------|-----|-----|-------|------------|
+| **Y1 Q1** | 25 | 50k₽ | - | 25k₽ | 25k₽ |
+| **Y1 Q2** | 60 | 120k₽ | - | 50k₽ | 70k₽ |
+| **Y1 Q3** | 100 | 200k₽ | - | 80k₽ | 120k₽ |
+| **Y1 Q4** | 150 | 300k₽ | 3.6M₽ | 110k₽ | 190k₽ |
+| | | | **Y1 Total:** | | **~1.2M₽** |
+| **Y2 Q1** | 200 | 400k₽ | - | 150k₽ | 250k₽ |
+| **Y2 Q2** | 270 | 540k₽ | - | 200k₽ | 340k₽ |
+| **Y2 Q3** | 350 | 700k₽ | - | 260k₽ | 440k₽ |
+| **Y2 Q4** | 450 | 900k₽ | 10.8M₽ | 330k₽ | 570k₽ |
+| | | | **Y2 Total:** | | **~4.8M₽** |
+| **Y3 Q1** | 550 | 1.1M₽ | - | 400k₽ | 700k₽ |
+| **Y3 Q2** | 650 | 1.3M₽ | - | 470k₽ | 830k₽ |
+| **Y3 Q3** | 750 | 1.5M₽ | - | 540k₽ | 960k₽ |
+| **Y3 Q4** | 850 | 1.7M₽ | 20.4M₽ | 610k₽ | 1.1M₽ |
+| | | | **Y3 Total:** | | **~10.8M₽** |
 
-| Month | Users | MRR | Costs | Profit |
-|-------|-------|-----|-------|--------|
-| 1-3 | 50 | 75k₽ | 45k₽ | 30k₽ |
-| 4-6 | 150 | 250k₽ | 140k₽ | 110k₽ |
-| 7-9 | 300 | 550k₽ | 280k₽ | 270k₽ |
-| 10-12 | 500 | 950k₽ | 450k₽ | 500k₽ |
+**3-Year Total Profit:** ~16.8M₽
 
-**Year 1 Total:** ~2.7M₽ profit
+---
+
+### Optimistic Scenario
+
+| Quarter | Paying Users | MRR | ARR | Costs | Net Profit |
+|---------|--------------|-----|-----|-------|------------|
+| **Y1 Q1** | 50 | 100k₽ | - | 40k₽ | 60k₽ |
+| **Y1 Q2** | 150 | 300k₽ | - | 110k₽ | 190k₽ |
+| **Y1 Q3** | 300 | 600k₽ | - | 220k₽ | 380k₽ |
+| **Y1 Q4** | 500 | 1M₽ | 12M₽ | 370k₽ | 630k₽ |
+| | | | **Y1 Total:** | | **~3.8M₽** |
+| **Y2 Q1** | 700 | 1.4M₽ | - | 500k₽ | 900k₽ |
+| **Y2 Q2** | 950 | 1.9M₽ | - | 680k₽ | 1.2M₽ |
+| **Y2 Q3** | 1,200 | 2.4M₽ | - | 860k₽ | 1.5M₽ |
+| **Y2 Q4** | 1,500 | 3M₽ | 36M₽ | 1.1M₽ | 1.9M₽ |
+| | | | **Y2 Total:** | | **~16.8M₽** |
+| **Y3 Q1** | 1,800 | 3.6M₽ | - | 1.3M₽ | 2.3M₽ |
+| **Y3 Q2** | 2,100 | 4.2M₽ | - | 1.5M₽ | 2.7M₽ |
+| **Y3 Q3** | 2,400 | 4.8M₽ | - | 1.7M₽ | 3.1M₽ |
+| **Y3 Q4** | 2,700 | 5.4M₽ | 65M₽ | 1.9M₽ | 3.5M₽ |
+| | | | **Y3 Total:** | | **~35M₽** |
+
+**3-Year Total Profit:** ~55.6M₽
+
+---
+
+### Visual Growth Trajectory
+
+```
+Paying Users (Optimistic)
+│
+│                                          ╭─── 2,700
+│                                     ╭────╯
+│                                ╭────╯
+│                           ╭────╯
+│                      ╭────╯ 1,500
+│                 ╭────╯
+│            ╭────╯
+│       ╭────╯ 500
+│  ╭────╯
+│──╯ 50
+└────────────────────────────────────────────────
+  Q1   Q2   Q3   Q4   Q1   Q2   Q3   Q4   Q1   Q2   Q3   Q4
+  └────── Y1 ──────┘  └────── Y2 ──────┘  └────── Y3 ──────┘
+```
+
+```
+MRR Growth (Optimistic)
+│
+│                                          ╭─── 5.4M₽
+│                                     ╭────╯
+│                                ╭────╯
+│                           ╭────╯ 3M₽
+│                      ╭────╯
+│                 ╭────╯
+│            ╭────╯ 1M₽
+│       ╭────╯
+│  ╭────╯
+│──╯ 100k₽
+└────────────────────────────────────────────────
+  Q1   Q2   Q3   Q4   Q1   Q2   Q3   Q4   Q1   Q2   Q3   Q4
+  └────── Y1 ──────┘  └────── Y2 ──────┘  └────── Y3 ──────┘
+```
+
+---
+
+### Break-even Analysis
+
+| Scenario | Break-even Point | Users Needed |
+|----------|------------------|--------------|
+| Conservative | Month 1 | ~15 paying users |
+| Optimistic | Month 1 | ~15 paying users |
+
+**Fixed costs:** ~25k₽/month (Vercel + Neon + misc)
+**Margin per user:** ~1,300₽ (ARPU 2,000₽ × 65% margin)
+**Break-even:** 25,000 ÷ 1,300 = ~19 users
+
+---
+
+### Milestones
+
+| Milestone | Conservative | Optimistic |
+|-----------|--------------|------------|
+| 100 users | Q3 Y1 | Q2 Y1 |
+| 500 users | Q4 Y2 | Q4 Y1 |
+| 1M₽ MRR | Q4 Y2 | Q4 Y1 |
+| 1,000 users | Q4 Y3 | Q2 Y2 |
+| 5M₽ MRR | - | Q4 Y3 |
+| 10M₽ ARR | Q4 Y2 | Q4 Y1 |
+| 50M₽ ARR | - | Q3 Y3 |
 
 ---
 
