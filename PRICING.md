@@ -2,12 +2,12 @@
 
 ## Current Pricing Tiers
 
-| Plan | Price | SMS | Locations | AI Replies | Target |
-|------|-------|-----|-----------|------------|--------|
-| **Пробный период** | 0₽ | 20 (14 days) | 1 | 0 | Try before buy |
-| Старт | 1,090₽ | 100/mo | 1 | 0 | Small business |
-| Бизнес | 4,990₽ | 300/mo | 5 | 50 | Growing companies |
-| Сеть | 14,990₽ | 1000/mo | Unlimited | 100 | Networks/franchises |
+| Plan | Price | SMS | Locations | Team | AI Replies | Target |
+|------|-------|-----|-----------|------|------------|--------|
+| **Пробный период** | 0₽ | 20 (14 days) | 1 | 1 | 0 | Try before buy |
+| Старт | 1,190₽ | 100/mo | 1 | 3 | 0 | Small business |
+| Бизнес | 4,990₽ | 400/mo | 5 | 20 | 50 | Growing companies |
+| Сеть | 16,990₽ | 1000/mo | ∞ | ∞ | 100 | Networks/franchises |
 
 ### Trial Model
 - **14 days free trial** with 20 SMS and full features
@@ -16,9 +16,10 @@
 - Trial users can upgrade anytime during trial
 
 ### Pricing Strategy (Airline Model)
-- **Старт**: Loss leader, undercuts all competitors, gets customers in
-- **Бизнес/Сеть**: Profit centers with 57-61% margins
-- As businesses grow, they upgrade → higher margins
+- **Старт**: Entry tier, 42% margin, not competitive vs Business on arbitrage
+- **Бизнес**: Mid-tier profit center, 48% margin
+- **Сеть**: Premium tier, 62% margin, unlimited for chains
+- Margins scale UP with tier (42% → 48% → 62%)
 - No free tier = no freeloaders, higher quality leads
 
 ### Why SMS (not WhatsApp)
@@ -63,11 +64,11 @@
 | Tier | SMS | SMS Cost | Other | Total Cost | Revenue | Margin |
 |------|-----|----------|-------|------------|---------|--------|
 | Пробный (14 дней) | 20 | 120₽ | 20₽ | 140₽ | 0₽ | -140₽ (CAC) |
-| Старт | 100 | 600₽ | 90₽ | 690₽ | 1,090₽ | **400₽ (37%)** |
-| Бизнес | 300 | 1,800₽ | 170₽ | 1,970₽ | 4,990₽ | **3,020₽ (61%)** |
-| Сеть | 1000 | 6,000₽ | 420₽ | 6,420₽ | 14,990₽ | **8,570₽ (57%)** |
+| Старт | 100 | 600₽ | 90₽ | 690₽ | 1,190₽ | **500₽ (42%)** |
+| Бизнес | 400 | 2,400₽ | 170₽ | 2,570₽ | 4,990₽ | **2,420₽ (48%)** |
+| Сеть | 1000 | 6,000₽ | 420₽ | 6,420₽ | 16,990₽ | **10,570₽ (62%)** |
 
-**Note:** Airline model — Старт is acquisition (37% margin), Бизнес/Сеть are profit centers (57-61%). Trial cost (140₽) recovered in first month on any paid plan.
+**Note:** Margins scale with tier (42% → 48% → 62%). Trial cost (140₽) recovered in first month. Arbitrage-proof: 4× Start (4,760₽) < Business (4,990₽) but Business has more users + features.
 
 ### Cheaper Alternatives to Consider
 
@@ -181,10 +182,10 @@ AI replies are included in higher tiers:
 **Trial Economics:**
 - Cost per trial: 140₽
 - If 30% convert to Старт: 140₽ / 0.3 = 467₽ CAC
-- LTV (12 months on Старт): 400₽ × 12 = 4,800₽
-- LTV:CAC = 10.3:1 ✅
+- LTV (12 months on Старт): 500₽ × 12 = 6,000₽
+- LTV:CAC = 12.8:1 ✅
 
-### Старт (1,090₽/month) — Acquisition Tier
+### Старт (1,190₽/month) — Entry Tier
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
@@ -192,29 +193,29 @@ AI replies are included in higher tiers:
 | Infrastructure | 40₽ | Allocated share |
 | Support | 50₽ | Email only |
 | **Total Cost** | **690₽** | |
-| **Gross Margin** | **400₽ (37%)** | Loss leader |
+| **Gross Margin** | **500₽ (42%)** | Entry tier |
 
-### Бизнес (4,990₽/month) — Profit Center
+### Бизнес (4,990₽/month) — Mid-Tier Profit
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (300) | 1,800₽ | @6₽ |
+| SMS (400) | 2,400₽ | @6₽ |
 | Infrastructure | 60₽ | Higher usage |
 | AI replies (50) | 10₽ | Negligible |
 | Support | 100₽ | Priority |
-| **Total Cost** | **1,970₽** | |
-| **Gross Margin** | **3,020₽ (61%)** | |
+| **Total Cost** | **2,570₽** | |
+| **Gross Margin** | **2,420₽ (48%)** | |
 
-### Сеть (14,990₽/month) — Premium Profit
+### Сеть (16,990₽/month) — Premium Profit
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
 | SMS (1000) | 6,000₽ | @6₽ |
-| Infrastructure | 100₽ | Heavy usage |
+| Infrastructure | 120₽ | Heavy usage |
 | AI replies (100) | 20₽ | Negligible |
-| Support | 300₽ | Personal manager |
+| Support | 280₽ | Personal manager |
 | **Total Cost** | **6,420₽** | |
-| **Gross Margin** | **8,570₽ (57%)** | |
+| **Gross Margin** | **10,570₽ (62%)** | |
 
 ---
 
@@ -365,17 +366,17 @@ MRR Growth (Optimistic)
 
 | Tier | Users | Revenue | Margin | Profit |
 |------|-------|---------|--------|--------|
-| Старт | 60 | 65,400₽ | 37% | 24,198₽ |
-| Бизнес | 30 | 149,700₽ | 61% | 91,317₽ |
-| Сеть | 10 | 149,900₽ | 57% | 85,443₽ |
-| **Total** | 100 | 365,000₽ | **55%** | **200,958₽** |
+| Старт | 60 | 71,400₽ | 42% | 30,000₽ |
+| Бизнес | 30 | 149,700₽ | 48% | 71,856₽ |
+| Сеть | 10 | 169,900₽ | 62% | 105,358₽ |
+| **Total** | 100 | 391,000₽ | **53%** | **207,214₽** |
 
-**ARPU:** 3,650₽ | **Avg margin:** 2,010₽ | **Break-even:** 25,000 ÷ 2,010 = ~13 users
+**ARPU:** 3,910₽ | **Avg margin:** 2,072₽ | **Break-even:** 25,000 ÷ 2,072 = ~12 users
 
-✅ **Airline model works:**
-- Старт undercuts all competitors → acquisition
-- Бизнес/Сеть carry profits (57-61% margins)
-- Blended margin 55% is healthy
+✅ **Pricing model works:**
+- Margins scale with tier (42% → 48% → 62%)
+- Higher tiers = higher profit per user
+- Arbitrage-proof via team limits + features
 
 ---
 
@@ -425,9 +426,9 @@ MRR Growth (Optimistic)
 
 ### Unit Economics
 - **CAC** (Customer Acquisition Cost): Target <3,000₽
-- **LTV** (Lifetime Value): Target >30,000₽ (15+ months × 2,010₽ margin)
+- **LTV** (Lifetime Value): Target >31,000₽ (15+ months × 2,072₽ margin)
 - **LTV:CAC ratio**: Target >10:1
-- **Gross Margin**: Target >55% blended (37% Старт, 57-61% Бизнес/Сеть)
+- **Gross Margin**: Target >50% blended (42% Старт, 48% Бизнес, 62% Сеть)
 
 ### Operational
 - SMS delivery rate: >95%

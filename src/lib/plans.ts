@@ -40,11 +40,11 @@ export const PLANS: Record<PlanId, Plan> = {
   start: {
     id: "start",
     name: "Старт",
-    price: 1090,
+    price: 1190,
     smsLimit: 100,
     aiRepliesLimit: 0,
     businessLimit: 1,
-    teamLimit: 1,
+    teamLimit: 3,
     features: {
       integrations: false,
       analytics: "full",
@@ -56,10 +56,10 @@ export const PLANS: Record<PlanId, Plan> = {
     id: "business",
     name: "Бизнес",
     price: 4990,
-    smsLimit: 300,
+    smsLimit: 400,
     aiRepliesLimit: 50,
     businessLimit: 5,
-    teamLimit: 5,
+    teamLimit: 20,
     features: {
       integrations: true,
       analytics: "full",
@@ -70,7 +70,7 @@ export const PLANS: Record<PlanId, Plan> = {
   network: {
     id: "network",
     name: "Сеть",
-    price: 14990,
+    price: 16990,
     smsLimit: 1000,
     aiRepliesLimit: 100,
     businessLimit: -1, // unlimited

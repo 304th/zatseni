@@ -9,21 +9,21 @@ const PLANS = [
   {
     id: "start",
     name: "Старт",
-    price: 1090,
-    features: ["1 точка", "100 SMS в месяц", "Полная аналитика"],
+    price: 1190,
+    features: ["1 точка", "До 3 сотрудников", "100 SMS в месяц"],
   },
   {
     id: "business",
     name: "Бизнес",
     price: 4990,
-    features: ["До 5 точек", "300 SMS в месяц", "50 AI-ответов"],
+    features: ["До 5 точек", "До 20 сотрудников", "400 SMS в месяц"],
     popular: true,
   },
   {
     id: "network",
     name: "Сеть",
-    price: 14990,
-    features: ["Безлимит точек", "1000 SMS в месяц", "White label"],
+    price: 16990,
+    features: ["Безлимит точек", "Безлимит сотрудников", "1000 SMS в месяц"],
   },
 ];
 
