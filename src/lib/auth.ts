@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           plan: user.plan,
           phone: user.phone,
+          phoneVerified: user.phoneVerified ? true : false,
         };
       },
     }),
@@ -98,6 +99,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           plan: user.plan,
           phone: user.phone,
+          phoneVerified: user.phoneVerified ? true : false,
         };
       },
     }),
@@ -159,6 +161,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           plan: user.plan,
           phone: user.phone,
+          phoneVerified: user.phoneVerified ? true : false,
         };
       },
     }),
@@ -210,6 +213,7 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as { role?: string }).role;
         token.plan = (user as { plan?: string }).plan;
         token.phone = (user as { phone?: string | null }).phone;
+        token.phoneVerified = (user as { phoneVerified?: boolean }).phoneVerified;
       }
 
       // Refresh user data on session update
@@ -221,6 +225,7 @@ export const authOptions: NextAuthOptions = {
           token.role = freshUser.role;
           token.plan = freshUser.plan;
           token.phone = freshUser.phone;
+          token.phoneVerified = freshUser.phoneVerified ? true : false;
         }
       }
 
@@ -233,6 +238,7 @@ export const authOptions: NextAuthOptions = {
           token.role = dbUser.role;
           token.plan = dbUser.plan;
           token.phone = dbUser.phone;
+          token.phoneVerified = dbUser.phoneVerified ? true : false;
         }
       }
 
@@ -244,6 +250,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
         session.user.plan = token.plan as string;
         session.user.phone = token.phone as string | null | undefined;
+        session.user.phoneVerified = token.phoneVerified as boolean | undefined;
       }
       return session;
     },

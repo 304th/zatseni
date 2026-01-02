@@ -60,6 +60,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
     }
 
+    // Check phone verification
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { phoneVerified: true },
+    });
+
+    if (!user?.phoneVerified) {
+      return NextResponse.json(
+        { error: "Подтвердите номер телефона для отправки SMS", code: "PHONE_NOT_VERIFIED" },
+        { status: 403 }
+      );
+    }
+
     const { businessId, phone } = await req.json();
 
     if (!businessId || !phone) {
