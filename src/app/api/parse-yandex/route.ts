@@ -96,22 +96,42 @@ function extractFromEmbeddedJson(html: string): Partial<YandexBusinessData> {
     if (data.address) break;
   }
 
-  // Phone patterns
+  // Phone patterns - try multiple approaches
   const phonePatterns = [
     /"phones"\s*:\s*\[\s*\{[^}]*"formatted"\s*:\s*"([^"]+)"/,
     /"phoneNumbers"\s*:\s*\[\s*"([^"]+)"/,
-    /"phone"\s*:\s*"(\+?[78][^"]{9,14})"/,
-    /"telephone"\s*:\s*"(\+?[78][^"]{9,14})"/,
+    /"telephone"\s*:\s*"([^"]+)"/,
+    /"phone"\s*:\s*"([^"]+)"/,
+    /"formattedPhone"\s*:\s*"([^"]+)"/,
   ];
 
   for (const pattern of phonePatterns) {
     const match = html.match(pattern);
     if (match && match[1]) {
       let phone = match[1].replace(/"/g, "").trim();
-      if (phone.match(/^[\+\d\s\(\)-]{10,}/)) {
+      // Check if it looks like a phone number
+      if (phone.match(/[\d\s\(\)-]{7,}/) && phone.match(/\d{7,}/)) {
         data.phone = phone;
         break;
       }
+    }
+  }
+
+  // Fallback: find any phone-like pattern in the HTML
+  if (!data.phone) {
+    const phoneRegex = /["'](\+7[\s\(\)-]*\d{3}[\s\(\)-]*\d{3}[\s\(\)-]*\d{2}[\s\(\)-]*\d{2})["']/g;
+    const phoneMatch = html.match(phoneRegex);
+    if (phoneMatch && phoneMatch[0]) {
+      data.phone = phoneMatch[0].replace(/["']/g, "");
+    }
+  }
+
+  // Another fallback: 8-xxx format
+  if (!data.phone) {
+    const phone8Regex = /["'](8[\s\(\)-]*\d{3}[\s\(\)-]*\d{3}[\s\(\)-]*\d{2}[\s\(\)-]*\d{2})["']/;
+    const phoneMatch = html.match(phone8Regex);
+    if (phoneMatch && phoneMatch[1]) {
+      data.phone = phoneMatch[1];
     }
   }
 
