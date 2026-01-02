@@ -4,10 +4,10 @@
 
 | Plan | Price | SMS/mo | Locations | AI Replies | Target |
 |------|-------|--------|-----------|------------|--------|
-| Бесплатный | 0₽ | 10 | 1 | 0 | Try it free |
+| Бесплатный | 0₽ | 5 | 1 | 0 | Try it free |
 | Старт | 990₽ | 100 | 1 | 0 | Small business |
 | Бизнес | 3,990₽ | 500 | 5 | 50 | Growing companies |
-| Сеть | 9,990₽ | 2000 | Unlimited | 100 | Networks/franchises |
+| Сеть | 9,990₽ | 1000 | Unlimited | 100 | Networks/franchises |
 
 ---
 
@@ -36,12 +36,12 @@
 
 | Tier | SMS Included | Our Cost | Revenue | SMS Margin |
 |------|--------------|----------|---------|------------|
-| Бесплатный | 10 | 25₽ | 0₽ | -25₽ (marketing) |
+| Бесплатный | 5 | 12.5₽ | 0₽ | -12.5₽ (marketing) |
 | Старт | 100 | 250₽ | 990₽ | 740₽ (75%) |
 | Бизнес | 500 | 1,250₽ | 3,990₽ | 2,740₽ (69%) |
-| Сеть | 2000 | 5,000₽ | 9,990₽ | 4,990₽ (50%) |
+| Сеть | 1000 | 2,500₽ | 9,990₽ | 7,490₽ (75%) |
 
-**Note:** Free tier is a marketing cost (~25₽/user/month). Бизнес tier has healthy margins after price adjustment.
+**Note:** Free tier is a marketing cost (~12.5₽/user/month). Сеть tier value = unlimited locations + white label, not more SMS.
 
 ### Cheaper Alternatives to Consider
 
@@ -146,11 +146,11 @@ AI replies are included in paid tiers:
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (10) | 25₽ | @2.5₽ |
+| SMS (5) | 12.5₽ | @2.5₽ |
 | Infrastructure | 20₽ | Minimal usage |
 | Support | 0₽ | Self-service |
-| **Total Cost** | **45₽** | |
-| **Gross Margin** | **-45₽** | Marketing cost |
+| **Total Cost** | **32.5₽** | |
+| **Gross Margin** | **-32.5₽** | Marketing cost |
 
 ### Старт (990₽/month)
 
@@ -177,12 +177,12 @@ AI replies are included in paid tiers:
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (2000) | 5,000₽ | @2.5₽ |
+| SMS (1000) | 2,500₽ | @2.5₽ |
 | Infrastructure | 100₽ | Heavy usage |
 | AI replies (100) | 20₽ | Negligible |
 | Support | 300₽ | Personal manager |
-| **Total Cost** | **5,420₽** | |
-| **Gross Margin** | **4,570₽ (46%)** | |
+| **Total Cost** | **2,920₽** | |
+| **Gross Margin** | **7,070₽ (71%)** | |
 
 ---
 
@@ -197,7 +197,7 @@ We consolidated from 5 to 4 tiers for simplicity:
 
 ### Free Tier Economics
 
-Free tier costs us ~45₽/user/month. Break-even if:
+Free tier costs us ~32.5₽/user/month. Break-even if:
 - 5% convert to Старт (990₽ × 0.05 = 49.5₽)
 - Or 2% convert to Бизнес (3,990₽ × 0.02 = 79.8₽)
 

@@ -57,7 +57,7 @@ const pricing = [
     description: "Попробуйте бесплатно",
     features: [
       "1 точка",
-      "10 SMS в месяц",
+      "5 SMS в месяц",
       "Базовая аналитика",
     ],
     cta: "Начать бесплатно",
@@ -100,7 +100,7 @@ const pricing = [
     description: "Для сетей и франшиз",
     features: [
       "Неограниченно точек",
-      "2000 SMS в месяц",
+      "1000 SMS в месяц",
       "100 AI-ответов в месяц",
       "White label",
     ],
@@ -354,7 +354,7 @@ export default function Home() {
             Готовы получать больше отзывов?
           </h2>
           <p className="text-xl text-indigo-100 mb-8">
-            Начните с бесплатного тарифа — 10 SMS в месяц
+            Начните с бесплатного тарифа — 5 SMS в месяц
           </p>
           <CTALink
             href="/signup"

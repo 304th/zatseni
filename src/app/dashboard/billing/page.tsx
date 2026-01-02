@@ -9,7 +9,7 @@ const PLANS = [
     id: "free",
     name: "Бесплатный",
     price: 0,
-    features: ["1 точка", "10 SMS в месяц", "Базовая аналитика"],
+    features: ["1 точка", "5 SMS в месяц", "Базовая аналитика"],
   },
   {
     id: "start",
@@ -28,7 +28,7 @@ const PLANS = [
     id: "network",
     name: "Сеть",
     price: 9990,
-    features: ["Безлимит точек", "2000 SMS в месяц", "White label"],
+    features: ["Безлимит точек", "1000 SMS в месяц", "White label"],
   },
 ];
 

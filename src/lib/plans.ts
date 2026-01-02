@@ -21,7 +21,7 @@ export const PLANS: Record<PlanId, Plan> = {
     id: "free",
     name: "Бесплатный",
     price: 0,
-    smsLimit: 10,
+    smsLimit: 5,
     aiRepliesLimit: 0,
     businessLimit: 1,
     teamLimit: 1,
@@ -66,7 +66,7 @@ export const PLANS: Record<PlanId, Plan> = {
     id: "network",
     name: "Сеть",
     price: 9990,
-    smsLimit: 2000,
+    smsLimit: 1000,
     aiRepliesLimit: 100,
     businessLimit: -1, // unlimited
     teamLimit: -1, // unlimited
