@@ -1,4 +1,4 @@
-export type PlanId = "start" | "business" | "business_plus" | "network";
+export type PlanId = "free" | "start" | "business" | "business_plus" | "network";
 
 export interface Plan {
   id: PlanId;
@@ -17,6 +17,21 @@ export interface Plan {
 }
 
 export const PLANS: Record<PlanId, Plan> = {
+  free: {
+    id: "free",
+    name: "Бесплатный",
+    price: 0,
+    smsLimit: 10,
+    aiRepliesLimit: 0,
+    businessLimit: 1,
+    teamLimit: 1,
+    features: {
+      integrations: false,
+      analytics: "basic",
+      priority_support: false,
+      custom_branding: false,
+    },
+  },
   start: {
     id: "start",
     name: "Старт",
@@ -27,7 +42,7 @@ export const PLANS: Record<PlanId, Plan> = {
     teamLimit: 1,
     features: {
       integrations: false,
-      analytics: "basic",
+      analytics: "full",
       priority_support: false,
       custom_branding: false,
     },
@@ -43,7 +58,7 @@ export const PLANS: Record<PlanId, Plan> = {
     features: {
       integrations: true,
       analytics: "full",
-      priority_support: true,
+      priority_support: false,
       custom_branding: true,
     },
   },
@@ -80,7 +95,7 @@ export const PLANS: Record<PlanId, Plan> = {
 };
 
 export function getPlan(planId: string): Plan {
-  return PLANS[planId as PlanId] || PLANS.start;
+  return PLANS[planId as PlanId] || PLANS.free;
 }
 
 export function canUseIntegrations(planId: string): boolean {

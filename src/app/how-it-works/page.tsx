@@ -226,7 +226,7 @@ export default function HowItWorksPage() {
       <section className="bg-blue-600 py-16 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">Начните собирать отзывы сегодня</h2>
         <p className="text-xl mb-8 opacity-90">
-          Бесплатный пробный период 14 дней
+          Бесплатный тариф навсегда
         </p>
         <div className="flex gap-4 justify-center">
           <CTALink

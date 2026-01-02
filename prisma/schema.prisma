@@ -47,9 +47,7 @@ model User {
   phoneVerified DateTime?           // when phone was verified
   telegramId    String?    @unique  // for Telegram auth
   role          String     @default("user") // user, support, admin
-  plan          String     @default("start") // start, business, network
-  trialStartedAt DateTime?          // when trial started (after phone verification)
-  trialEndsAt    DateTime?          // when trial ends (14 days after start)
+  plan          String     @default("free") // free, start, business, business_plus, network
   accounts      Account[]
   sessions      Session[]
   businesses    Business[]         // businesses owned by user
@@ -183,12 +181,3 @@ model PhoneOTP {
   @@index([phone])
 }
 
-// Track phones that have been used for trials (prevents abuse)
-model TrialPhone {
-  id        String   @id @default(cuid())
-  phone     String   @unique
-  userId    String   // user who used this phone for trial
-  usedAt    DateTime @default(now())
-
-  @@index([phone])
-}

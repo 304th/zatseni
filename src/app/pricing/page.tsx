@@ -7,6 +7,25 @@ import PublicHeader from "@/components/PublicHeader";
 
 const plans = [
   {
+    id: "free",
+    name: "Бесплатный",
+    price: "0",
+    period: "мес",
+    description: "Попробуйте бесплатно",
+    features: [
+      "1 точка",
+      "10 SMS в месяц",
+      "Базовая аналитика",
+    ],
+    notIncluded: [
+      "AI-ответы на отзывы",
+      "Интеграции с CRM/POS",
+    ],
+    cta: "Начать бесплатно",
+    ctaLoggedIn: "Текущий",
+    popular: false,
+  },
+  {
     id: "start",
     name: "Старт",
     price: "990",
@@ -15,14 +34,13 @@ const plans = [
     features: [
       "1 точка",
       "100 SMS в месяц",
-      "Базовая аналитика",
-      "Email поддержка",
+      "Полная аналитика",
     ],
     notIncluded: [
       "AI-ответы на отзывы",
       "Интеграции с CRM/POS",
     ],
-    cta: "Начать бесплатно",
+    cta: "Выбрать план",
     ctaLoggedIn: "Выбрать",
     popular: false,
   },
@@ -37,7 +55,6 @@ const plans = [
       "500 SMS в месяц",
       "30 AI-ответов в месяц",
       "Интеграции с CRM/POS",
-      "Брендирование страницы",
     ],
     notIncluded: [],
     cta: "Выбрать план",
@@ -54,9 +71,7 @@ const plans = [
       "До 10 точек",
       "1000 SMS в месяц",
       "50 AI-ответов в месяц",
-      "Интеграции с CRM/POS",
       "Приоритетная поддержка",
-      "Брендирование страницы",
     ],
     notIncluded: [],
     cta: "Выбрать план",
@@ -73,7 +88,6 @@ const plans = [
       "Неограниченно точек",
       "2000 SMS в месяц",
       "100 AI-ответов в месяц",
-      "Персональный менеджер",
       "White label",
     ],
     notIncluded: [],
@@ -85,8 +99,8 @@ const plans = [
 
 const faqs = [
   {
-    q: "Как работает пробный период?",
-    a: "Вы получаете 14 дней бесплатно на тарифе «Старт» с 50 бесплатными SMS. Карта не требуется.",
+    q: "Как работает бесплатный тариф?",
+    a: "Вы получаете 10 SMS в месяц бесплатно навсегда. Карта не требуется. Можете перейти на платный тариф в любой момент.",
   },
   {
     q: "Можно ли менять тариф?",
@@ -138,7 +152,7 @@ export default function PricingPage() {
 
       {/* Pricing Cards */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {plans.map((plan) => {
             const isCurrentPlan = isLoggedIn && plan.id === currentPlan;
             return (
@@ -293,7 +307,7 @@ export default function PricingPage() {
       <section className="bg-blue-600 py-16 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">Готовы начать?</h2>
         <p className="text-xl mb-8 opacity-90">
-          14 дней бесплатно. Без привязки карты.
+          Бесплатный тариф навсегда. Без привязки карты.
         </p>
         {isLoggedIn ? (
           <Link
@@ -307,7 +321,7 @@ export default function PricingPage() {
             href="/signup"
             className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
           >
-            Создать аккаунт
+            Начать бесплатно
           </Link>
         )}
       </section>

@@ -3,9 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const TRIAL_DAYS = 14;
-
-// Link phone to existing user account and start trial
+// Link phone to existing user account
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -55,51 +53,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if phone already used for trial
-    const existingTrialPhone = await prisma.trialPhone.findUnique({
-      where: { phone },
-    });
-
-    // Get current user
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "Пользователь не найден" }, { status: 404 });
-    }
-
-    // Start trial only if phone not used before AND user doesn't already have trial
-    const now = new Date();
-    const canStartTrial = !existingTrialPhone && !user.trialStartedAt;
-
+    // Link phone to user
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: session.user.id },
       data: {
         phone,
-        phoneVerified: now,
-        ...(canStartTrial && {
-          trialStartedAt: now,
-          trialEndsAt: new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000),
-        }),
+        phoneVerified: new Date(),
       },
     });
 
-    // Record phone as used for trial
-    if (canStartTrial) {
-      await prisma.trialPhone.create({
-        data: {
-          phone,
-          userId: user.id,
-        },
-      });
-    }
-
-    return NextResponse.json({
-      success: true,
-      trialStarted: canStartTrial,
-      trialBlocked: !!existingTrialPhone,
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Link phone error:", error);
     return NextResponse.json(

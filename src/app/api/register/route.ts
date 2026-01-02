@@ -4,7 +4,7 @@ import { sendVerificationEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-const VALID_PLANS = ["start", "business", "business_plus", "network"];
+const VALID_PLANS = ["free", "start", "business", "business_plus", "network"];
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate plan
-    const selectedPlan = VALID_PLANS.includes(plan) ? plan : "start";
+    const selectedPlan = VALID_PLANS.includes(plan) ? plan : "free";
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
