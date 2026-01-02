@@ -64,6 +64,20 @@ const pricing = [
     popular: false
   },
   {
+    id: "start",
+    name: "Старт",
+    price: "990",
+    period: "₽/мес",
+    description: "Для небольшого бизнеса",
+    features: [
+      "1 точка",
+      "100 SMS в месяц",
+      "Полная аналитика",
+    ],
+    cta: "Выбрать план",
+    popular: false
+  },
+  {
     id: "business",
     name: "Бизнес",
     price: "2 990",
@@ -297,7 +311,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 max-w-7xl mx-auto">
             {pricing.map((plan, i) => (
               <div
                 key={i}
