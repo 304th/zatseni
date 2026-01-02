@@ -111,3 +111,17 @@ export function formatPrice(price: number): string {
   if (price === 0) return "Бесплатно";
   return `${price.toLocaleString("ru-RU")} ₽/мес`;
 }
+
+// Get user's effective price (grandfathered or current)
+// planPrice is stored in kopecks, returns rubles
+export function getUserPlanPrice(planId: string, planPriceKopecks?: number | null): number {
+  if (planPriceKopecks != null) {
+    return planPriceKopecks / 100; // convert kopecks to rubles
+  }
+  return getPlan(planId).price;
+}
+
+// Get price in kopecks for storage
+export function getPlanPriceKopecks(planId: string): number {
+  return getPlan(planId).price * 100;
+}

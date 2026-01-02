@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendVerificationEmail } from "@/lib/email";
+import { getPlanPriceKopecks } from "@/lib/plans";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -41,6 +42,8 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         plan: selectedPlan,
+        planPrice: getPlanPriceKopecks(selectedPlan),
+        planStartedAt: new Date(),
       },
     });
 

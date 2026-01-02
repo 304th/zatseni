@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { PLANS } from "@/lib/plans";
+import { PLANS, getPlanPriceKopecks } from "@/lib/plans";
 
 // YooKassa webhook handler
 export async function POST(req: NextRequest) {
@@ -36,10 +36,14 @@ export async function POST(req: NextRequest) {
 
       // Apply the purchase
       if (payment.type === "subscription" && payment.planId) {
-        // Update user's plan
+        // Update user's plan with new price locked in
         await prisma.user.update({
           where: { id: payment.userId },
-          data: { plan: payment.planId },
+          data: {
+            plan: payment.planId,
+            planPrice: getPlanPriceKopecks(payment.planId),
+            planStartedAt: new Date(),
+          },
         });
 
         // Update all user's businesses with new SMS limits

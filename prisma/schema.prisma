@@ -48,6 +48,8 @@ model User {
   telegramId    String?    @unique  // for Telegram auth
   role          String     @default("user") // user, support, admin
   plan          String     @default("free") // free, start, business, network
+  planPrice     Int?       // locked price at signup (kopecks), null = current price
+  planStartedAt DateTime?  // when current plan started
   accounts      Account[]
   sessions      Session[]
   businesses    Business[]         // businesses owned by user

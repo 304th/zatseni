@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getPlanPriceKopecks } from "@/lib/plans";
 
 const VALID_PLANS = ["free", "start", "business", "network"];
 
@@ -50,6 +51,8 @@ export async function POST(req: NextRequest) {
           phone,
           phoneVerified: new Date(),
           plan: selectedPlan,
+          planPrice: getPlanPriceKopecks(selectedPlan),
+          planStartedAt: new Date(),
         },
       });
     }
