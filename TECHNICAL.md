@@ -8,12 +8,13 @@
 │  Frontend   │     │     ORM     │     │  (Supabase) │
 └─────────────┘     └─────────────┘     └─────────────┘
        │
-       ▼
-┌─────────────┐     ┌─────────────┐
-│  NextAuth   │     │  External   │
-│    JWT      │     │   APIs      │
-└─────────────┘     └─────────────┘
-                          │
+       ├───────────────────────────────┐
+       ▼                               ▼
+┌─────────────┐     ┌─────────────┐  ┌─────────────┐
+│  NextAuth   │     │  External   │  │   Upstash   │
+│    JWT      │     │   APIs      │  │    Redis    │
+└─────────────┘     └─────────────┘  │ (ratelimit) │
+                          │          └─────────────┘
               ┌───────────┼───────────┐
               ▼           ▼           ▼
          SMS.ru      YooKassa      SMTP
@@ -491,17 +492,34 @@ Webhook Events:
 - refund.succeeded
 ```
 
-### SMTP (Email)
+### Email (Resend)
 ```
-Supported providers:
-- Gmail: smtp.gmail.com:587
-- Yandex: smtp.yandex.ru:465 (SSL)
-- SendGrid: smtp.sendgrid.net:587
+Base URL: https://api.resend.com
+
+Send Email:
+POST /emails
+Headers: Authorization: Bearer RESEND_API_KEY
 
 Templates:
 - Verification email (24h expiry)
 - Password reset (1h expiry)
 - Team invite (7d expiry)
+```
+
+### Upstash Redis (Rate Limiting)
+```
+Console: https://console.upstash.com
+SDK: @upstash/ratelimit, @upstash/redis
+
+Rate Limits:
+- General API: 60 req/min (sliding window)
+- Auth endpoints: 10 req/min
+- SMS/OTP: 3 req/min
+
+Usage in src/lib/ratelimit.ts:
+- ratelimit: general API
+- authRatelimit: login/signup
+- smsRatelimit: OTP sending
 ```
 
 ---
@@ -537,13 +555,13 @@ SMSRU_API_KEY=xxx
 YOOKASSA_SHOP_ID=xxx
 YOOKASSA_SECRET_KEY=xxx
 
-# Email
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=xxx
-SMTP_PASS=xxx
-SMTP_FROM=noreply@zatseni.ru
+# Email (Resend)
+RESEND_API_KEY=re_xxx
+RESEND_FROM=noreply@zatseni.ru
+
+# Rate Limiting (Upstash Redis)
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxx
 ```
 
 ---
