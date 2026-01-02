@@ -140,21 +140,21 @@ AI replies are included in higher tiers:
 
 | Service | Plan | Cost/month | Notes |
 |---------|------|------------|-------|
-| **Vercel** | Pro | $20 | Hosting, edge functions |
-| **Neon PostgreSQL** | Launch | $19 | Serverless Postgres |
+| **Railway** | Hobby | $5 | Hosting |
+| **Supabase** | Free→Pro | $0-25 | PostgreSQL + Auth |
 | **Resend** | Free→Pro | $0-20 | Transactional email |
 | **Domain** | .ru | ~100₽/year | Negligible |
-| **Total** | | **~$40-60** | ~4,000-6,000₽ |
+| **Total** | | **~$5-50** | ~500-5,000₽ |
 
 ### Scaling Projections
 
-| Users | Vercel | Neon | Email | Total |
-|-------|--------|------|-------|-------|
-| 0-50 | $20 | $19 | $0 | $39 |
-| 50-200 | $20-40 | $19 | $20 | $59-79 |
-| 200-500 | $40-80 | $69 | $20 | $129-169 |
-| 500-1000 | $80-150 | $69-200 | $90 | $239-440 |
-| 1000+ | $150+ | $200+ | $90+ | $440+ |
+| Users | Railway | Supabase | Email | Total |
+|-------|---------|----------|-------|-------|
+| 0-50 | $5 | $0 | $0 | $5 |
+| 50-200 | $5-20 | $25 | $20 | $50-65 |
+| 200-500 | $20-40 | $25 | $20 | $65-85 |
+| 500-1000 | $40-80 | $25-100 | $90 | $155-270 |
+| 1000+ | $80+ | $100+ | $90+ | $270+ |
 
 ### Cost per Customer (Infrastructure only)
 
@@ -360,7 +360,7 @@ MRR Growth (Optimistic)
 | Conservative | Month 1-2 | ~20 paying users |
 | Optimistic | Month 1 | ~20 paying users |
 
-**Fixed costs:** ~25k₽/month (Vercel + Supabase + misc)
+**Fixed costs:** ~10k₽/month (Railway + Supabase + misc)
 
 **Blended margin calculation** (assumed mix: 60% Старт, 30% Бизнес, 10% Сеть):
 
@@ -454,8 +454,8 @@ MRR Growth (Optimistic)
 - [xAI Grok Pricing](https://docs.x.ai/docs/models)
 
 ### Infrastructure
-- [Vercel Pricing](https://vercel.com/pricing)
-- [Neon PostgreSQL Pricing](https://neon.com/pricing)
+- [Railway Pricing](https://railway.app/pricing)
+- [Supabase Pricing](https://supabase.com/pricing)
 - [Resend Email Pricing](https://resend.com/pricing)
 
 ---

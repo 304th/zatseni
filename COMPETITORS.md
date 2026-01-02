@@ -146,7 +146,7 @@ Most competitors rely on WhatsApp for messaging. **This is now a major vulnerabi
 
 ## Competitive Matrix
 
-| Feature | Zatseni | Revvy | SaySay | DailyGrow |
+| Feature | Otzovik.ai | Revvy | SaySay | DailyGrow |
 |---------|---------|-------|--------|-----------|
 | Entry Price | **1,090₽** | 2,990₽ | 1,290₽ | ~2,000₽ |
 | Mid Tier | 4,990₽ | 3,990₽ | 1,989₽ | ~3,000₽ |
@@ -159,7 +159,7 @@ Most competitors rely on WhatsApp for messaging. **This is now a major vulnerabi
 | Negative Capture | ✅ | ✅ | ✅ | ❌ |
 | CRM Integrations | ✅ | ✅ | ✅ | ❌ |
 
-**Zatseni is the cheapest AND the only one with working delivery channel.**
+**Otzovik.ai is the cheapest AND the only one with working delivery channel.**
 
 ## Our Differentiation
 
@@ -202,7 +202,7 @@ Most competitors rely on WhatsApp for messaging. **This is now a major vulnerabi
    - Future: Add as option, low priority for Russian market
 
 3. **No AI responses** - Competitors have ChatGPT
-   - Future: Auto-suggest responses to negative feedback
+   - Future: AI auto-suggest responses to negative reviews that slip through to Yandex/2GIS
 
 4. **No review monitoring** - We generate, do not aggregate
    - Future: Add passive monitoring from Yandex/2GIS

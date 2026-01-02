@@ -1,4 +1,4 @@
-# Zatseni Technical Documentation
+# Otzovik.ai Technical Documentation
 
 ## Architecture Overview
 
@@ -633,7 +633,7 @@ Warning: These use unofficial APIs and may break at any time.
 DATABASE_URL=postgresql://...
 
 # Auth
-NEXTAUTH_URL=https://zatseni.ru
+NEXTAUTH_URL=https://otzovik.ai
 NEXTAUTH_SECRET=random-32-bytes
 
 # SMS
@@ -645,7 +645,7 @@ YOOKASSA_SECRET_KEY=xxx
 
 # Email (Resend)
 RESEND_API_KEY=re_xxx
-RESEND_FROM=noreply@zatseni.ru
+RESEND_FROM=noreply@otzovik.ai
 
 # Rate Limiting (Upstash Redis)
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
@@ -657,7 +657,7 @@ QSTASH_CURRENT_SIGNING_KEY=xxx
 QSTASH_NEXT_SIGNING_KEY=xxx
 
 # App URL (for QStash callbacks)
-NEXT_PUBLIC_APP_URL=https://zatseni.ru
+NEXT_PUBLIC_APP_URL=https://otzovik.ai
 ```
 
 ---

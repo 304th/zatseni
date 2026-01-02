@@ -1,8 +1,8 @@
-# Зацени — Review Booster for Russian Market
+# Otzovik.ai — Review Booster for Russian Market
 
 ## What It Does
 
-Zatseni helps local businesses collect more positive reviews on Yandex Maps and 2GIS by intercepting customer feedback before it goes public.
+Otzovik.ai helps local businesses collect more positive reviews on Yandex Maps and 2GIS by intercepting customer feedback before it goes public.
 
 **The Problem:** Most customers only leave reviews when angry. Happy customers rarely bother.
 
@@ -22,14 +22,14 @@ Customer Visit → SMS Sent → Customer Rates → Routing Decision
 1. **Business Setup**
    - Owner signs up, adds business info
    - Configures Yandex Maps and 2GIS review URLs
-   - Gets unique review page: `zatseni.ru/r/business-slug`
+   - Gets unique review page: `otzovik.ai/r/business-slug`
 
 2. **SMS Sending**
    - Manual: Dashboard button, enter phone
    - Automated: CRM/POS webhook integration (Bitrix24, AmoCRM, YCLIENTS, iiko, Poster)
 
 3. **Customer Experience**
-   - Receives SMS: "Thanks for visiting [Business]! Rate us: zatseni.ru/r/slug"
+   - Receives SMS: "Thanks for visiting [Business]! Rate us: otzovik.ai/r/slug"
    - Opens link, sees 5-star rating selector
    - **If 4-5 stars:** "Thanks! Please leave a review" + Yandex/2GIS buttons
    - **If 1-3 stars:** "What went wrong?" + private feedback form
@@ -121,7 +121,7 @@ Owner → Integrations page → Create API key → Copy webhook URL
      ↓
 In CRM (e.g., iiko): Settings → Webhooks → Add URL with ?key=API_KEY
      ↓
-On each completed order: CRM POSTs phone → Zatseni sends SMS
+On each completed order: CRM POSTs phone → Otzovik.ai sends SMS
 ```
 
 ## Key Metrics to Track
@@ -162,7 +162,7 @@ On each completed order: CRM POSTs phone → Zatseni sends SMS
 - **SMS:** SMS.ru API
 - **Payments:** YooKassa
 - **Auth:** NextAuth.js with credentials + JWT
-- **Hosting:** Vercel (recommended)
+- **Hosting:** Railway
 
 ## Future Roadmap Ideas
 
