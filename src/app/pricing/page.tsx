@@ -19,8 +19,8 @@ const plans = [
       "Email поддержка",
     ],
     notIncluded: [
+      "AI-ответы на отзывы",
       "Интеграции с CRM/POS",
-      "Брендирование страницы",
     ],
     cta: "Начать бесплатно",
     ctaLoggedIn: "Выбрать",
@@ -29,15 +29,33 @@ const plans = [
   {
     id: "business",
     name: "Бизнес",
-    price: "2 490",
+    price: "2 990",
     period: "мес",
     description: "Для растущих компаний",
     features: [
       "До 5 точек",
       "500 SMS в месяц",
-      "Расширенная аналитика",
-      "Приоритетная поддержка",
+      "30 AI-ответов в месяц",
       "Интеграции с CRM/POS",
+      "Брендирование страницы",
+    ],
+    notIncluded: [],
+    cta: "Выбрать план",
+    ctaLoggedIn: "Выбрать",
+    popular: false,
+  },
+  {
+    id: "business_plus",
+    name: "Бизнес+",
+    price: "4 990",
+    period: "мес",
+    description: "Оптимальный выбор",
+    features: [
+      "До 10 точек",
+      "1000 SMS в месяц",
+      "50 AI-ответов в месяц",
+      "Интеграции с CRM/POS",
+      "Приоритетная поддержка",
       "Брендирование страницы",
     ],
     notIncluded: [],
@@ -48,15 +66,14 @@ const plans = [
   {
     id: "network",
     name: "Сеть",
-    price: "7 990",
+    price: "9 990",
     period: "мес",
     description: "Для сетей и франшиз",
     features: [
       "Неограниченно точек",
       "2000 SMS в месяц",
-      "Полная аналитика",
+      "100 AI-ответов в месяц",
       "Персональный менеджер",
-      "Интеграции с CRM/POS",
       "White label",
     ],
     notIncluded: [],
@@ -120,8 +137,8 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-3 gap-8">
+      <section className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan) => {
             const isCurrentPlan = isLoggedIn && plan.id === currentPlan;
             return (

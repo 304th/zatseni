@@ -1,10 +1,11 @@
-export type PlanId = "start" | "business" | "network";
+export type PlanId = "start" | "business" | "business_plus" | "network";
 
 export interface Plan {
   id: PlanId;
   name: string;
   price: number; // rubles/month, 0 = free
   smsLimit: number;
+  aiRepliesLimit: number; // AI auto-replies to negative reviews
   businessLimit: number;
   teamLimit: number; // -1 = unlimited
   features: {
@@ -21,6 +22,7 @@ export const PLANS: Record<PlanId, Plan> = {
     name: "Старт",
     price: 990,
     smsLimit: 100,
+    aiRepliesLimit: 0,
     businessLimit: 1,
     teamLimit: 1,
     features: {
@@ -33,10 +35,26 @@ export const PLANS: Record<PlanId, Plan> = {
   business: {
     id: "business",
     name: "Бизнес",
-    price: 2490,
+    price: 2990,
     smsLimit: 500,
+    aiRepliesLimit: 30,
     businessLimit: 5,
     teamLimit: 5,
+    features: {
+      integrations: true,
+      analytics: "full",
+      priority_support: true,
+      custom_branding: true,
+    },
+  },
+  business_plus: {
+    id: "business_plus",
+    name: "Бизнес+",
+    price: 4990,
+    smsLimit: 1000,
+    aiRepliesLimit: 50,
+    businessLimit: 10,
+    teamLimit: 10,
     features: {
       integrations: true,
       analytics: "full",
@@ -47,8 +65,9 @@ export const PLANS: Record<PlanId, Plan> = {
   network: {
     id: "network",
     name: "Сеть",
-    price: 7990,
+    price: 9990,
     smsLimit: 2000,
+    aiRepliesLimit: 100,
     businessLimit: -1, // unlimited
     teamLimit: -1, // unlimited
     features: {
@@ -70,6 +89,7 @@ export function canUseIntegrations(planId: string): boolean {
 
 export function canAddBusiness(planId: string, currentCount: number): boolean {
   const plan = getPlan(planId);
+  if (plan.businessLimit === -1) return true;
   return currentCount < plan.businessLimit;
 }
 
@@ -81,6 +101,10 @@ export function canAddTeamMember(planId: string, currentCount: number): boolean 
 
 export function getSmsLimit(planId: string): number {
   return getPlan(planId).smsLimit;
+}
+
+export function getAiRepliesLimit(planId: string): number {
+  return getPlan(planId).aiRepliesLimit;
 }
 
 export function formatPrice(price: number): string {
