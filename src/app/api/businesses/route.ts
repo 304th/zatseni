@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
     }
 
-    const { name, phone, address, yandexUrl, gisUrl } = await req.json();
+    const { name, phone, address, yandexUrl, gisUrl, images } = await req.json();
 
     if (!name) {
       return NextResponse.json(
@@ -85,6 +85,7 @@ export async function POST(req: NextRequest) {
         address,
         yandexUrl,
         gisUrl,
+        images,
         userId: session.user.id,
         smsLimit: getSmsLimit(userPlan),
       },

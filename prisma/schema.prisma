@@ -85,6 +85,7 @@ model Business {
   yandexUrl   String?   // Yandex Maps URL
   gisUrl      String?   // 2GIS URL
   logo        String?
+  images      String?   // JSON array of image URLs from Yandex Maps
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   requests    ReviewRequest[]
