@@ -87,7 +87,7 @@ export default function ReviewForm({ businessId, yandexUrl, gisUrl }: ReviewForm
         <div className="flex flex-col gap-3 mt-6">
           {yandexUrl && (
             <a
-              href={yandexUrl.includes("/reviews") ? yandexUrl : `${yandexUrl.replace(/\/$/, "")}/reviews/`}
+              href={`${yandexUrl.replace(/\/$/, "")}${yandexUrl.includes("?") ? "&" : "?"}add-review=true`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-yellow-400 text-black py-3 px-4 rounded-lg font-medium hover:bg-yellow-500 transition"
