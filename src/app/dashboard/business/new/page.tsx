@@ -49,8 +49,9 @@ export default function NewBusinessPage() {
 
   const createMutation = useMutation({
     mutationFn: () => {
+      const { slug, ...rest } = formData;
       const data = {
-        ...formData,
+        ...rest,
         images: parsedImages.length > 0 ? JSON.stringify(parsedImages) : null,
       };
       return api.createBusiness(data as Parameters<typeof api.createBusiness>[0]);
