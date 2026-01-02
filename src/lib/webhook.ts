@@ -75,6 +75,7 @@ export async function processWebhook(
   });
 
   // Send SMS with review link
+  // TODO: support custom sender name per business (requires sms.ru registration)
   const reviewUrl = `${process.env.NEXTAUTH_URL}/r/${business.slug}`;
   const message = `Спасибо за визит в ${business.name}! Оцените нас: ${reviewUrl}`;
 

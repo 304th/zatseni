@@ -9,7 +9,14 @@ interface SmsResult {
   smsId?: string;
 }
 
-export async function sendSms(phone: string, message: string): Promise<SmsResult> {
+// Default sender name (must be registered in sms.ru dashboard)
+const DEFAULT_SENDER = process.env.SMSRU_SENDER || "Otzovik";
+
+export async function sendSms(
+  phone: string,
+  message: string,
+  senderName?: string
+): Promise<SmsResult> {
   const apiKey = process.env.SMSRU_API_KEY;
 
   if (!apiKey) {
@@ -24,10 +31,12 @@ export async function sendSms(phone: string, message: string): Promise<SmsResult
   }
 
   try {
+    const from = senderName || DEFAULT_SENDER;
     const params = new URLSearchParams({
       api_id: apiKey,
       to: phone,
       msg: message,
+      from,
       json: "1",
     });
 
