@@ -10,101 +10,274 @@ interface YandexBusinessData {
   yandexUrl?: string;
 }
 
-// Extract org ID from various Yandex Maps URL formats
-function extractOrgId(url: string): string | null {
-  // Format: /org/name/123456789/ or /org/123456789/
-  const orgMatch = url.match(/\/org\/(?:[^/]+\/)?(\d+)/);
-  if (orgMatch) return orgMatch[1];
+// Extract organization data from embedded JSON in Yandex Maps page
+function extractFromEmbeddedJson(html: string): Partial<YandexBusinessData> {
+  const data: Partial<YandexBusinessData> = {};
 
-  // Format: oid=123456789
-  const oidMatch = url.match(/oid=(\d+)/);
-  if (oidMatch) return oidMatch[1];
+  // Method 1: Look for organization data in script tags
+  // Yandex embeds data like: "name":"Business Name","address":{"formatted":"..."}
 
-  return null;
-}
+  // Extract business name - look for patterns in JSON
+  const namePatterns = [
+    // "name":"Business Name" in organization context
+    /"displayName"\s*:\s*"([^"]+)"/,
+    /"orgName"\s*:\s*"([^"]+)"/,
+    /"title"\s*:\s*"([^"]+)"[^}]*"type"\s*:\s*"business"/,
+    // From structured data
+    /"name"\s*:\s*"([^"]+)"[^}]*"@type"\s*:\s*"(?:LocalBusiness|Organization|Store|Restaurant|Place)"/,
+    /"@type"\s*:\s*"(?:LocalBusiness|Organization|Store|Restaurant|Place)"[^}]*"name"\s*:\s*"([^"]+)"/,
+  ];
 
-// Parse HTML to extract business data
-function parseYandexHtml(html: string, url: string): YandexBusinessData {
-  const data: YandexBusinessData = { yandexUrl: url };
+  for (const pattern of namePatterns) {
+    const match = html.match(pattern);
+    if (match && match[1] && !match[1].includes("Яндекс") && match[1].length < 100) {
+      data.name = match[1];
+      break;
+    }
+  }
 
-  // Try to find JSON-LD data
-  const jsonLdMatch = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/i);
-  if (jsonLdMatch) {
-    try {
-      const jsonLd = JSON.parse(jsonLdMatch[1]);
-      if (jsonLd.name) data.name = jsonLd.name;
-      if (jsonLd.address?.streetAddress) data.address = jsonLd.address.streetAddress;
-      if (jsonLd.telephone) data.phone = jsonLd.telephone;
-      if (jsonLd.image) {
-        data.images = Array.isArray(jsonLd.image) ? jsonLd.image.slice(0, 5) : [jsonLd.image];
+  // Extract address
+  const addressPatterns = [
+    /"formattedAddress"\s*:\s*"([^"]+)"/,
+    /"formatted"\s*:\s*"([^"]+)"[^}]*"kind"\s*:\s*"house"/,
+    /"address"\s*:\s*\{[^}]*"formatted"\s*:\s*"([^"]+)"/,
+    /"streetAddress"\s*:\s*"([^"]+)"/,
+    /"fullAddress"\s*:\s*"([^"]+)"/,
+    /"text"\s*:\s*"([^"]+)"[^}]*"precision"\s*:\s*"exact"/,
+  ];
+
+  for (const pattern of addressPatterns) {
+    const match = html.match(pattern);
+    if (match && match[1] && match[1].length > 5 && match[1].length < 200) {
+      // Clean up address - remove city prefix if too long
+      let addr = match[1];
+      // Decode unicode escapes
+      addr = addr.replace(/\\u([0-9a-fA-F]{4})/g, (_, code) =>
+        String.fromCharCode(parseInt(code, 16))
+      );
+      data.address = addr;
+      break;
+    }
+  }
+
+  // Extract phone
+  const phonePatterns = [
+    /"phones"\s*:\s*\[\s*\{[^}]*"formatted"\s*:\s*"([^"]+)"/,
+    /"phone"\s*:\s*"([^"]+)"/,
+    /"telephone"\s*:\s*"([^"]+)"/,
+    /"phoneNumber"\s*:\s*"([^"]+)"/,
+    /"\+7[\s\d()-]{10,14}"/,
+    /"8[\s\d()-]{10,14}"/,
+  ];
+
+  for (const pattern of phonePatterns) {
+    const match = html.match(pattern);
+    if (match) {
+      let phone = match[1] || match[0];
+      phone = phone.replace(/"/g, "").trim();
+      // Validate it looks like a phone
+      if (phone.match(/^[\+\d\s\(\)-]{10,}$/)) {
+        data.phone = phone;
+        break;
       }
-    } catch {
-      // JSON parse failed, continue with other methods
     }
   }
 
-  // Try meta tags
-  if (!data.name) {
-    const titleMatch = html.match(/<meta property="og:title" content="([^"]+)"/);
-    if (titleMatch) {
-      // Clean up title - often has "- Яндекс Карты" suffix
-      data.name = titleMatch[1].replace(/\s*[-–—]\s*Яндекс\s*Карты?.*$/i, "").trim();
-    }
-  }
+  // Extract images
+  const images: string[] = [];
 
-  if (!data.address) {
-    const descMatch = html.match(/<meta property="og:description" content="([^"]+)"/);
-    if (descMatch) {
-      // Description often contains address
-      const desc = descMatch[1];
-      // Try to extract address pattern
-      const addressMatch = desc.match(/(?:адрес|address)?:?\s*([^.]+(?:ул\.|пр\.|пер\.|д\.|к\.)[^.]+)/i);
-      if (addressMatch) {
-        data.address = addressMatch[1].trim();
-      } else if (desc.length < 200) {
-        // Short description might be the address
-        data.address = desc;
-      }
-    }
-  }
+  // Look for photo URLs in various formats
+  const imagePatterns = [
+    /https:\/\/avatars\.mds\.yandex\.net\/get-altay\/[^"'\s]+/g,
+    /https:\/\/avatars\.mds\.yandex\.net\/get-yandex-businesses\/[^"'\s]+/g,
+    /"photoUrl"\s*:\s*"([^"]+)"/g,
+    /"imageUrl"\s*:\s*"([^"]+avatars[^"]+)"/g,
+    /"src"\s*:\s*"(https:\/\/[^"]*avatars\.mds\.yandex\.net[^"]+)"/g,
+  ];
 
-  // Extract images from og:image and page content
-  if (!data.images || data.images.length === 0) {
-    const images: string[] = [];
+  for (const pattern of imagePatterns) {
+    const matches = html.matchAll(pattern);
+    for (const match of matches) {
+      let imgUrl = match[1] || match[0];
+      imgUrl = imgUrl.replace(/\\u002F/g, "/").replace(/\\/g, "");
 
-    // OG image
-    const ogImageMatch = html.match(/<meta property="og:image" content="([^"]+)"/);
-    if (ogImageMatch && !ogImageMatch[1].includes("logo")) {
-      images.push(ogImageMatch[1]);
-    }
-
-    // Look for image URLs in the page (Yandex uses avatars.mds.yandex.net for business photos)
-    const imageMatches = html.matchAll(/https:\/\/avatars\.mds\.yandex\.net\/[^"'\s]+/g);
-    for (const match of imageMatches) {
-      const imgUrl = match[0];
-      // Filter for reasonable image URLs (not icons, etc)
-      if (imgUrl.includes("/get-altay") || imgUrl.includes("/get-yandex-businesses")) {
+      // Filter out small images (icons, logos)
+      if (imgUrl.includes("/orig") || imgUrl.includes("/XL") || imgUrl.includes("/L") ||
+          (!imgUrl.includes("/S") && !imgUrl.includes("/XS") && !imgUrl.includes("/icon"))) {
         if (!images.includes(imgUrl) && images.length < 5) {
           images.push(imgUrl);
         }
       }
     }
+  }
 
-    if (images.length > 0) {
-      data.images = images.slice(0, 5);
+  if (images.length > 0) {
+    data.images = images;
+  }
+
+  return data;
+}
+
+// Extract from meta tags as fallback
+function extractFromMetaTags(html: string): Partial<YandexBusinessData> {
+  const data: Partial<YandexBusinessData> = {};
+
+  // OG Title - but clean it up
+  const titleMatch = html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
+                     html.match(/<meta\s+content="([^"]+)"\s+property="og:title"/i);
+  if (titleMatch) {
+    let title = titleMatch[1];
+    // Remove common suffixes
+    title = title
+      .replace(/\s*[-–—|]\s*Яндекс[\s.]?Карты.*$/i, "")
+      .replace(/\s*[-–—|]\s*Yandex[\s.]?Maps.*$/i, "")
+      .replace(/\s*[-–—|]\s*отзывы.*$/i, "")
+      .trim();
+
+    if (title && title.length > 2 && title.length < 100 && !title.toLowerCase().includes("яндекс")) {
+      data.name = title;
     }
   }
 
-  // Extract phone from page content
-  if (!data.phone) {
-    // Look for phone patterns in visible content
-    const phoneMatch = html.match(/(?:телефон|phone|тел\.?)[:\s]*([+7|8][\s\d()-]{10,})/i);
-    if (phoneMatch) {
-      data.phone = phoneMatch[1].replace(/[^\d+]/g, "");
+  // OG Description often contains address
+  const descMatch = html.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i) ||
+                    html.match(/<meta\s+content="([^"]+)"\s+property="og:description"/i);
+  if (descMatch) {
+    const desc = descMatch[1];
+    // Check if it looks like an address (contains common address words)
+    if (desc.match(/(?:ул\.|улица|пр\.|проспект|пер\.|д\.|дом|корп|стр|г\.|город|область|район)/i)) {
+      // Extract just the address part
+      const addrMatch = desc.match(/^([^.!?]+(?:д\.|дом)[^.!?]*)/i) ||
+                       desc.match(/^([^,]+,[^,]+,[^,]+)/);
+      if (addrMatch) {
+        data.address = addrMatch[1].trim();
+      } else if (desc.length < 150) {
+        data.address = desc;
+      }
+    }
+  }
+
+  // OG Image
+  const imgMatch = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i) ||
+                   html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/i);
+  if (imgMatch && !imgMatch[1].includes("logo") && imgMatch[1].includes("avatars")) {
+    data.images = [imgMatch[1]];
+  }
+
+  return data;
+}
+
+// Extract from JSON-LD structured data
+function extractFromJsonLd(html: string): Partial<YandexBusinessData> {
+  const data: Partial<YandexBusinessData> = {};
+
+  const jsonLdMatches = html.matchAll(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
+
+  for (const match of jsonLdMatches) {
+    try {
+      const jsonLd = JSON.parse(match[1]);
+
+      // Handle array of objects
+      const items = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+
+      for (const item of items) {
+        if (item["@type"] && ["LocalBusiness", "Organization", "Store", "Restaurant",
+            "FoodEstablishment", "HealthAndBeautyBusiness", "Place"].includes(item["@type"])) {
+
+          if (item.name && !data.name) {
+            data.name = item.name;
+          }
+
+          if (item.address && !data.address) {
+            if (typeof item.address === "string") {
+              data.address = item.address;
+            } else if (item.address.streetAddress) {
+              data.address = item.address.streetAddress;
+            } else if (item.address.formatted) {
+              data.address = item.address.formatted;
+            }
+          }
+
+          if (item.telephone && !data.phone) {
+            data.phone = item.telephone;
+          }
+
+          if (item.image && !data.images) {
+            data.images = Array.isArray(item.image) ? item.image.slice(0, 5) : [item.image];
+          }
+        }
+      }
+    } catch {
+      // JSON parse failed, continue
     }
   }
 
   return data;
+}
+
+// Extract from page title
+function extractFromTitle(html: string): Partial<YandexBusinessData> {
+  const data: Partial<YandexBusinessData> = {};
+
+  const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+  if (titleMatch) {
+    let title = titleMatch[1];
+    // Clean up title
+    title = title
+      .replace(/\s*[-–—|:]\s*Яндекс[\s.]?Карты.*$/i, "")
+      .replace(/\s*[-–—|:]\s*Yandex[\s.]?Maps.*$/i, "")
+      .replace(/\s*[-–—|]\s*карта.*$/i, "")
+      .replace(/\s*[-–—|]\s*отзывы.*$/i, "")
+      .trim();
+
+    if (title && title.length > 2 && title.length < 100 &&
+        !title.toLowerCase().includes("яндекс") &&
+        !title.toLowerCase().includes("yandex")) {
+      data.name = title;
+    }
+  }
+
+  return data;
+}
+
+// Main parsing function - combines all methods
+function parseYandexHtml(html: string, url: string): YandexBusinessData {
+  const result: YandexBusinessData = { yandexUrl: url };
+
+  // Try all extraction methods
+  const jsonData = extractFromEmbeddedJson(html);
+  const jsonLdData = extractFromJsonLd(html);
+  const metaData = extractFromMetaTags(html);
+  const titleData = extractFromTitle(html);
+
+  // Merge results with priority: embedded JSON > JSON-LD > meta > title
+  result.name = jsonData.name || jsonLdData.name || metaData.name || titleData.name;
+  result.address = jsonData.address || jsonLdData.address || metaData.address;
+  result.phone = jsonData.phone || jsonLdData.phone;
+
+  // Merge images from all sources
+  const allImages = [
+    ...(jsonData.images || []),
+    ...(jsonLdData.images || []),
+    ...(metaData.images || []),
+  ];
+
+  // Deduplicate and limit
+  const uniqueImages = [...new Set(allImages)].slice(0, 5);
+  if (uniqueImages.length > 0) {
+    result.images = uniqueImages;
+  }
+
+  // Clean up phone number
+  if (result.phone) {
+    result.phone = result.phone.replace(/[^\d+]/g, "");
+    // Normalize Russian phone
+    if (result.phone.startsWith("8") && result.phone.length === 11) {
+      result.phone = "+7" + result.phone.slice(1);
+    }
+  }
+
+  return result;
 }
 
 export async function POST(req: NextRequest) {
@@ -128,31 +301,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch the page
+    // Fetch the page with better headers
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        "Accept": "text/html,application/xhtml+xml",
-        "Accept-Language": "ru-RU,ru;q=0.9",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
       },
       redirect: "follow",
     });
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: "Не удалось загрузить страницу" },
+        { error: `Не удалось загрузить страницу: ${response.status}` },
         { status: 400 }
       );
     }
 
     const html = await response.text();
-    const finalUrl = response.url; // In case of redirects
+    const finalUrl = response.url;
 
+    // Debug: log a snippet if parsing fails
     const data = parseYandexHtml(html, finalUrl);
 
-    if (!data.name) {
+    // Return partial data even if name not found
+    if (!data.name && !data.address && !data.phone) {
+      console.error("Parse failed. HTML snippet:", html.slice(0, 2000));
       return NextResponse.json(
-        { error: "Не удалось найти информацию о бизнесе", partial: data },
+        {
+          error: "Не удалось найти информацию о бизнесе. Попробуйте ввести данные вручную.",
+          debug: {
+            htmlLength: html.length,
+            hasJsonLd: html.includes("application/ld+json"),
+            hasOgTitle: html.includes("og:title"),
+          }
+        },
         { status: 400 }
       );
     }
@@ -161,7 +347,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Parse Yandex error:", error);
     return NextResponse.json(
-      { error: "Ошибка парсинга" },
+      { error: "Ошибка парсинга: " + (error instanceof Error ? error.message : "unknown") },
       { status: 500 }
     );
   }
