@@ -95,12 +95,7 @@ export default function IntegrationsPage({ params }: { params: Promise<{ id: str
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-2">Интеграции</h1>
-        <p className="text-gray-600 mb-8">
-          Подключите CRM или POS для автоматической отправки запросов на отзыв
-        </p>
-
-        {!canUseIntegrations && (
+      {!canUseIntegrations && (
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-8 text-white">
             <h2 className="text-xl font-bold mb-2">Интеграции доступны на платных тарифах</h2>
             <p className="mb-4 opacity-90">

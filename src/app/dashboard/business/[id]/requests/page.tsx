@@ -127,10 +127,8 @@ export default function RequestsPage() {
   };
 
   return (
-    <div className="max-w-4xl">
-      <h1 className="text-2xl font-bold mb-6">История запросов — {business.name}</h1>
-
-        {/* Stats */}
+    <>
+      {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-gray-800">{stats.total}</div>
@@ -231,6 +229,6 @@ export default function RequestsPage() {
             </div>
           </div>
         )}
-    </div>
+    </>
   );
 }

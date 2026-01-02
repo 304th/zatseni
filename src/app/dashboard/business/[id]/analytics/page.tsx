@@ -62,18 +62,17 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Аналитика</h1>
+      <div className="mb-6 flex items-center justify-end">
         <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
-          >
-            <option value="7">7 дней</option>
-            <option value="30">30 дней</option>
-            <option value="90">90 дней</option>
-          </select>
-        </div>
+          value={period}
+          onChange={(e) => setPeriod(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg"
+        >
+          <option value="7">7 дней</option>
+          <option value="30">30 дней</option>
+          <option value="90">90 дней</option>
+        </select>
+      </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-4 gap-4 mb-8">

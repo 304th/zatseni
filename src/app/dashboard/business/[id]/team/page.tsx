@@ -166,17 +166,16 @@ export default function TeamPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Команда</h1>
-          {isOwner && (
-            <button
-              onClick={() => setShowInviteModal(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              + Пригласить
-            </button>
-          )}
+      {isOwner && (
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setShowInviteModal(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            + Пригласить
+          </button>
         </div>
+      )}
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">

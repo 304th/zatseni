@@ -154,58 +154,21 @@ export default function BusinessPage() {
   }
 
   return (
-    <div className="max-w-2xl">
-      <div className="mb-6 flex items-center justify-end gap-4">
-        <Link
-          href={`/dashboard/business/${params.id}/analytics`}
-          className="text-blue-600 hover:underline"
-        >
-          Аналитика
-        </Link>
-        <Link
-          href={`/dashboard/business/${params.id}/requests`}
-          className="text-blue-600 hover:underline"
-        >
-          История запросов
-        </Link>
-        {business.userRole === "owner" && (
-          <>
-            <Link
-              href={`/dashboard/business/${params.id}/team`}
-              className="text-blue-600 hover:underline"
-            >
-              Команда {business._count?.members ? `(${business._count.members})` : ""}
-            </Link>
-            <Link
-              href={`/dashboard/business/${params.id}/integrations`}
-              className="text-blue-600 hover:underline"
-            >
-              Интеграции
-            </Link>
-          </>
-        )}
-      </div>
-
+    <>
       {/* Stats Card */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold">{business.name}</h1>
-              {business.userRole === "manager" && (
-                <span className="text-sm text-gray-500">Вы — менеджер</span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                {business.plan}
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+              {business.plan}
+            </span>
+            {business.userRole === "owner" && (
+              <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
+                Владелец
               </span>
-              {business.userRole === "owner" && (
-                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
-                  Владелец
-                </span>
-              )}
-            </div>
+            )}
           </div>
+        </div>
 
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="text-center p-3 bg-gray-50 rounded">
@@ -382,6 +345,6 @@ export default function BusinessPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
