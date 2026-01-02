@@ -3,40 +3,35 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { getTrialDaysLeft, formatTrialStatus, TRIAL_SMS_LIMIT } from "@/lib/plans";
 
 const PLANS = [
   {
-    id: "free",
-    name: "Бесплатный",
-    price: 0,
-    features: ["1 точка", "5 SMS в месяц", "Базовая аналитика"],
-  },
-  {
     id: "start",
     name: "Старт",
-    price: 990,
+    price: 1090,
     features: ["1 точка", "100 SMS в месяц", "Полная аналитика"],
   },
   {
     id: "business",
     name: "Бизнес",
-    price: 3990,
-    features: ["До 5 точек", "500 SMS в месяц", "50 AI-ответов"],
+    price: 4990,
+    features: ["До 5 точек", "300 SMS в месяц", "50 AI-ответов"],
     popular: true,
   },
   {
     id: "network",
     name: "Сеть",
-    price: 9990,
+    price: 14990,
     features: ["Безлимит точек", "1000 SMS в месяц", "White label"],
   },
 ];
 
 const SMS_PACKS = [
-  { amount: 100, price: 350, perSms: "3.50" },
-  { amount: 300, price: 900, perSms: "3.00" },
-  { amount: 500, price: 1250, perSms: "2.50" },
-  { amount: 1000, price: 2000, perSms: "2.00" },
+  { amount: 50, price: 650, perSms: "13" },
+  { amount: 100, price: 1200, perSms: "12" },
+  { amount: 250, price: 2750, perSms: "11" },
+  { amount: 500, price: 5000, perSms: "10" },
 ];
 
 interface Payment {
@@ -56,14 +51,18 @@ function BillingContent() {
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"plans" | "sms" | "history">("plans");
 
-  const currentPlan = session?.user?.plan || "start";
+  const currentPlan = session?.user?.plan || "free";
+  const userCreatedAt = session?.user?.createdAt ? new Date(session.user.createdAt) : new Date();
+  const isOnTrial = currentPlan === "free";
+  const trialDaysLeft = isOnTrial ? getTrialDaysLeft(userCreatedAt) : 0;
+  const trialExpired = isOnTrial && trialDaysLeft === 0;
   const successStatus = searchParams.get("status") === "success";
   const upgradeParam = searchParams.get("upgrade");
 
   useEffect(() => {
     fetchPayments();
     // If upgrade param exists and it's a valid plan, highlight it
-    if (upgradeParam && ["free", "start", "business", "network"].includes(upgradeParam)) {
+    if (upgradeParam && ["start", "business", "network"].includes(upgradeParam)) {
       setTab("plans");
     }
   }, [upgradeParam]);
@@ -129,15 +128,36 @@ function BillingContent() {
   return (
     <div className="max-w-4xl">
       <h1 className="text-2xl font-bold mb-2">Тариф и оплата</h1>
-        <p className="text-gray-600 mb-6">
-          Текущий тариф: <strong>{PLANS.find((p) => p.id === currentPlan)?.name}</strong>
-        </p>
-
-        {successStatus && (
-          <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg mb-6">
-            Оплата успешно обработана! Изменения вступят в силу в течение нескольких минут.
-          </div>
+      <p className="text-gray-600 mb-6">
+        {isOnTrial ? (
+          <>Пробный период: <strong>{formatTrialStatus(userCreatedAt)}</strong></>
+        ) : (
+          <>Текущий тариф: <strong>{PLANS.find((p) => p.id === currentPlan)?.name}</strong></>
         )}
+      </p>
+
+      {/* Trial Banner */}
+      {isOnTrial && (
+        <div className={`p-4 rounded-lg mb-6 ${trialExpired ? "bg-red-50 border border-red-200" : "bg-blue-50 border border-blue-200"}`}>
+          {trialExpired ? (
+            <div className="text-red-800">
+              <div className="font-bold mb-1">Пробный период истёк</div>
+              <div className="text-sm">Выберите тариф, чтобы продолжить использование сервиса.</div>
+            </div>
+          ) : (
+            <div className="text-blue-800">
+              <div className="font-bold mb-1">Пробный период — {trialDaysLeft} {trialDaysLeft === 1 ? "день" : trialDaysLeft <= 4 ? "дня" : "дней"}</div>
+              <div className="text-sm">{TRIAL_SMS_LIMIT} SMS • Полный функционал • Выберите тариф до окончания</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {successStatus && (
+        <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg mb-6">
+          Оплата успешно обработана! Изменения вступят в силу в течение нескольких минут.
+        </div>
+      )}
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b">
@@ -161,9 +181,9 @@ function BillingContent() {
           </button>
         </div>
 
-        {/* Plans */}
-        {tab === "plans" && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Plans */}
+      {tab === "plans" && (
+        <div className="grid md:grid-cols-3 gap-4">
             {PLANS.map((plan) => {
               const isUpgradeTarget = upgradeParam === plan.id && plan.id !== currentPlan;
               return (

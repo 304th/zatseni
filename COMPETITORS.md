@@ -4,6 +4,33 @@
 
 Russian review management market is growing as local businesses recognize the importance of Yandex Maps and 2GIS ratings. Key players focus on aggregation, automated responses, and review generation.
 
+## ⚠️ Critical: WhatsApp Blocked in Russia (Dec 2025)
+
+Most competitors rely on WhatsApp for messaging. **This is now a major vulnerability.**
+
+### Timeline
+- **2022**: Meta declared "extremist organization"
+- **Aug 2025**: WhatsApp/Telegram voice calls blocked
+- **Oct 2025**: Roskomnadzor starts full WhatsApp blocking
+- **Dec 2025**: Active restrictions in Moscow/St. Petersburg, messages failing
+
+### Sources
+- [Novaya Gazeta](https://novayagazeta.eu/articles/2024/12/24/russia-mulls-blocking-whatsapp-in-2025-en-news)
+- [Kyiv Independent](https://kyivindependent.com/whatsapp-may-be-blocked-in-2025-in-russia-if-company-doesnt-comply-with-law-senator-says/)
+- [The Record](https://therecord.media/russia-whatsapp-restrictions)
+
+### Channel Status in Russia
+
+| Channel | Status | Reach |
+|---------|--------|-------|
+| **SMS** | ✅ Works everywhere | 100% phones |
+| **WhatsApp** | ❌ Blocked/unstable | declining |
+| **Telegram** | ⚠️ Calls blocked | ~85% |
+| **Viber** | ❌ Blocked | 0% |
+| **Email** | ✅ Works | ~60% open |
+
+**Our SMS-first approach is now a competitive advantage, not a cost problem.**
+
 ## Main Competitors
 
 ### 1. Revvy.ai (Market Leader)
@@ -14,23 +41,22 @@ Russian review management market is growing as local businesses recognize the im
 
 **Strengths:**
 - First mover, strong brand recognition
-- WhatsApp integration (higher engagement than SMS)
 - Deep CRM integrations (YCLIENTS, amoCRM, Bitrix24, iiko)
 - Multi-platform (Yandex, Google, 2GIS, TripAdvisor, Zoon)
 - Proven results: users report 4-star to 4.5-star improvements
 
 **Weaknesses:**
-- Expensive entry point - 2,990 RUB minimum vs our 990 RUB
+- ⚠️ **WhatsApp dependency is now critical vulnerability** (blocked in Russia)
+- Expensive entry point - 2,990 RUB minimum vs our 1,490 RUB
 - No free trial mentioned - high barrier to try
 - Complex feature set - overwhelming for small businesses
-- WhatsApp dependency - requires business WhatsApp API setup
-- No SMS option - WhatsApp-only limits reach to older demographics
+- No SMS fallback - messages may not be delivered
 
 **Counter Strategy:**
-- Position as simpler and cheaper alternative
-- SMS-first approach (works without smartphone apps)
-- 14-day free trial with 50 SMS
-- One-click setup vs complex WhatsApp integration
+- **"Ваши сообщения дойдут — SMS работает, WhatsApp нет"**
+- Position as reliable alternative when WhatsApp fails
+- SMS-first approach (works on 100% of phones)
+- Simpler, cheaper, guaranteed delivery
 
 ### 2. DailyGrow.ru
 
@@ -120,35 +146,39 @@ Russian review management market is growing as local businesses recognize the im
 
 ## Competitive Matrix
 
-| Feature | Zatseni | Revvy | DailyGrow | Repometr |
-|---------|---------|-------|-----------|----------|
-| Entry Price | 990 RUB | 2,990 RUB | ~2,000 RUB | ~2,500 RUB |
-| Free Trial | 14 days | No | Unknown | Unknown |
-| SMS Outreach | Yes | No | No | No |
-| WhatsApp | No | Yes | No | No |
-| Yandex Maps | Yes | Yes | Yes | Yes |
-| 2GIS | Yes | Yes | Yes | Yes |
-| Google Maps | No | Yes | Yes | Yes |
-| Negative Capture | Yes | Yes | No | No |
-| CRM Integrations | Yes | Yes | No | No |
-| Self-Serve Signup | Yes | Unknown | Yes | No |
+| Feature | Zatseni | Revvy | SaySay | DailyGrow |
+|---------|---------|-------|--------|-----------|
+| Entry Price | **1,090₽** | 2,990₽ | 1,290₽ | ~2,000₽ |
+| Mid Tier | 4,990₽ | 3,990₽ | 1,989₽ | ~3,000₽ |
+| Free Trial | 14 days | No | QR only | Unknown |
+| **SMS Outreach** | ✅ Yes (100) | ❌ No | ❌ No | ❌ No |
+| WhatsApp | ❌ No | ⚠️ Blocked | ⚠️ Blocked | ❌ No |
+| **Delivery Guarantee** | ✅ 100% | ⚠️ Unstable | ⚠️ Unstable | N/A |
+| Yandex Maps | ✅ | ✅ | ✅ | ✅ |
+| 2GIS | ✅ | ✅ | ✅ | ✅ |
+| Negative Capture | ✅ | ✅ | ✅ | ❌ |
+| CRM Integrations | ✅ | ✅ | ✅ | ❌ |
+
+**Zatseni is the cheapest AND the only one with working delivery channel.**
 
 ## Our Differentiation
 
-### 1. Price Leader
-- 990 RUB vs 2,990 RUB = 3x cheaper entry
+### 1. 🚀 Guaranteed Delivery (SMS)
+- **WhatsApp blocked in Russia — SMS is the only reliable channel**
+- Works on 100% of phones (no app required)
+- No dependency on foreign tech companies
+- Reaches ALL demographics including older customers
+
+### 2. Price Leader
+- **1,090₽** vs 1,290₽ (SaySay) vs 2,990₽ (Revvy)
+- Cheapest entry point in the market
 - Transparent pricing, no hidden fees
 - SMS packs for pay-as-you-go
 
-### 2. Simplicity
+### 3. Simplicity
 - Sign up, Add business, Send SMS (3 steps)
-- No WhatsApp Business API setup
+- No WhatsApp Business API setup required
 - No technical integration required (webhooks optional)
-
-### 3. SMS-First
-- Works on any phone (no smartphone required)
-- Higher delivery rate than WhatsApp in Russia
-- Reaches older demographics
 
 ### 4. Negative Capture
 - Private feedback before public damage
@@ -159,16 +189,17 @@ Russian review management market is growing as local businesses recognize the im
 - Yandex Maps + 2GIS (not Google/Yelp)
 - Russian language UI
 - YooKassa payments (Russian cards, SBP)
+- **No reliance on blocked foreign services**
 
 ## Weaknesses to Address
 
 ### Our Current Gaps:
 
-1. **No WhatsApp** - Higher engagement, but complex setup
-   - Future: Add WhatsApp Business API option for paid plans
+1. ~~**No WhatsApp**~~ — **No longer a weakness!** WhatsApp is blocked in Russia.
+   - SMS-first is now the winning strategy
 
 2. **No Google Maps** - Some businesses care
-   - Future: Add as option, but not priority
+   - Future: Add as option, low priority for Russian market
 
 3. **No AI responses** - Competitors have ChatGPT
    - Future: Auto-suggest responses to negative feedback
@@ -177,7 +208,7 @@ Russian review management market is growing as local businesses recognize the im
    - Future: Add passive monitoring from Yandex/2GIS
 
 5. **No QR codes** - Revvy has them for tables/receipts
-   - Future: Generate QR to review page
+   - Future: Generate QR to review page (easy add)
 
 ## Go-to-Market Strategy
 
@@ -191,9 +222,14 @@ Russian review management market is growing as local businesses recognize the im
 
 ### Positioning:
 
-"Simple and affordable review collection for Yandex Maps and 2GIS"
+**Primary message (reliability):**
+> "SMS работает везде. WhatsApp — нет. Ваши клиенты получат сообщение."
 
-"Intercept negative reviews before they go public. From 990 RUB/month."
+**Secondary message (value):**
+> "Сбор отзывов для Яндекс Карт и 2ГИС. От 1,090₽/месяц."
+
+**Against competitors:**
+> "Пока конкуренты ждут разблокировки WhatsApp, ваши клиенты уже оставляют отзывы."
 
 ### Channels:
 

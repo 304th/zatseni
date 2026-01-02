@@ -3,7 +3,7 @@ export type PlanId = "free" | "start" | "business" | "network";
 export interface Plan {
   id: PlanId;
   name: string;
-  price: number; // rubles/month, 0 = free
+  price: number; // rubles/month, 0 = free/trial
   smsLimit: number;
   aiRepliesLimit: number; // AI auto-replies to negative reviews
   businessLimit: number;
@@ -16,18 +16,23 @@ export interface Plan {
   };
 }
 
+// Trial configuration
+export const TRIAL_DAYS = 14;
+export const TRIAL_SMS_LIMIT = 20;
+
 export const PLANS: Record<PlanId, Plan> = {
+  // "free" is now trial - 14 days with 20 SMS, then must upgrade
   free: {
     id: "free",
-    name: "Бесплатный",
+    name: "Пробный период",
     price: 0,
-    smsLimit: 5,
+    smsLimit: TRIAL_SMS_LIMIT, // 20 SMS during trial
     aiRepliesLimit: 0,
     businessLimit: 1,
     teamLimit: 1,
     features: {
-      integrations: false,
-      analytics: "basic",
+      integrations: true, // full features during trial
+      analytics: "full",
       priority_support: false,
       custom_branding: false,
     },
@@ -35,7 +40,7 @@ export const PLANS: Record<PlanId, Plan> = {
   start: {
     id: "start",
     name: "Старт",
-    price: 990,
+    price: 1090,
     smsLimit: 100,
     aiRepliesLimit: 0,
     businessLimit: 1,
@@ -50,8 +55,8 @@ export const PLANS: Record<PlanId, Plan> = {
   business: {
     id: "business",
     name: "Бизнес",
-    price: 3990,
-    smsLimit: 500,
+    price: 4990,
+    smsLimit: 300,
     aiRepliesLimit: 50,
     businessLimit: 5,
     teamLimit: 5,
@@ -65,7 +70,7 @@ export const PLANS: Record<PlanId, Plan> = {
   network: {
     id: "network",
     name: "Сеть",
-    price: 9990,
+    price: 14990,
     smsLimit: 1000,
     aiRepliesLimit: 100,
     businessLimit: -1, // unlimited
@@ -124,4 +129,36 @@ export function getUserPlanPrice(planId: string, planPriceKopecks?: number | nul
 // Get price in kopecks for storage
 export function getPlanPriceKopecks(planId: string): number {
   return getPlan(planId).price * 100;
+}
+
+// Trial helpers
+export function getTrialEndDate(createdAt: Date): Date {
+  const endDate = new Date(createdAt);
+  endDate.setDate(endDate.getDate() + TRIAL_DAYS);
+  return endDate;
+}
+
+export function isTrialActive(planId: string, createdAt: Date): boolean {
+  if (planId !== "free") return false;
+  return new Date() < getTrialEndDate(createdAt);
+}
+
+export function isTrialExpired(planId: string, createdAt: Date): boolean {
+  if (planId !== "free") return false;
+  return new Date() >= getTrialEndDate(createdAt);
+}
+
+export function getTrialDaysLeft(createdAt: Date): number {
+  const endDate = getTrialEndDate(createdAt);
+  const now = new Date();
+  const diff = endDate.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+export function formatTrialStatus(createdAt: Date): string {
+  const daysLeft = getTrialDaysLeft(createdAt);
+  if (daysLeft === 0) return "Пробный период истёк";
+  if (daysLeft === 1) return "Остался 1 день";
+  if (daysLeft <= 4) return `Осталось ${daysLeft} дня`;
+  return `Осталось ${daysLeft} дней`;
 }

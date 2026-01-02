@@ -18,7 +18,7 @@ const CheckIcon = () => (
 const features = [
   {
     icon: "📱",
-    title: "SMS и WhatsApp",
+    title: "SMS — работает везде",
     description: "Автоматическая отправка просьбы об отзыве после визита клиента"
   },
   {
@@ -50,52 +50,39 @@ const features = [
 
 const pricing = [
   {
-    id: "free",
-    name: "Бесплатный",
-    price: "0",
-    period: "₽/мес",
-    description: "Попробуйте бесплатно",
-    features: [
-      "1 точка",
-      "5 SMS в месяц",
-      "Базовая аналитика",
-    ],
-    cta: "Начать бесплатно",
-    popular: false
-  },
-  {
     id: "start",
     name: "Старт",
-    price: "990",
+    price: "1 090",
     period: "₽/мес",
     description: "Для небольшого бизнеса",
     features: [
       "1 точка",
       "100 SMS в месяц",
       "Полная аналитика",
+      "SMS — работает везде",
     ],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     popular: false
   },
   {
     id: "business",
     name: "Бизнес",
-    price: "3 990",
+    price: "4 990",
     period: "₽/мес",
     description: "Для растущих компаний",
     features: [
       "До 5 точек",
-      "500 SMS в месяц",
+      "300 SMS в месяц",
       "50 AI-ответов в месяц",
       "Интеграции с CRM/POS",
     ],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     popular: true
   },
   {
     id: "network",
     name: "Сеть",
-    price: "9 990",
+    price: "14 990",
     period: "₽/мес",
     description: "Для сетей и франшиз",
     features: [
@@ -104,7 +91,7 @@ const pricing = [
       "100 AI-ответов в месяц",
       "White label",
     ],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     popular: false
   }
 ];
@@ -117,8 +104,8 @@ const steps = [
   },
   {
     num: "2",
-    title: "Отправляем сообщение",
-    description: "SMS или WhatsApp: «Спасибо за визит! Оцените нас: [ссылка]»"
+    title: "Отправляем SMS",
+    description: "«Спасибо за визит! Оцените нас: [ссылка]» — доставка гарантирована"
   },
   {
     num: "3",
@@ -142,7 +129,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-full text-sm mb-6">
             <span>🚀</span>
-            <span>Бесплатный тариф навсегда</span>
+            <span>14 дней бесплатно • 20 SMS</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
@@ -286,57 +273,55 @@ export default function Home() {
 
       {/* Pricing */}
       <section id="pricing" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Простые цены
             </h2>
             <p className="text-xl text-gray-600">
-              Без скрытых платежей. Отмена в любой момент.
+              14 дней бесплатно с 20 SMS. Без скрытых платежей.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          {/* Trial Banner */}
+          <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white text-center mb-8">
+            <div className="text-xl font-bold mb-1">Пробный период — 14 дней бесплатно</div>
+            <div className="text-indigo-100">20 SMS • Полный функционал • Без привязки карты</div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
             {pricing.map((plan, i) => (
               <div
                 key={i}
-                className={`p-6 rounded-2xl relative ${plan.popular ? 'bg-indigo-600 text-white ring-2 ring-indigo-600' : 'bg-white border border-gray-200'}`}
+                className={`bg-white rounded-2xl shadow-lg p-8 relative flex flex-col ${
+                  plan.popular ? 'ring-2 ring-indigo-600' : ''
+                }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm">
                     Популярный
                   </div>
                 )}
-                <h3 className={`text-xl font-bold mb-1 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
-                  {plan.name}
-                </h3>
-                <p className={`text-sm mb-4 ${plan.popular ? 'text-indigo-200' : 'text-gray-500'}`}>
-                  {plan.description}
-                </p>
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className={`text-3xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
-                    {plan.price}
-                  </span>
-                  <span className={plan.popular ? 'text-indigo-200' : 'text-gray-500'}>
-                    {plan.period}
-                  </span>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                <p className="text-gray-600 mb-4">{plan.description}</p>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-gray-900">{plan.price}₽</span>
+                  <span className="text-gray-500">/мес</span>
                 </div>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-3 mb-8 flex-grow">
                   {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-center gap-2 text-sm">
+                    <li key={j} className="flex items-center gap-2">
                       <CheckIcon />
-                      <span className={plan.popular ? 'text-indigo-100' : 'text-gray-600'}>
-                        {feature}
-                      </span>
+                      <span className="text-gray-700">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <CTALink
                   href={`/signup?plan=${plan.id}`}
-                  className={`block w-full py-2.5 rounded-lg font-semibold transition text-center ${
+                  className={`block w-full py-3 rounded-lg font-medium transition text-center ${
                     plan.popular
-                      ? 'bg-white text-indigo-600 hover:bg-indigo-50'
-                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   }`}
                 >
                   {plan.cta}
@@ -354,16 +339,16 @@ export default function Home() {
             Готовы получать больше отзывов?
           </h2>
           <p className="text-xl text-indigo-100 mb-8">
-            Начните с бесплатного тарифа — 5 SMS в месяц
+            14 дней бесплатно • 20 SMS • Полный функционал
           </p>
           <CTALink
             href="/signup"
             className="inline-block bg-white text-indigo-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-indigo-50 transition shadow-lg"
           >
-            Начать бесплатно
+            Попробовать бесплатно
           </CTALink>
           <p className="text-indigo-200 mt-4 text-sm">
-            Без карты • Настройка за 5 минут • Бесплатно навсегда
+            Без карты • Настройка за 5 минут
           </p>
         </div>
       </section>

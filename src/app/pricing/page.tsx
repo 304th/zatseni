@@ -7,65 +7,47 @@ import PublicHeader from "@/components/PublicHeader";
 
 const plans = [
   {
-    id: "free",
-    name: "Бесплатный",
-    price: "0",
-    period: "мес",
-    description: "Попробуйте бесплатно",
-    features: [
-      "1 точка",
-      "5 SMS в месяц",
-      "Базовая аналитика",
-    ],
-    notIncluded: [
-      "AI-ответы на отзывы",
-      "Интеграции с CRM/POS",
-    ],
-    cta: "Начать бесплатно",
-    ctaLoggedIn: "Текущий",
-    popular: false,
-  },
-  {
     id: "start",
     name: "Старт",
-    price: "990",
+    price: "1 090",
     period: "мес",
     description: "Для небольшого бизнеса",
     features: [
       "1 точка",
       "100 SMS в месяц",
       "Полная аналитика",
+      "SMS — работает везде",
     ],
     notIncluded: [
       "AI-ответы на отзывы",
       "Интеграции с CRM/POS",
     ],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     ctaLoggedIn: "Выбрать",
     popular: false,
   },
   {
     id: "business",
     name: "Бизнес",
-    price: "3 990",
+    price: "4 990",
     period: "мес",
     description: "Для растущих компаний",
     features: [
       "До 5 точек",
-      "500 SMS в месяц",
+      "300 SMS в месяц",
       "50 AI-ответов в месяц",
       "Интеграции с CRM/POS",
       "Приоритетная поддержка",
     ],
     notIncluded: [],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     ctaLoggedIn: "Выбрать",
     popular: true,
   },
   {
     id: "network",
     name: "Сеть",
-    price: "9 990",
+    price: "14 990",
     period: "мес",
     description: "Для сетей и франшиз",
     features: [
@@ -75,7 +57,7 @@ const plans = [
       "White label",
     ],
     notIncluded: [],
-    cta: "Выбрать план",
+    cta: "Попробовать бесплатно",
     ctaLoggedIn: "Выбрать",
     popular: false,
   },
@@ -83,8 +65,12 @@ const plans = [
 
 const faqs = [
   {
-    q: "Как работает бесплатный тариф?",
-    a: "Вы получаете 5 SMS в месяц бесплатно навсегда. Карта не требуется. Можете перейти на платный тариф в любой момент.",
+    q: "Как работает пробный период?",
+    a: "14 дней бесплатно с 20 SMS. Полный функционал без ограничений. Карта не требуется. После пробного периода выберите подходящий тариф.",
+  },
+  {
+    q: "Что будет после пробного периода?",
+    a: "Вы сможете выбрать любой тариф. Если не выберете — аккаунт приостановится, но данные сохранятся. Можете вернуться в любой момент.",
   },
   {
     q: "Можно ли менять тариф?",
@@ -92,11 +78,11 @@ const faqs = [
   },
   {
     q: "Что если SMS закончатся?",
-    a: "Вы можете докупить SMS-пакеты или перейти на более высокий тариф. Стоимость дополнительных SMS — от 3₽ за штуку.",
+    a: "Вы можете докупить SMS-пакеты или перейти на более высокий тариф. Стоимость дополнительных SMS — от 6₽ за штуку.",
   },
   {
-    q: "Есть ли скидки при оплате за год?",
-    a: "Да, при оплате за год вы получаете 2 месяца бесплатно (скидка ~17%).",
+    q: "Почему SMS, а не WhatsApp?",
+    a: "WhatsApp заблокирован в России с октября 2025. SMS работает везде и всегда — гарантированная доставка на любой телефон.",
   },
   {
     q: "Какие способы оплаты принимаете?",
@@ -127,16 +113,26 @@ export default function PricingPage() {
       <PublicHeader />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 text-center">
+      <section className="pt-32 pb-8 text-center">
         <h1 className="text-4xl font-bold mb-4">Простые и понятные тарифы</h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Начните бесплатно, платите только когда растёте. Никаких скрытых платежей.
+          14 дней бесплатно с 20 SMS. Никаких скрытых платежей.
         </p>
       </section>
 
+      {/* Trial Banner */}
+      <section className="max-w-4xl mx-auto px-4 pb-8">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white text-center">
+          <div className="text-2xl font-bold mb-2">Пробный период — 14 дней бесплатно</div>
+          <div className="text-blue-100">
+            20 SMS • Полный функционал • Без привязки карты
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Cards */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="max-w-5xl mx-auto px-4 pb-16">
+        <div className="grid md:grid-cols-3 gap-6">
           {plans.map((plan) => {
             const isCurrentPlan = isLoggedIn && plan.id === currentPlan;
             return (
@@ -235,10 +231,10 @@ export default function PricingPage() {
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
             {[
-              { sms: 100, price: 350, per: "3.50₽" },
-              { sms: 300, price: 900, per: "3.00₽" },
-              { sms: 500, price: 1250, per: "2.50₽" },
-              { sms: 1000, price: 2000, per: "2.00₽" },
+              { sms: 50, price: 650, per: "13₽" },
+              { sms: 100, price: 1200, per: "12₽" },
+              { sms: 250, price: 2750, per: "11₽" },
+              { sms: 500, price: 5000, per: "10₽" },
             ].map((pkg) => (
               <div
                 key={pkg.sms}
@@ -291,7 +287,7 @@ export default function PricingPage() {
       <section className="bg-blue-600 py-16 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">Готовы начать?</h2>
         <p className="text-xl mb-8 opacity-90">
-          Бесплатный тариф навсегда. Без привязки карты.
+          14 дней бесплатно • 20 SMS • Без привязки карты
         </p>
         {isLoggedIn ? (
           <Link
@@ -305,7 +301,7 @@ export default function PricingPage() {
             href="/signup"
             className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100"
           >
-            Начать бесплатно
+            Попробовать бесплатно
           </Link>
         )}
       </section>

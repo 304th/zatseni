@@ -2,46 +2,72 @@
 
 ## Current Pricing Tiers
 
-| Plan | Price | SMS/mo | Locations | AI Replies | Target |
-|------|-------|--------|-----------|------------|--------|
-| Бесплатный | 0₽ | 5 | 1 | 0 | Try it free |
-| Старт | 990₽ | 100 | 1 | 0 | Small business |
-| Бизнес | 3,990₽ | 500 | 5 | 50 | Growing companies |
-| Сеть | 9,990₽ | 1000 | Unlimited | 100 | Networks/franchises |
+| Plan | Price | SMS | Locations | AI Replies | Target |
+|------|-------|-----|-----------|------------|--------|
+| **Пробный период** | 0₽ | 20 (14 days) | 1 | 0 | Try before buy |
+| Старт | 1,090₽ | 100/mo | 1 | 0 | Small business |
+| Бизнес | 4,990₽ | 300/mo | 5 | 50 | Growing companies |
+| Сеть | 14,990₽ | 1000/mo | Unlimited | 100 | Networks/franchises |
+
+### Trial Model
+- **14 days free trial** with 20 SMS and full features
+- No credit card required
+- After trial: choose a plan or account pauses (data preserved)
+- Trial users can upgrade anytime during trial
+
+### Pricing Strategy (Airline Model)
+- **Старт**: Loss leader, undercuts all competitors, gets customers in
+- **Бизнес/Сеть**: Profit centers with 57-61% margins
+- As businesses grow, they upgrade → higher margins
+- No free tier = no freeloaders, higher quality leads
+
+### Why SMS (not WhatsApp)
+
+**WhatsApp is blocked/restricted in Russia since Oct 2025.** Roskomnadzor actively restricts Meta services. SMS is the only channel that:
+- Works on 100% of phones (no app required)
+- Guaranteed delivery (no blocks/throttling)
+- Reaches older demographics
+- No dependency on foreign tech companies
+
+> "В отличие от WhatsApp, SMS работает везде и всегда."
 
 ---
 
 ## 1. SMS Costs — Deep Dive
 
-### Current Provider Options (Russia)
+### Current Provider Options (Russia, Jan 2025)
 
-| Provider | Price/SMS | Monthly Fee | Notes |
-|----------|-----------|-------------|-------|
-| **sms.ru** | 2.5-4₽ | Free (shared sender) | Good for small volumes |
-| **SMSC.ru** | 2.0-3.5₽ | 0₽ | High reliability, good API |
-| **TargetSMS** | 0.69-10.99₽ | 0₽ | Free sender registration |
-| **p1sms.ru** | 2-4₽ | 0₽ | Good for OTP |
-| **МТС Маркетолог** | 5.3-7.5₽ | 0₽ | Direct carrier |
-| **REDSMS** | 7.70₽ | Lower with volume | Premium names |
+| Provider | MTS | Megafon | Beeline | Tele2 | Notes |
+|----------|-----|---------|---------|-------|-------|
+| **[sms.ru](https://sms.ru/price)** | 5.55₽ | 7.75₽ | 8.80₽ | 6.37₽ | Good API, already integrated |
+| **[SMSC.ru](https://smsc.ru/tariffs/)** | 5.70₽ | 8.00₽ | 25.00₽* | 6.50₽ | High reliability |
+| **[TargetSMS](https://targetsms.ru/tarify)** | 5.51₽ | 7.17₽ | varies | 5.67₽ | Free sender registration |
+| **[Exolve/MTS](https://exolve.ru/tariffs/)** | 4.50₽ | 6.00₽ | 7.30₽ | 4.77₽ | Direct carrier, best for volume |
+| **[P1SMS](https://p1sms.ru/ceny-na-sms-rassylki)** | ~5₽ | ~5₽ | varies | ~5₽ | Good for OTP |
 
-### Sender Name Registration Fees
-- MegaFon: 3,000₽/month
-- MTS: 2,100₽/month
-- Волна/Win mobile (Crimea): 4,000₽/month each
-- Others: Usually free
+*\*international sender name*
+
+**Average cost: ~6₽/SMS** (weighted by carrier market share)
+
+### Sender Name Registration Fees (monthly)
+- MTS: 1,000-2,000₽ + 1,000₽ per template
+- MegaFon: 2,500-3,000₽
+- Beeline: 1st free, then 1,000₽
+- Tele2: Free
+- Волна/Win mobile (Crimea): 4,000₽ each
 
 ### Our SMS Cost Structure
 
-**Assumption: Using SMSC.ru at ~2.5₽/SMS average**
+**Assumption: Using sms.ru at ~6₽/SMS average**
 
-| Tier | SMS Included | Our Cost | Revenue | SMS Margin |
-|------|--------------|----------|---------|------------|
-| Бесплатный | 5 | 12.5₽ | 0₽ | -12.5₽ (marketing) |
-| Старт | 100 | 250₽ | 990₽ | 740₽ (75%) |
-| Бизнес | 500 | 1,250₽ | 3,990₽ | 2,740₽ (69%) |
-| Сеть | 1000 | 2,500₽ | 9,990₽ | 7,490₽ (75%) |
+| Tier | SMS | SMS Cost | Other | Total Cost | Revenue | Margin |
+|------|-----|----------|-------|------------|---------|--------|
+| Пробный (14 дней) | 20 | 120₽ | 20₽ | 140₽ | 0₽ | -140₽ (CAC) |
+| Старт | 100 | 600₽ | 90₽ | 690₽ | 1,090₽ | **400₽ (37%)** |
+| Бизнес | 300 | 1,800₽ | 170₽ | 1,970₽ | 4,990₽ | **3,020₽ (61%)** |
+| Сеть | 1000 | 6,000₽ | 420₽ | 6,420₽ | 14,990₽ | **8,570₽ (57%)** |
 
-**Note:** Free tier is a marketing cost (~12.5₽/user/month). Сеть tier value = unlimited locations + white label, not more SMS.
+**Note:** Airline model — Старт is acquisition (37% margin), Бизнес/Сеть are profit centers (57-61%). Trial cost (140₽) recovered in first month on any paid plan.
 
 ### Cheaper Alternatives to Consider
 
@@ -99,8 +125,8 @@ Automatically generate professional responses to negative reviews on Yandex Maps
 
 ### AI Feature Pricing (Implemented)
 
-AI replies are included in paid tiers:
-- **Бесплатный/Старт**: 0 AI replies (upsell driver)
+AI replies are included in higher tiers:
+- **Пробный/Старт**: 0 AI replies (upsell driver)
 - **Бизнес**: 50 AI replies/month
 - **Сеть**: 100 AI replies/month
 - **Extra**: 5₽ per additional reply
@@ -142,94 +168,99 @@ AI replies are included in paid tiers:
 
 ## 4. Full Cost Analysis per Tier
 
-### Бесплатный (0₽/month)
+### Пробный период (14 дней бесплатно)
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (5) | 12.5₽ | @2.5₽ |
+| SMS (20) | 120₽ | @6₽, one-time |
 | Infrastructure | 20₽ | Minimal usage |
 | Support | 0₽ | Self-service |
-| **Total Cost** | **32.5₽** | |
-| **Gross Margin** | **-32.5₽** | Marketing cost |
+| **Total Cost** | **140₽** | CAC investment |
+| **Payback** | **<1 month** | On any paid plan |
 
-### Старт (990₽/month)
+**Trial Economics:**
+- Cost per trial: 140₽
+- If 30% convert to Старт: 140₽ / 0.3 = 467₽ CAC
+- LTV (12 months on Старт): 400₽ × 12 = 4,800₽
+- LTV:CAC = 10.3:1 ✅
+
+### Старт (1,090₽/month) — Acquisition Tier
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (100) | 250₽ | @2.5₽ |
+| SMS (100) | 600₽ | @6₽ |
 | Infrastructure | 40₽ | Allocated share |
 | Support | 50₽ | Email only |
-| **Total Cost** | **340₽** | |
-| **Gross Margin** | **650₽ (66%)** | |
+| **Total Cost** | **690₽** | |
+| **Gross Margin** | **400₽ (37%)** | Loss leader |
 
-### Бизнес (3,990₽/month)
+### Бизнес (4,990₽/month) — Profit Center
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (500) | 1,250₽ | @2.5₽ |
+| SMS (300) | 1,800₽ | @6₽ |
 | Infrastructure | 60₽ | Higher usage |
 | AI replies (50) | 10₽ | Negligible |
 | Support | 100₽ | Priority |
-| **Total Cost** | **1,420₽** | |
-| **Gross Margin** | **2,570₽ (64%)** | |
+| **Total Cost** | **1,970₽** | |
+| **Gross Margin** | **3,020₽ (61%)** | |
 
-### Сеть (9,990₽/month)
+### Сеть (14,990₽/month) — Premium Profit
 
 | Cost Item | Amount | Notes |
 |-----------|--------|-------|
-| SMS (1000) | 2,500₽ | @2.5₽ |
+| SMS (1000) | 6,000₽ | @6₽ |
 | Infrastructure | 100₽ | Heavy usage |
 | AI replies (100) | 20₽ | Negligible |
 | Support | 300₽ | Personal manager |
-| **Total Cost** | **2,920₽** | |
-| **Gross Margin** | **7,070₽ (71%)** | |
+| **Total Cost** | **6,420₽** | |
+| **Gross Margin** | **8,570₽ (57%)** | |
 
 ---
 
 ## 5. Pricing Strategy Notes
 
-### Why 4 Tiers (not 5)
+### Why 3 Paid Tiers + Trial
 
-We consolidated from 5 to 4 tiers for simplicity:
-- Removed Бизнес+ (4,990₽) — too similar to Бизнес
-- Бизнес now includes priority support and more AI replies
-- Cleaner decision path: Free → Старт → Бизнес → Сеть
+We use trial model instead of free tier:
+- **No freeloaders** — trial expires, must choose plan
+- **Higher quality leads** — users commit with intent to pay
+- **20 SMS** — enough to see real results (3-4 reviews), drives conversion
+- Cleaner decision path: Trial → Старт → Бизнес → Сеть
 
-### Free Tier Economics
+### Trial Economics
 
-Free tier costs us ~32.5₽/user/month. Break-even if:
-- 5% convert to Старт (990₽ × 0.05 = 49.5₽)
-- Or 2% convert to Бизнес (3,990₽ × 0.02 = 79.8₽)
+Trial costs us 140₽/user (one-time). Break-even if:
+- 30% convert to Старт: 467₽ CAC, LTV 4,800₽ (10.3:1)
+- 20% convert to Бизнес: 700₽ CAC, LTV 36,240₽ (51.8:1)
 
-Target: 10%+ conversion to paid within 3 months.
-
-### SMS Overage Pricing
-
-| Volume | Price/SMS |
-|--------|-----------|
-| 1-100 extra | 5₽ |
-| 101-500 extra | 4₽ |
-| 500+ extra | 3.5₽ |
+Target: 30%+ conversion to paid within 14 days.
 
 ### Add-on Packages
 
-| Package | Price | Contents |
-|---------|-------|----------|
-| SMS Pack 100 | 350₽ | 3.5₽/SMS |
-| SMS Pack 500 | 1,500₽ | 3₽/SMS |
-| SMS Pack 1000 | 2,500₽ | 2.5₽/SMS |
-| AI Replies 50 | 200₽ | 4₽/reply |
-| WhatsApp channel | 500₽/mo | Alternative to SMS |
+SMS packs are "emergency refills" — premium priced to incentivize tier upgrades.
+Purchased SMS never expire (tier SMS reset monthly).
+
+| Package | Price | Per SMS |
+|---------|-------|---------|
+| 50 SMS | 650₽ | 13₽ |
+| 100 SMS | 1,200₽ | 12₽ |
+| 250 SMS | 2,750₽ | 11₽ |
+| 500 SMS | 5,000₽ | 10₽ |
+
+| Other Add-ons | Price |
+|---------------|-------|
+| AI Replies 50 | 200₽ (4₽/reply) |
 
 ---
 
 ## 6. Growth Projections (3-Year)
 
 ### Assumptions
-- **ARPU:** 2,000₽/month average (mix of tiers)
+- **ARPU:** 3,650₽/month average (blended tiers)
 - **Churn:** 5%/month Year 1, 3%/month Year 2-3
 - **Growth:** 15% month-over-month Year 1, 10% Year 2, 7% Year 3
-- **Costs:** 35% of revenue (SMS + infra + support)
+- **Costs:** 45% of revenue (airline model: low on Старт, high on Бизнес/Сеть)
 
 ---
 
@@ -325,12 +356,26 @@ MRR Growth (Optimistic)
 
 | Scenario | Break-even Point | Users Needed |
 |----------|------------------|--------------|
-| Conservative | Month 1 | ~15 paying users |
-| Optimistic | Month 1 | ~15 paying users |
+| Conservative | Month 1-2 | ~20 paying users |
+| Optimistic | Month 1 | ~20 paying users |
 
-**Fixed costs:** ~25k₽/month (Vercel + Neon + misc)
-**Margin per user:** ~1,300₽ (ARPU 2,000₽ × 65% margin)
-**Break-even:** 25,000 ÷ 1,300 = ~19 users
+**Fixed costs:** ~25k₽/month (Vercel + Supabase + misc)
+
+**Blended margin calculation** (assumed mix: 60% Старт, 30% Бизнес, 10% Сеть):
+
+| Tier | Users | Revenue | Margin | Profit |
+|------|-------|---------|--------|--------|
+| Старт | 60 | 65,400₽ | 37% | 24,198₽ |
+| Бизнес | 30 | 149,700₽ | 61% | 91,317₽ |
+| Сеть | 10 | 149,900₽ | 57% | 85,443₽ |
+| **Total** | 100 | 365,000₽ | **55%** | **200,958₽** |
+
+**ARPU:** 3,650₽ | **Avg margin:** 2,010₽ | **Break-even:** 25,000 ÷ 2,010 = ~13 users
+
+✅ **Airline model works:**
+- Старт undercuts all competitors → acquisition
+- Бизнес/Сеть carry profits (57-61% margins)
+- Blended margin 55% is healthy
 
 ---
 
@@ -379,10 +424,10 @@ MRR Growth (Optimistic)
 ## 8. Key Metrics to Track
 
 ### Unit Economics
-- **CAC** (Customer Acquisition Cost): Target <2,000₽
-- **LTV** (Lifetime Value): Target >15,000₽ (15+ months retention)
-- **LTV:CAC ratio**: Target >7:1
-- **Gross Margin**: Target >50% average
+- **CAC** (Customer Acquisition Cost): Target <3,000₽
+- **LTV** (Lifetime Value): Target >30,000₽ (15+ months × 2,010₽ margin)
+- **LTV:CAC ratio**: Target >10:1
+- **Gross Margin**: Target >55% blended (37% Старт, 57-61% Бизнес/Сеть)
 
 ### Operational
 - SMS delivery rate: >95%
@@ -394,11 +439,12 @@ MRR Growth (Optimistic)
 
 ## Sources
 
-### SMS Pricing
-- [sms.ru](https://sms.ru/price)
-- [SMSC.ru](https://smsc.ru/tariffs/)
-- [TargetSMS](https://targetsms.ru/tarify)
-- [DTF Top SMS Services](https://dtf.ru/top-raiting/4149545-luchshie-servisy-dlya-sms-rassylok)
+### SMS Pricing (verified Jan 2025)
+- [sms.ru](https://sms.ru/price) — 5.55-8.80₽/SMS
+- [SMSC.ru](https://smsc.ru/tariffs/) — 5.70-8.00₽/SMS
+- [TargetSMS](https://targetsms.ru/tarify) — 5.51-7.17₽/SMS
+- [Exolve/MTS](https://exolve.ru/tariffs/messengers/) — 4.50-7.30₽/SMS (direct carrier)
+- [P1SMS](https://p1sms.ru/ceny-na-sms-rassylki) — ~5₽/SMS
 
 ### AI API Pricing
 - [OpenAI Pricing](https://openai.com/api/pricing/)

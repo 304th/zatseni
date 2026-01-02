@@ -55,7 +55,8 @@ export async function POST(req: NextRequest) {
           });
         }
       } else if (payment.type === "sms_pack" && payment.smsAmount) {
-        // Add SMS to all user's businesses (proportionally)
+        // Add purchased SMS to all user's businesses (proportionally)
+        // smsPurchased never expires (unlike smsLimit which resets monthly)
         const businesses = await prisma.business.findMany({
           where: { userId: payment.userId },
         });
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
           const smsPerBusiness = Math.floor(payment.smsAmount / businesses.length);
           await prisma.business.updateMany({
             where: { userId: payment.userId },
-            data: { smsLimit: { increment: smsPerBusiness } },
+            data: { smsPurchased: { increment: smsPerBusiness } },
           });
         }
       }

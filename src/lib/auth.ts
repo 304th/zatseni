@@ -67,6 +67,7 @@ export const authOptions: NextAuthOptions = {
           plan: user.plan,
           phone: user.phone,
           phoneVerified: user.phoneVerified ? true : false,
+          createdAt: user.createdAt,
         };
       },
     }),
@@ -100,6 +101,7 @@ export const authOptions: NextAuthOptions = {
           plan: user.plan,
           phone: user.phone,
           phoneVerified: user.phoneVerified ? true : false,
+          createdAt: user.createdAt,
         };
       },
     }),
@@ -162,6 +164,7 @@ export const authOptions: NextAuthOptions = {
           plan: user.plan,
           phone: user.phone,
           phoneVerified: user.phoneVerified ? true : false,
+          createdAt: user.createdAt,
         };
       },
     }),
@@ -214,6 +217,7 @@ export const authOptions: NextAuthOptions = {
         token.plan = (user as { plan?: string }).plan;
         token.phone = (user as { phone?: string | null }).phone;
         token.phoneVerified = (user as { phoneVerified?: boolean }).phoneVerified;
+        token.createdAt = (user as { createdAt?: Date }).createdAt?.toISOString();
       }
 
       // Refresh user data on session update
@@ -226,6 +230,7 @@ export const authOptions: NextAuthOptions = {
           token.plan = freshUser.plan;
           token.phone = freshUser.phone;
           token.phoneVerified = freshUser.phoneVerified ? true : false;
+          token.createdAt = freshUser.createdAt.toISOString();
         }
       }
 
@@ -239,6 +244,7 @@ export const authOptions: NextAuthOptions = {
           token.plan = dbUser.plan;
           token.phone = dbUser.phone;
           token.phoneVerified = dbUser.phoneVerified ? true : false;
+          token.createdAt = dbUser.createdAt.toISOString();
         }
       }
 
@@ -251,6 +257,7 @@ export const authOptions: NextAuthOptions = {
         session.user.plan = token.plan as string;
         session.user.phone = token.phone as string | null | undefined;
         session.user.phoneVerified = token.phoneVerified as boolean | undefined;
+        session.user.createdAt = token.createdAt as string | undefined;
       }
       return session;
     },

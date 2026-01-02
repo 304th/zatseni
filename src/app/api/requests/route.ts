@@ -94,9 +94,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Бизнес не найден" }, { status: 404 });
     }
 
-    if (business.smsUsed >= business.smsLimit) {
+    // Check SMS availability: tier quota first, then purchased
+    const tierRemaining = business.smsLimit - business.smsUsed;
+    const totalAvailable = tierRemaining + business.smsPurchased;
+
+    if (totalAvailable <= 0) {
       return NextResponse.json(
-        { error: "Лимит SMS исчерпан. Обновите тариф." },
+        { error: "Лимит SMS исчерпан. Купите пакет или обновите тариф." },
         { status: 400 }
       );
     }
@@ -130,11 +134,20 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Update SMS counter
-    await prisma.business.update({
-      where: { id: businessId },
-      data: { smsUsed: { increment: 1 } },
-    });
+    // Update SMS counter: use tier quota first, then purchased
+    if (tierRemaining > 0) {
+      // Use tier quota (expires monthly)
+      await prisma.business.update({
+        where: { id: businessId },
+        data: { smsUsed: { increment: 1 } },
+      });
+    } else {
+      // Use purchased SMS (never expires)
+      await prisma.business.update({
+        where: { id: businessId },
+        data: { smsPurchased: { decrement: 1 } },
+      });
+    }
 
     return NextResponse.json(request);
   } catch (error) {
