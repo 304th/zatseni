@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-const VALID_PLANS = ["free", "start", "business", "business_plus", "network"];
+const VALID_PLANS = ["free", "start", "business", "network"];
 
 export async function POST(req: NextRequest) {
   try {

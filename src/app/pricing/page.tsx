@@ -47,30 +47,14 @@ const plans = [
   {
     id: "business",
     name: "Бизнес",
-    price: "2 990",
+    price: "3 990",
     period: "мес",
     description: "Для растущих компаний",
     features: [
       "До 5 точек",
       "500 SMS в месяц",
-      "30 AI-ответов в месяц",
-      "Интеграции с CRM/POS",
-    ],
-    notIncluded: [],
-    cta: "Выбрать план",
-    ctaLoggedIn: "Выбрать",
-    popular: false,
-  },
-  {
-    id: "business_plus",
-    name: "Бизнес+",
-    price: "4 990",
-    period: "мес",
-    description: "Оптимальный выбор",
-    features: [
-      "До 10 точек",
-      "1000 SMS в месяц",
       "50 AI-ответов в месяц",
+      "Интеграции с CRM/POS",
       "Приоритетная поддержка",
     ],
     notIncluded: [],
@@ -152,7 +136,7 @@ export default function PricingPage() {
 
       {/* Pricing Cards */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan) => {
             const isCurrentPlan = isLoggedIn && plan.id === currentPlan;
             return (

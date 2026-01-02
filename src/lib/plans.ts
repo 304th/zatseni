@@ -1,4 +1,4 @@
-export type PlanId = "free" | "start" | "business" | "business_plus" | "network";
+export type PlanId = "free" | "start" | "business" | "network";
 
 export interface Plan {
   id: PlanId;
@@ -50,26 +50,11 @@ export const PLANS: Record<PlanId, Plan> = {
   business: {
     id: "business",
     name: "Бизнес",
-    price: 2990,
+    price: 3990,
     smsLimit: 500,
-    aiRepliesLimit: 30,
+    aiRepliesLimit: 50,
     businessLimit: 5,
     teamLimit: 5,
-    features: {
-      integrations: true,
-      analytics: "full",
-      priority_support: false,
-      custom_branding: true,
-    },
-  },
-  business_plus: {
-    id: "business_plus",
-    name: "Бизнес+",
-    price: 4990,
-    smsLimit: 1000,
-    aiRepliesLimit: 50,
-    businessLimit: 10,
-    teamLimit: 10,
     features: {
       integrations: true,
       analytics: "full",

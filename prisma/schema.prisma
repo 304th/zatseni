@@ -47,7 +47,7 @@ model User {
   phoneVerified DateTime?           // when phone was verified
   telegramId    String?    @unique  // for Telegram auth
   role          String     @default("user") // user, support, admin
-  plan          String     @default("free") // free, start, business, business_plus, network
+  plan          String     @default("free") // free, start, business, network
   accounts      Account[]
   sessions      Session[]
   businesses    Business[]         // businesses owned by user

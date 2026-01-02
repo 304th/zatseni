@@ -4,7 +4,7 @@ import { sendVerificationEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-const VALID_PLANS = ["free", "start", "business", "business_plus", "network"];
+const VALID_PLANS = ["free", "start", "business", "network"];
 
 export async function POST(req: NextRequest) {
   try {

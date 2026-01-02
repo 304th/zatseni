@@ -20,14 +20,8 @@ const PLANS = [
   {
     id: "business",
     name: "Бизнес",
-    price: 2990,
-    features: ["До 5 точек", "500 SMS в месяц", "30 AI-ответов"],
-  },
-  {
-    id: "business_plus",
-    name: "Бизнес+",
-    price: 4990,
-    features: ["До 10 точек", "1000 SMS в месяц", "50 AI-ответов"],
+    price: 3990,
+    features: ["До 5 точек", "500 SMS в месяц", "50 AI-ответов"],
     popular: true,
   },
   {
@@ -69,7 +63,7 @@ function BillingContent() {
   useEffect(() => {
     fetchPayments();
     // If upgrade param exists and it's a valid plan, highlight it
-    if (upgradeParam && ["free", "start", "business", "business_plus", "network"].includes(upgradeParam)) {
+    if (upgradeParam && ["free", "start", "business", "network"].includes(upgradeParam)) {
       setTab("plans");
     }
   }, [upgradeParam]);
@@ -169,7 +163,7 @@ function BillingContent() {
 
         {/* Plans */}
         {tab === "plans" && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PLANS.map((plan) => {
               const isUpgradeTarget = upgradeParam === plan.id && plan.id !== currentPlan;
               return (
