@@ -1,16 +1,17 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Lazy initialization to avoid build errors
+let resend: Resend | null = null;
 
-const FROM_EMAIL = process.env.SMTP_FROM || "noreply@otzovik.ai";
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
+
+const FROM_EMAIL = process.env.RESEND_FROM || "noreply@otzovik.ai";
 const APP_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
 interface SendEmailOptions {
@@ -21,24 +22,32 @@ interface SendEmailOptions {
 }
 
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
-  // In development, just log the email
-  if (process.env.NODE_ENV === "development" && !process.env.SMTP_USER) {
+  const client = getResend();
+
+  // In development without API key, just log
+  if (!client) {
     console.log("=== EMAIL (dev mode) ===");
     console.log("To:", to);
     console.log("Subject:", subject);
-    console.log("HTML:", html);
+    console.log("HTML:", html.substring(0, 200) + "...");
     console.log("========================");
     return { success: true, dev: true };
   }
 
   try {
-    await transporter.sendMail({
-      from: `"Отзовик" <${FROM_EMAIL}>`,
+    const { error } = await client.emails.send({
+      from: `Отзовик <${FROM_EMAIL}>`,
       to,
       subject,
       html,
       text: text || html.replace(/<[^>]*>/g, ""),
     });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return { success: false, error };
+    }
+
     return { success: true };
   } catch (error) {
     console.error("Email send error:", error);
