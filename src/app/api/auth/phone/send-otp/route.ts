@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendSms } from "@/lib/sms";
+import { smsRatelimit } from "@/lib/ratelimit";
 
 // Normalize Russian phone number
 function normalizePhone(phone: string): string {
@@ -24,6 +25,15 @@ function isValidRussianPhone(phone: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") ?? req.ip ?? "anonymous";
+    const { success } = await smsRatelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Слишком много запросов" },
+        { status: 429 }
+      );
+    }
+
     const { phone } = await req.json();
 
     if (!phone) {
