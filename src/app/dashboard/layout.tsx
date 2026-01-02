@@ -14,6 +14,7 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const router = useRouter();
   const [showVerification, setShowVerification] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -37,10 +38,24 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DashboardSidebar />
-      <main className="ml-64 p-8">
+      <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Mobile header with hamburger */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 flex items-center px-4 z-30">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="p-2 -ml-2 text-gray-600 hover:text-gray-900"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <span className="ml-3 font-semibold text-gray-900">Отзовик</span>
+      </div>
+
+      <main className="md:ml-64 p-4 md:p-8 pt-20 md:pt-8">
         {needsPhoneVerification && (
-          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="text-2xl">📱</span>
               <div>
@@ -54,7 +69,7 @@ export default function DashboardLayout({
             </div>
             <button
               onClick={() => setShowVerification(true)}
-              className="bg-amber-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-amber-700"
+              className="bg-amber-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-amber-700 whitespace-nowrap"
             >
               Подтвердить
             </button>
