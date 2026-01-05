@@ -1,22 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { processWebhook, extractPhone } from "@/lib/webhook";
 
-// iiko webhook handler
-// Triggers on: delivery completed
-// Docs: https://api-ru.iiko.services/
-
-// Event types we process
-const ALLOWED_EVENTS = ["DeliveryOrderUpdate", "TableOrderUpdate"];
+// R-Keeper Delivery webhook handler
+// Configured via: Admin Panel → Communications → External API for Push Notifications
+// Docs: https://docs.rkeeper.ru/delivery/vneshnee-api-dlya-push-uvedomlenij-156074728.html
 
 // Order statuses that trigger review request
 const COMPLETED_STATUSES = [
-  "Delivered",
-  "Closed",
-  "Finished",
-  // Russian variants
+  // Russian
+  "Выполнен",
   "Доставлен",
-  "Закрыт",
   "Завершен",
+  "Закрыт",
+  // English
+  "Completed",
+  "Delivered",
+  "Finished",
+  "Closed",
 ];
 
 function extractValue(data: Record<string, unknown>, path: string): unknown {
@@ -34,55 +34,62 @@ function extractValue(data: Record<string, unknown>, path: string): unknown {
 
 export async function POST(req: NextRequest) {
   try {
-    const apiKey = req.nextUrl.searchParams.get("key");
+    // R-Keeper can send token in header or query param
+    const apiKey = req.nextUrl.searchParams.get("key")
+      || req.headers.get("X-Api-Key")
+      || req.headers.get("Authorization")?.replace("Bearer ", "");
+
     if (!apiKey) {
       return NextResponse.json({ error: "API key required" }, { status: 401 });
     }
 
     const body = await req.json();
 
-    // Log payload for debugging (remove in production if too verbose)
-    console.log("[iiko webhook]", JSON.stringify(body, null, 2));
-
-    // Check event type
-    const eventType = body.eventType as string | undefined;
-    if (eventType && !ALLOWED_EVENTS.includes(eventType)) {
-      console.log(`[iiko] Skipping event type: ${eventType}`);
-      return NextResponse.json({ skipped: true, reason: "event_type_filtered" });
-    }
+    // Log payload for debugging
+    console.log("[rkeeper webhook]", JSON.stringify(body, null, 2));
 
     // Check order status - only send for completed orders
-    const status = extractValue(body, "eventInfo.order.status")
-      || extractValue(body, "order.status")
-      || extractValue(body, "status");
+    const status = extractValue(body, "order.status")
+      || extractValue(body, "status")
+      || extractValue(body, "orderStatus")
+      || extractValue(body, "data.status");
 
     if (status && typeof status === "string") {
       const isCompleted = COMPLETED_STATUSES.some(
         s => status.toLowerCase() === s.toLowerCase()
       );
       if (!isCompleted) {
-        console.log(`[iiko] Skipping status: ${status}`);
+        console.log(`[rkeeper] Skipping status: ${status}`);
         return NextResponse.json({ skipped: true, reason: "status_not_completed" });
       }
     }
 
-    // Extract phone from various payload structures
+    // Extract phone from various R-Keeper payload structures
     const phone = extractPhone(body, [
-      "eventInfo.order.customer.phone",
-      "eventInfo.order.phone",
+      // Order customer fields
       "order.customer.phone",
+      "order.client.phone",
       "order.phone",
-      "deliveryOrder.customer.phone",
+      "order.customerPhone",
+      // Direct fields
       "customer.phone",
+      "client.phone",
+      "customerPhone",
+      "clientPhone",
+      // Data wrapper
+      "data.customer.phone",
+      "data.client.phone",
+      "data.phone",
+      // Fallback
       "phone",
     ]);
 
     if (!phone) {
-      console.log("[iiko] Phone not found in payload");
+      console.log("[rkeeper] Phone not found in payload");
       return NextResponse.json({ error: "Phone not found in payload" }, { status: 400 });
     }
 
-    const result = await processWebhook(apiKey, phone, "iiko");
+    const result = await processWebhook(apiKey, phone, "rkeeper");
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
@@ -90,7 +97,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("iiko webhook error:", error);
+    console.error("R-Keeper webhook error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

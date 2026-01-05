@@ -11,7 +11,8 @@ const INTEGRATIONS = [
   { id: "bitrix24", name: "Bitrix24", path: "/api/webhook/bitrix24", desc: "CRM и автоматизация" },
   { id: "amocrm", name: "AmoCRM", path: "/api/webhook/amocrm", desc: "CRM для продаж" },
   { id: "yclients", name: "YCLIENTS", path: "/api/webhook/yclients", desc: "Для салонов и услуг" },
-  { id: "iiko", name: "iiko", path: "/api/webhook/iiko", desc: "Для ресторанов" },
+  { id: "iiko", name: "iiko", path: "/api/webhook/iiko", desc: "POS для ресторанов" },
+  { id: "rkeeper", name: "R-Keeper", path: "/api/webhook/rkeeper", desc: "POS для ресторанов (UCS)" },
   { id: "poster", name: "Poster", path: "/api/webhook/poster", desc: "POS система" },
 ];
 
